@@ -1,0 +1,83 @@
+[data-tab-content] {
+    display: none;
+}
+  
+.active[data-tab-content] {
+  display: block;
+}
+
+/* ------------------- */
+/* Custome properties  */
+/* ------------------- */
+:root{
+  --clr-dark: #0B0D17;
+  --clr-white: #ffffff;
+  --clr-purple: #926AA6;
+
+}
+
+/* ------------------- */
+/* Reset               */
+/* ------------------- */
+
+/* https://piccalil.li/blog/a-modern-css-reset/ */
+/* Box sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Reset margins */
+body, h1, p, .tabs {
+    padding: 0;
+    margin: 0;
+}
+
+/* set up the body */
+body {
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/*form and button etc setup*/
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/*color*/
+.bg-color {background-color: var(--clr-white);}
+.text-dark {color: var(--clr-dark);}
+.text-white{color:var(--clr-white);}
+.bg-purple{background:var(--clr-purple);}
+
+.tabs {
+  display: flex;
+  gap: var(--gap, 1rem);
+  list-style-type: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 10px;
+}
+
+
+.tab:hover {
+  background-color: #AAA;
+}
+
+.page-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.container {
+  padding-inline: 2rem;
+  margin-inline: auto;
+  max-width: 60rem;
+}

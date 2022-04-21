@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style-homepage.css">
+    <script src ="script-homepage.js" defer></script>
+    <title>Track my time</title>
+</head>
+<body class ="bg-color">
+    <ul class = "tabs container">
+        <li data-tab-target = "#Home" class="active tab">Home</li>
+        <li data-tab-target = "#how-it-work" class="tab">How it works</li>
+        <li data-tab-target = "#about" class="tab">About us</li>
+        <li data-tab-target = "#registration" class="tab">Registration</li>
+        <li data-tab-target = "#log-in" class="tab">Log in</li>
+    </ul>
+    
+    <div class = "page-content container">
+
+        <div id="home" data-tab-content class="active">
+            <h1>Home</h1>
+        </div>
+
+        <div id = "registration" data-tab-content>
+          <div>
+            <h1> Cutomer form</h1>
+            <form action="" method="post" id="form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      placeholder="Username"
+                    />
+                    <div class="error"></div>
+                  </div>
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    placeholder="First name"
+                  />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    placeholder="Last name"
+                  />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    type="email"
+                    name="Email"
+                    id="email"
+                    placeholder="name@something.com"
+                  />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label for="telephone">Password (6 characters minimum)</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Your password"
+                  />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="submit">
+                    <i class="far fa-paper-plane"></i>Register
+                  </button>
+                </div>
+              </form>
+        </div>
+
+        <div id="log-in" data-tab-content>
+          <form action="" method="post">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Username"
+              />
+              <div class="error"></div>
+            </div>
+            <div class="form-group">
+              <label for="telephone">Password (6 characters minimum)</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Your password"
+              />
+              <div class="error"></div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="submit">
+                <i class="far fa-paper-plane"></i>Login
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+
+        <div id="how-it-work" data-tab-content>
+            <h1>Manual</h1>
+        </div>
+
+        <div id = "about" data-tab-content>
+            <h1>Who are we?</h1>
+        </div>
+    </div>
+</body>
+</html>
