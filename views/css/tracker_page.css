@@ -1,0 +1,160 @@
+body{
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    font-family: 'Inter', sans-serif;
+}
+
+
+.theme-light {
+  --color-primary: #ffffff;
+  --color-background: #d3d3d4;
+  --font-color: #000000;
+}
+.theme-dark {
+  --color-primary: #000000;
+  --color-background: #101010;
+  --font-color: #d3d1d1;
+  --color-possetive: #0E86F4;
+  --color-negative: #DC3131; 
+}
+
+.card-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 3rem;
+}
+
+.button-container{
+    margin: 2rem 0rem;
+    display: grid;
+    grid-template-columns: 1fr ;
+    align-content: center;
+
+}
+.possetive{
+        background-color:var(--color-possetive);
+        color: black;
+}
+.negative{
+        background-color:var(--color-negative);
+        color: black;
+
+}
+
+.active{
+     background-color:white;
+        color: black;
+}
+
+.current{
+    text-decoration: underline;
+}
+.card {
+    display: grid;
+    width: 238px;
+    height: 284px;
+    background-color: var(--color-background);
+}
+.card *{
+    margin: 10%;
+}
+.card h2{
+  font-size: 1.25rem;
+}
+.card h1{
+  font-size: 3rem;
+}
+.add-remove-tracker{
+      justify-self: center;
+}
+.filter-buttons{
+      justify-self: center;
+}
+ul{
+    display: flex;
+    justify-content: space-evenly;
+    background-color: var(--color-background);
+}
+
+
+li {
+  display: inline;
+  font-size: 1.5rem;
+  margin: 1rem;
+}
+
+a{
+  color: var(--font-color);
+  text-decoration: none;
+
+}
+
+button{
+    margin: 0.2rem;
+    width: 70px;
+    height: 60px;
+    border: none;
+    text-align: center;
+    font-size: 1rem;
+    background-color:var(--color-background) ;
+    color: var(--font-color);
+}
+
+
+
+
+@media screen  and (min-width: 600px) { 
+    button{ width: 90px;
+    height: 60px;
+    font-size: 1.5rem;
+}
+   
+    .card-container{
+        grid-template-columns: 1fr 1fr;
+    }
+    .button-container{
+        grid-template-columns: 2fr 1fr ;
+
+}
+}
+@media screen  and (min-width: 650px) { 
+    .add-remove-tracker{
+      justify-self: end;
+}
+    .filter-buttons{
+        justify-self: start;
+}
+    
+    .button-container{
+        margin: 2rem 2.5%;
+
+}
+
+}
+@media screen  and (min-width: 900px) { 
+    
+    .card-container{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    button{
+    margin: 1rem;
+    width: 102px;
+    height: 60px
+}
+}
+
+@media screen  and (min-width: 1200px) { 
+    
+    .card-container{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+@media screen  and (min-width: 1500px) { 
+    
+    .card-container{
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
+}
