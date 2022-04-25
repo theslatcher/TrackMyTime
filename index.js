@@ -1,12 +1,32 @@
-require("dotenv").config()
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
+app.use(require('body-parser').json());
+app.use(require('cookie-parser')());
+
+const passport = require('passport');
+app.use(require('express-session')({ 
+	secret: 'snape killed dumbledore',
+	resave: true,
+	saveUninitialized: true,
+	cookie: { 
+		expires: false,
+		secure: true,
+		httpOnly: false,
+		sameSite: 'strict'
+	}
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const task = require('./routes/task');
-app.use("/", task)
+app.use('/', task);
+
+const userRouter = require('./routes/user');
+app.use('/user/', userRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
