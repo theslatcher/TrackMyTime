@@ -23,6 +23,34 @@ router.delete("/task", async (req, res) => {
     })
 })
 
+router.get("/task", async (req, res) => {
+    await db.query('SELECT * FROM "TrackerTask"').then(response => {
+        res.status(200)
+        res.send(response.rows)
+    }).catch(err => {
+        res.status(404)
+        res.send({err: err.detail})
+    })
+})
+
+router.get("/task/:id", async (req, res) => {
+    await db.query('SELECT * FROM "TrackerTask" WHERE trackerid=$1', [req.params.id]).then(response => {
+        res.status(200)
+        res.send(response.rows)
+    }).catch(err => {
+        res.status(404)
+        res.status({err: err.detail})
+    })
+})
+
+router.put("/task/:id", async (req, res) => {
+    await db.query('UPDATE "TrackerTask" SET name = $1, color = $2, goal = $3 WHERE trackerid=$4', 
+    [req.body.name, req.body.color, req.body.goal, req.params.id]).then(response => {
+        res.status(200)
+        res.send("Success!")
+    })
+})
+
 
 
 module.exports = router
