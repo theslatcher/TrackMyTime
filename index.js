@@ -28,6 +28,9 @@ app.use('/', task);
 const userRouter = require('./routes/user');
 app.use('/user/', userRouter);
 
+const timeRouter = require('./routes/time');
+app.use('/time/', timeRouter);
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
