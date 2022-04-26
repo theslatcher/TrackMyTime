@@ -9,6 +9,7 @@ const button_add = document.getElementById("bAdd")
 
 
 const reload = () => {
+    container.innerHTML = ""
     const trackers = get_data()
     trackers.forEach(tracker => {
         container.innerHTML += card_template(tracker)
@@ -26,7 +27,33 @@ function card_template(tracker) {
     `)
 
 }
+function form_template() {
+    return (`<form action="" class="card" style=" border: 3px solid var(--font-color)">
+                <div class="form_title">
+                    <h2>Create New</h2>
+                    
+                </div>
+                <div class="form_element">
+                    <label for="">name?</label>
+                    <input type="text">
+                </div>
 
+                <div class="form_element">
+                    <label for="">goal?</label>
+                    <input type="number">
+                </div>
+                <div class="form_element">
+                    <label for="">color?</label>
+                    <input type="color">
+
+                </div>
+                <div class="form_element">
+                    <button class="negative form_button" type="button" onclick="reload()">x</button>
+                    <button class="possetive form_button" type="button">(y)</button>
+                    </div>
+
+            </form>`)
+}
 function get_data() {
     return ([
         { name: "Study", color: "Red", current: 20, goal: 40 },
@@ -71,5 +98,14 @@ tabs.forEach(tab => {
     })
 })
 
+button_add.addEventListener('click', () => {
+    container.innerHTML = form_template()
+
+    const trackers = get_data()
+    trackers.forEach(tracker => {
+        container.innerHTML += card_template(tracker)
+    });
+}
+)
 
 
