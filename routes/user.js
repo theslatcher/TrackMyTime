@@ -51,11 +51,11 @@ passport.use(new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser(function(user, done) {
-	done(null, user.username);
+	done(null, { username: user.username });
 });
 
-passport.deserializeUser(function(id, done) {
-	db.query('SELECT * FROM "User" WHERE username = $1;', [id])
+passport.deserializeUser(function(user, done) {
+	db.query('SELECT * FROM "User" WHERE username = $1;', [user.username])
 	.then(response => {
         return done(null, response.rows[0]);
     })
@@ -65,31 +65,29 @@ passport.deserializeUser(function(id, done) {
 });
 
 router.post('/signup', async (req, res) => {
-	if(!req.body || !req.body.username || !req.body.password || !req.body.firstname || !req.body.lastname || !req.body.email) {
+	if(!req.body || !req.body.username || !req.body.password || !req.body.first_name || !req.body.last_name || !req.body.email) {
 		res.status(422).json({error: 'Must provide all fields.'});
 	} else {
-		hashedPassword = await hashPassword(req.body.password);
+		req.body.password = await hashPassword(req.body.password);
 
 		await db.query('INSERT INTO "User"(username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);', 
-			[req.body.username, hashedPassword, req.body.firstname, req.body.lastname, req.body.email])
+			[req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.email])
 			.then(response => {
 				res.status(200).json({message: 'Success!'});
 			})
 			.catch(err => {
-				console.log(err);
 				res.status(409).json({err: err.detail});
 			});
 	}
 });
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {
-	console.log('logged in!');
-	res.status(200).json({message: 'Logged in.'});
-});
+	res.redirect('/');
+}); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	res.status(200).json({message: 'Signed out.'});
+	res.redirect('/');
 });
 
 module.exports = router;

@@ -9,12 +9,12 @@ app.use(require('cookie-parser')());
 
 const passport = require('passport');
 app.use(require('express-session')({ 
-	secret: 'snape killed dumbledore',
-	resave: true,
-	saveUninitialized: true,
+	secret: process.env.SessionSecret,
+	resave: false,
+	saveUninitialized: false,
 	cookie: { 
 		expires: false,
-		secure: true,
+		secure: false, //HTTPS-only
 		httpOnly: false,
 		sameSite: 'strict'
 	}
