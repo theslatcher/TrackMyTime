@@ -27,7 +27,7 @@ body{
 
 .card-container{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     justify-items: center;
     gap: 3rem;
 }
@@ -60,12 +60,12 @@ body{
     width: 238px;
     height: 284px;
     background-color: var(--color-background);
+    z-index: 1;
 
 
 }
 .card *{
     margin: 10%;
-    pointer-events: none
 }
 .card h2{
   font-size: 1.25rem;
@@ -106,47 +106,45 @@ ul{
     justify-content: space-evenly;
     background-color: var(--color-background);
     box-shadow:var(--shadows);
-  margin-inline: auto;
-  max-width: 60rem;
+    margin-inline: auto;
+    max-width: 60rem;
 } 
 
 
 li {
-  display: inline;
-  font-size: 1.5rem;
-  margin: 1rem;
+    display: inline;
+    font-size: 1.5rem;
+    margin: 1rem;
     cursor: pointer;
 
   
 }
 
-form{
-    padding-top: 2rem;
-    margin-top: 4rem;
-    display: grid;
-    background-color: var(--color-background);
-    width: min(500px,100%);
-    margin-inline:auto;
-    justify-content: center;
-    gap: 2rem;
-}
-form h1{
-    font-size: 2rem;
-    margin-left: 25%;
-}
+
 input{
-    font-size: 1.2rem;
-    width: 10ch;
-    margin-left:4rem ;
+    font-size: 1rem;
+    height: 1.2rem;
+    width: 50%;
     background-color: var(--color-background);
     color: var(--font-color);
     border: none;
+    
 }
 .form_element{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    border-bottom: 2px solid var(--font-color);
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+.form_element *{
+    margin:0 1rem;
+}
+.form_title{
+    margin: 0;
+    text-align: center;
+}
+.form_button{
+    height: 40px;
+    width: 60px;
 }
 
 button{
@@ -178,6 +176,7 @@ button{
    
     .card-container{
         grid-template-columns: 1fr 1fr;
+        
     }
     .button-container{
         grid-template-columns: 2fr 1fr ;
