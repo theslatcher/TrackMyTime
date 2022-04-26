@@ -1,5 +1,7 @@
 const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
+const toggleButton = document.getElementsByClassName('toggle-btn')[0]
+const navbarLinks = document.getElementsByClassName('navbar-links')[0]
 
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -15,12 +17,10 @@ tabs.forEach(tab => {
        
         target.classList.add('active');
 
-    //     //loop through 'li' items and remove 'active' class
-    //     tabs.forEach(tab => {
-    //           tab.classList.remove('active');
-    //       })
-
-    //    //add 'active' class to clicked 'li' item
-    //     e.target.classList.add("active");
     })
 })
+
+//show tabs when click to toggle button
+toggleButton.addEventListener('click', () => {
+    navbarLinks.classList.toggle('active');
+    })

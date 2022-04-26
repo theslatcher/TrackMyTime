@@ -8,23 +8,66 @@
     <title>Track my time</title>
   </head>
   <body class="bg-color">
-    <ul class="tabs container">
-      <li data-tab-target="#Home" class="active tab">Home</li>
-      <li data-tab-target="#how-it-work" class="tab">How it works</li>
-      <li data-tab-target="#about" class="tab">About us</li>
-      <li data-tab-target="#registration" class="tab">Registration</li>
-      <li data-tab-target="#log-in" class="tab">Log in</li>
-    </ul>
+    <header class = "primary-header container">
+      <div class = "logo">
+        <img src="../assets/logo.PNG" alt="logo of the website">
+      </div>
+      <div class ="brand-title">Track my time</div>
+      <a href = "#" class = "toggle-btn">
+        <span class = "bar"></span>
+        <span class = "bar"></span>
+        <span class = "bar"></span>
+      </a>
+      <div class ="navbar-links">
+        <ul class="tabs">
+          <li data-tab-target="#Home" class="active tab">Home</li>
+          <li data-tab-target="#how-it-work" class="tab">How it works</li>
+          <li data-tab-target="#about" class="tab">About us</li>
+          <li data-tab-target="#registration" class="tab">Registration</li>
+          <li data-tab-target="#log-in" class="tab">Log in</li>
+        </ul>
+      </div>
+    
+  </header>
 
     <div class="page-content container">
 
       <div id="home" data-tab-content class="active">
-        <h1>Home</h1>
+        <h1>Get started</h1>
+        <div class = "guide-container">
+
+          <div class="guide-item">
+            <div class = number> 1</div>
+            <div class="guide-content">
+              <h3>Register</h3>
+              <p>Create your account</p>
+            </div>
+          </div>
+
+          <div class="guide-item">
+            <div class = number> 2</div>
+            <div class="guide-content">
+              <h3>Fill in information</h3>
+              <p>Your personal profile and what things need to be track</p>
+            </div>
+
+          </div>
+
+          <div class="guide-item">
+            <div class = number> 3</div>
+            <div class="guide-content">
+              <h3>Setup your target</h3>
+              <p>Find what you need in our platform</p>
+            </div>
+
+          </div>
+        </div>
+   
       </div>
 
       <div id="registration" data-tab-content>
         <div>
-          <h1> Cutomer form</h1>
+          <h2> Cutomer form</h2>
           <form action="" method="post" id="form">
             <div class="form-group">
               <label for="username">Username</label>
@@ -86,6 +129,7 @@
       </div>
 
         <div id="log-in" data-tab-content>
+          <h2>User Login</h2>
           <form action="" method="post">
             <div class="form-group">
               <label for="username">Username</label>
@@ -123,6 +167,7 @@
 
         <div id="about" data-tab-content>
           <h1>Who are we?</h1>
+          <img src="../assets/sologan.PNG" alt="our sologon">
         </div>
       </div>
     </body>
