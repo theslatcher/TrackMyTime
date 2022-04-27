@@ -33,6 +33,9 @@ Rename
 Insert your database URL
 DB_Connection = postgres://username:password@example.com/database
 
+Insert a secret for the session
+SessionSecret = "secret"
+
 ```
 
 ## Running
