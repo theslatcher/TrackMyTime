@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
+const Users = require('../models/users');
+const db = require('../db');
 
 async function hashPassword(password) {
 	return new Promise( (resolve, reject) => {
@@ -34,9 +35,11 @@ async function verifyPassword(hashedPassword, password) {
 }
 
 passport.use(new LocalStrategy((username, password, done) => {
-  return db.query('SELECT * FROM "User" WHERE username = $1;', [username])
+  return Users.findOne({where: {username: username}})
 	.then(async (response) => {
-        if (!response || response.rows.length == 0) { return done(null, false, {message: 'Incorrect username or password.'}); }
+        if (!response || response.length == 0) {
+			return done(null, false, {message: 'Incorrect username or password 5.'}); 
+		}
 
 		validPassword = await verifyPassword(response.rows[0].password, password);
 
@@ -55,9 +58,9 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-	db.query('SELECT * FROM "User" WHERE username = $1;', [user.username])
+	Users.findOne({where: {username: user.username}})
 	.then(response => {
-        return done(null, response.rows[0]);
+        return done(null, response);
     })
 	.catch(err => {
         return done(err);
@@ -70,8 +73,7 @@ router.post('/signup', async (req, res) => {
 	} else {
 		req.body.password = await hashPassword(req.body.password);
 
-		await db.query('INSERT INTO "User"(username, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5);', 
-			[req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.email])
+		await Users.create(req.body)
 			.then(response => {
 				res.status(200).json({message: 'Success!'});
 			})

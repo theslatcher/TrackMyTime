@@ -1,11 +1,17 @@
-const {Pool} = require("pg")
-const DB_Connect = process.env.DB_Connection
+const Sequelize = require('sequelize').Sequelize;
 
-const pool = new Pool({
-    connectionString: DB_Connect
-})
+const sequelizeInstance = new Sequelize(process.env.DB_Connection, {logging: false});
 
 module.exports = {
-    query: (text, params) => pool.query(text, params),
-}
-
+    db: sequelizeInstance,
+	//MW: temporarily change the result to make it compliant with the old pg.pool.query() code.
+    query: async (command, params) => {
+		return new Promise( (resolve, reject) => {
+			sequelizeInstance.query(command, {bind: params})
+			.then((res) => {
+				resolve({rows: res[0], rowCount: res[1].rowCount});
+			})
+			.catch((err) => {return reject(err)});
+		});
+	}
+};
