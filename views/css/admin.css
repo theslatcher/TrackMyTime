@@ -1,0 +1,26 @@
+td, tr{
+    background-color: lightgrey;
+    border-collapse: collapse;
+}
+
+tr:hover td {
+    background: grey;
+    color: white;
+}
+
+td, th{
+    text-align: center;
+    width: 25%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+table{
+    border-spacing: 0px;
+    border: 2px black solid
+}
+
+th{
+    background-color: grey;
+    color: white;
+}

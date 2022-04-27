@@ -4,6 +4,7 @@ const db = require('../db');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
+const { response } = require('express');
 
 async function hashPassword(password) {
 	return new Promise( (resolve, reject) => {
@@ -89,5 +90,29 @@ router.get('/signout', async (req, res) => {
 	req.logOut();
 	res.redirect('/');
 });
+
+router.get('/', async (req, res) => {
+	db.query('SELECT * FROM "User"').then(response => {
+		res.status(200)
+		res.send(response.rows)
+	})
+})
+
+router.get('/:username', async (req, res) => {
+	db.query('SELECT * FROM "User" WHERE username=$1', [req.params.username]).then(response => {
+		res.status(200)
+		res.send(response.rows[0])
+	})
+})
+
+router.delete('/:username', async (req, res) => {
+	db.query('DELETE FROM "User" WHERE username=$1', [req.params.username]).then(response => {
+		res.status(200)
+		res.send({message: "Success!"})
+	}).catch(err => {
+		res.status(404)
+		res.send({error: err})
+	})
+})
 
 module.exports = router;
