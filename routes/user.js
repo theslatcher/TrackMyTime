@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
-const Users = require('../models/users');
+const User = require('../models/user');
 const db = require('../db');
 
 async function hashPassword(password) {
@@ -35,16 +35,16 @@ async function verifyPassword(hashedPassword, password) {
 }
 
 passport.use(new LocalStrategy((username, password, done) => {
-  return Users.findOne({where: {username: username}})
+  return User.findOne({where: {username: username}})
 	.then(async (response) => {
-        if (!response || response.length == 0) {
+        if (!response) {
 			return done(null, false, {message: 'Incorrect username or password 5.'}); 
 		}
 
-		validPassword = await verifyPassword(response.rows[0].password, password);
+		validPassword = await verifyPassword(response.password, password);
 
 		if (validPassword)
-			return done(null, response.rows[0]);
+			return done(null, response);
 		else
 			return done(null, false, {message: 'Incorrect username or password.'});
     })
@@ -58,7 +58,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-	Users.findOne({where: {username: user.username}})
+	User.findOne({where: {username: user.username}})
 	.then(response => {
         return done(null, response);
     })
@@ -68,19 +68,17 @@ passport.deserializeUser(function(user, done) {
 });
 
 router.post('/signup', async (req, res) => {
-	if(!req.body || !req.body.username || !req.body.password || !req.body.first_name || !req.body.last_name || !req.body.email) {
-		res.status(422).json({error: 'Must provide all fields.'});
-	} else {
-		req.body.password = await hashPassword(req.body.password);
+	if (req.body.password)
+			req.body.password = await hashPassword(req.body.password);
 
-		await Users.create(req.body)
-			.then(response => {
-				res.status(200).json({message: 'Success!'});
-			})
-			.catch(err => {
-				res.status(409).json({err: err.detail});
-			});
-	}
+	await User.create(req.body)
+		.then(response => {
+			res.status(200).json({message: 'Success!'});
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(409).json({err: err});
+		});
 });
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {

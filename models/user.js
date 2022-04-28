@@ -1,7 +1,7 @@
 const DataTypes = require('sequelize').DataTypes;
 const sequelize = require('../db').db;
 
-var Users = sequelize.define('Users', {
+var User = sequelize.define('User', {
 	username: {
 		type: DataTypes.STRING,
 		primaryKey: true
@@ -34,9 +34,12 @@ var Users = sequelize.define('Users', {
 	}
 },
 {
-	timestamps: false
+	timestamps: false,
+    freezeTableName: true
 });
 
-Users.schema('public');
+User.removeAttribute('id');
 
-module.exports = Users;
+User.schema('public');
+
+module.exports = User;
