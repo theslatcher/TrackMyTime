@@ -91,21 +91,21 @@ router.get('/signout', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-	db.query('SELECT * FROM "User"').then(response => {
+	await User.findAll().then(response => {
 		res.status(200)
-		res.send(response.rows)
+		res.send(response)
 	})
 })
 
 router.get('/:username', async (req, res) => {
-	db.query('SELECT * FROM "User" WHERE username=$1', [req.params.username]).then(response => {
+	await User.findOne({where: {username: req.params.username}}).then(response => {
 		res.status(200)
-		res.send(response.rows[0])
+		res.send(response)
 	})
 })
 
 router.delete('/:username', async (req, res) => {
-	db.query('DELETE FROM "User" WHERE username=$1', [req.params.username]).then(response => {
+	await User.destroy({where: {username: req.params.username}}).then(response => {
 		res.status(200)
 		res.send({message: "Success!"})
 	}).catch(err => {

@@ -1,9 +1,24 @@
+body{
+    background-color: grey;
+    color: white;
+}
+
+#Users, #Stats{
+    float: left;
+}
+
+#Stats{
+    margin-left: 10%;
+    display: none;
+}
+
 td, tr{
     background-color: lightgrey;
+    color: black;
     border-collapse: collapse;
 }
 
-tr:hover td {
+#userTable tr:hover td {
     background: grey;
     color: white;
 }

@@ -1,5 +1,7 @@
 const userPanel = document.getElementById("Users")
 const userTable = document.getElementById("userTable")
+const statTable = document.getElementById("statTable")
+const statDiv = document.getElementById("Stats")
 
 function getUsers(){
     fetch("http://localhost:3000/user", {
@@ -30,7 +32,14 @@ function getUsers(){
 }
 
 function getSpecific(username){
-    fetch("http://localhost:3000/user/" + username, {
+    statTable.innerHTML = `
+    <tr>
+        <th> Name </th>
+        <th> Current Time </th>
+        <th> Goal </th>
+    </tr>
+    `
+    fetch("http://localhost:3000/task/user/" + username, {
         method: "GET",
         headers:{
             "Content-Type": "application/json"
@@ -38,7 +47,29 @@ function getSpecific(username){
     })
     .then(response => response.json())
     .then(info => {
-        console.log(info);
+        var current = 0
+        var totalGoal = 0
+        for(task of info){
+            current += task.currenttime
+            totalGoal += task.goal
+            statTable.insertAdjacentHTML("beforeend", `
+            <tr>
+                <td>` + task.name + `h</td>
+                <td>` + task.currenttime + `h</td>
+                <td>` + task.goal + `h</td>
+            </tr>    
+            `)
+        }
+
+        statTable.insertAdjacentHTML("beforeend", `
+        <tr>
+            <td style="font-weight: bold"> Total </td>
+            <td style="font-weight: bold"> `+ current +`h </td>
+            <td style="font-weight: bold"> ` + totalGoal + `h </td>
+        </tr>
+            `)
+
+        statDiv.style.display = "block"
     })
 }
 
