@@ -1,12 +1,11 @@
-const db = require("../db");
+const TrackerTime = require('../models/trackerTime');
 const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  await db
-    .query('SELECT * FROM "TrackerTime"')
+  await TrackerTime.findAll()
     .then((response) => {
-      res.status(200).send(response.rows);
+      res.status(200).send(response);
     })
     .catch((err) => {
       res.status(404).send(err);
@@ -14,10 +13,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  await db
-    .query('SELECT * FROM "TrackerTime" WHERE trackerid=$1', [req.params.id])
+  await TrackerTime.findOne({where: {trackerid: req.params.id}})
     .then((response) => {
-      res.status(200).send(response.rows);
+      res.status(200).send(response);
     })
     .catch((err) => {
       res.status(404).send(err);
@@ -25,11 +23,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  await db
-    .query(
-      'INSERT INTO "TrackerTime"(dayofyear, totaltime, trackerid) VALUES($1, $2, $3);',
-      [req.body.dayofyear, req.body.totaltime, req.body.trackerid]
-    )
+  await TrackerTime.create(req.body)
     .then((response) => {
       res
         .status(200)
@@ -41,10 +35,9 @@ router.post("/", async (req, res) => {
 });
 
 router.delete("/", async (req, res) => {
-  await db
-    .query('DELETE FROM "TrackerTime" WHERE trackerid=$1', [req.body.trackerid])
+  await TrackerTime.destroy({where: {trackerid: req.body.trackerid}})
     .then((response) => {
-      res.status(200).send(`Deleted ${response.rowCount} rows`);
+      res.status(200).send(`Deleted ${response} rows`);
     })
     .catch((err) => {
       res.status(409).send(err);
@@ -52,13 +45,10 @@ router.delete("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  await db
-    .query(
-      'UPDATE "TrackerTime" SET dayofyear = $1, totaltime = $2 WHERE trackerid=$3',
-      [req.body.dayofyear, req.body.totaltime, req.params.id]
-    )
+  await TrackerTime.update({dayofyear: req.body.dayofyear, totaltime: req.body.totaltime}, 
+    {where: {trackerid: req.params.id}})
     .then((response) => {
-      res.status(200).send(`Updated ${response.rowCount} rows`);
+      res.status(200).send(`Updated ${response.length} rows`);
     })
     .catch((err) => {
       res.status(404).send(err);
