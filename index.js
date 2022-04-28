@@ -31,8 +31,12 @@ app.use('/user/', userRouter);
 const timeRouter = require('./routes/time');
 app.use('/time/', timeRouter);
 
+app.use(express.static('views'));
+
+const path = require('path');
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.sendFile(path.join(__dirname, '/views/html/tracker_page.html'));
 });
+
 
 app.listen(port, () => console.log(`Running on ${port}!`));

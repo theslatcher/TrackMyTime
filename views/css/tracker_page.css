@@ -169,6 +169,17 @@ button{
   display: block;
 }
 
+.graph-container {
+    max-width: 45vw; 
+    min-width: 350px; 
+    margin:auto;
+  }
+  
+  .graph-canvas {
+    margin-top: 50px;
+  }
+  
+
 
 @media screen  and (min-width: 600px) { 
     button{ width: 90px;
