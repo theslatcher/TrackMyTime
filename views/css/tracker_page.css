@@ -168,8 +168,7 @@ button{
 }
 
 .graph-container {
-    max-width: 45vw; 
-    min-width: 350px; 
+    max-width: 40rem;
     margin:auto;
 }
   
