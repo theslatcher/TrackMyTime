@@ -50,7 +50,6 @@ signUpForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(signUpUser),
     })
-    .then(res => res.json())
     .then(data => {
         console.log('Success:', data);
       })
@@ -74,7 +73,6 @@ loginForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(loginUser),
     })
-    .then(res => res.json())
     .then(data => {
         console.log('Success:', data);
       })
