@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const TrackerTask = require("../models/trackerTask")
 
-router.post("/task", async (req, res) => {
+router.post("/", async (req, res) => {
     req.body.currenttime = 0;
     await TrackerTask.create(req.body).then(response => {
         res.status(200)
@@ -13,7 +13,7 @@ router.post("/task", async (req, res) => {
     })
 })
 
-router.delete("/task", async (req, res) => {
+router.delete("/", async (req, res) => {
     await TrackerTask.destroy({where: {name: req.body.name}}).then(response => {
         res.status(200)
         res.send("Success!")
@@ -23,7 +23,7 @@ router.delete("/task", async (req, res) => {
     })
 })
 
-router.get("/task", async (req, res) => {
+router.get("/", async (req, res) => {
     await TrackerTask.findAll().then(response => {
         res.status(200)
         res.send(response)
@@ -33,7 +33,7 @@ router.get("/task", async (req, res) => {
     })
 })
 
-router.get("/task/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     await TrackerTask.findOne({where: {trackerid: req.params.id}}).then(response => {
         res.status(200)
         res.send(response)
@@ -43,12 +43,19 @@ router.get("/task/:id", async (req, res) => {
     })
 })
 
-router.put("/task/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     await TrackerTask.update({name: req.body.name, color: req.body.color, goal: req.body.goal},
         {where: {trackerid: req.params.id}}).then(response => {
         res.status(200)
         res.send("Success!")
     })
+})
+
+router.get("/user/:username", async (req, res) => {
+    await TrackerTask.findAll({where: {username: req.params.username}}).then(response => {
+        res.status(200)
+        res.send(response)
+    }).catch(err => console.log(err))
 })
 
 

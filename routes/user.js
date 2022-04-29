@@ -90,4 +90,28 @@ router.get('/signout', async (req, res) => {
 	res.redirect('/');
 });
 
+router.get('/', async (req, res) => {
+	await User.findAll().then(response => {
+		res.status(200)
+		res.send(response)
+	})
+})
+
+router.get('/:username', async (req, res) => {
+	await User.findOne({where: {username: req.params.username}}).then(response => {
+		res.status(200)
+		res.send(response)
+	})
+})
+
+router.delete('/:username', async (req, res) => {
+	await User.destroy({where: {username: req.params.username}}).then(response => {
+		res.status(200)
+		res.send({message: "Success!"})
+	}).catch(err => {
+		res.status(404)
+		res.send({error: err})
+	})
+})
+
 module.exports = router;

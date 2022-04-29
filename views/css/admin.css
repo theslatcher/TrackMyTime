@@ -1,0 +1,51 @@
+body{
+    background-color: grey;
+    color: white;
+}
+
+#main-div{
+    text-align: center;
+}
+
+#Users, #Stats{
+    margin-left: 27.5%;
+    margin-top: 2.5%;
+    float: left;
+}
+
+#Stats{
+    margin-left: 10%;
+    display: none;
+}
+
+td, tr{
+    background-color: lightgrey;
+    color: black;
+    border-collapse: collapse;
+}
+
+#userTable tr:hover td {
+    background: grey;
+    color: white;
+}
+
+th:hover{
+    background-color: rgb(90, 90, 90);
+}
+
+td, th{
+    text-align: center;
+    width: 25%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+table{
+    border-spacing: 0px;
+    border: 2px black solid
+}
+
+th{
+    background-color: grey;
+    color: white;
+}
