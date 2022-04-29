@@ -43,7 +43,7 @@ signUpForm.addEventListener('submit', (e) => {
         email: signUpEmail.value
     };
 
-    fetch ('/signup', {
+    fetch ('/user/signup', {
         method: 'POST',
         headers: {
             "Content-Type": 'application/json',
@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', (e) => {
         password: loginPassword.value
     };
 
-    fetch ('/login', {
+    fetch ('/user/login', {
         method: 'POST',
         credentials: 'include',
         headers: {
