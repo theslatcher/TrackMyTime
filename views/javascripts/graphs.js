@@ -42,7 +42,7 @@ function createPie(d, i, title) {
     datasets: [
       {
         label: "Summarization of total time in every ",
-        borderColor: 'var(--color-background)', // line color
+        borderColor: d.colors, // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets
       },
@@ -66,10 +66,9 @@ function createPie(d, i, title) {
         title: {
           display: true,
           text: title,
-          color: 'var(--font-color)',
+          color: '#d3d1d1',
           font: {
             size: 18,
-            family: "'Inter', sans-serif",
           },
         },
       },
