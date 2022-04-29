@@ -9,7 +9,7 @@ const userData = "testuser";
 
 function fetchTrackerTask(user) {
   return new Promise((resolve, reject) => {
-    fetch(`http://localhost:3000/task/user/${user}`)
+    fetch(`/task/user/${user}`)
       .then(res => res.json())
       .then(data => {
         resolve(data);
