@@ -1,10 +1,10 @@
 const express = require("express")
 const router = express.Router()
-const db = require("../db")
+const TrackerTask = require("../models/trackerTask")
 
-router.post("/task", async (req, res) => {
-    await db.query('INSERT INTO "TrackerTask"(name, color, goal, currenttime, username) VALUES($1, $2, $3, 0, $4);', 
-    [req.body.name, req.body.color, req.body.goal, req.body.username]).then(response => {
+router.post("/", async (req, res) => {
+    req.body.currenttime = 0;
+    await TrackerTask.create(req.body).then(response => {
         res.status(200)
         res.send("Success!")
     }).catch(err => {
@@ -13,8 +13,8 @@ router.post("/task", async (req, res) => {
     })
 })
 
-router.delete("/task", async (req, res) => {
-    await db.query('DELETE FROM "TrackerTask" WHERE name=$1', [req.body.name]).then(response => {
+router.delete("/", async (req, res) => {
+    await TrackerTask.destroy({where: {name: req.body.name}}).then(response => {
         res.status(200)
         res.send("Success!")
     }).catch(err => {
@@ -23,32 +23,39 @@ router.delete("/task", async (req, res) => {
     })
 })
 
-router.get("/task", async (req, res) => {
-    await db.query('SELECT * FROM "TrackerTask"').then(response => {
+router.get("/", async (req, res) => {
+    await TrackerTask.findAll().then(response => {
         res.status(200)
-        res.send(response.rows)
+        res.send(response)
     }).catch(err => {
         res.status(404)
         res.send({err: err.detail})
     })
 })
 
-router.get("/task/:id", async (req, res) => {
-    await db.query('SELECT * FROM "TrackerTask" WHERE trackerid=$1', [req.params.id]).then(response => {
+router.get("/:id", async (req, res) => {
+    await TrackerTask.findOne({where: {trackerid: req.params.id}}).then(response => {
         res.status(200)
-        res.send(response.rows)
+        res.send(response)
     }).catch(err => {
         res.status(404)
         res.status({err: err.detail})
     })
 })
 
-router.put("/task/:id", async (req, res) => {
-    await db.query('UPDATE "TrackerTask" SET name = $1, color = $2, goal = $3 WHERE trackerid=$4', 
-    [req.body.name, req.body.color, req.body.goal, req.params.id]).then(response => {
+router.put("/:id", async (req, res) => {
+    await TrackerTask.update({name: req.body.name, color: req.body.color, goal: req.body.goal},
+        {where: {trackerid: req.params.id}}).then(response => {
         res.status(200)
         res.send("Success!")
     })
+})
+
+router.get("/user/:username", async (req, res) => {
+    await TrackerTask.findAll({where: {username: req.params.username}}).then(response => {
+        res.status(200)
+        res.send(response)
+    }).catch(err => console.log(err))
 })
 
 
