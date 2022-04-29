@@ -36,13 +36,13 @@ function formatData(data) {
   };
 }
 
-function createPie(d, i) {
+function createPie(d, i, title) {
   const data = {
     labels: d.labels,
     datasets: [
       {
         label: "Summarization of total time in every ",
-        borderColor: d.colors, // line color
+        borderColor: 'var(--color-background)', // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets
       },
@@ -54,11 +54,6 @@ function createPie(d, i) {
     data: data,
     options: {
       responsive: true,
-      title: {
-        display: true,
-        text: "jdfhgkjdfhgjkdf",
-        color: "#fff"
-      },
       tooltips: {
         mode: "index",
         intersect: false,
@@ -67,21 +62,26 @@ function createPie(d, i) {
         mode: "nearest",
         intersect: true,
       },
+      plugins: {
+        title: {
+          display: true,
+          text: title,
+          color: 'var(--font-color)',
+          font: {
+            size: 18,
+            family: "'Inter', sans-serif",
+          },
+        },
+      },
     },
   };
-  console.log("done!");
   const myChart = new Chart(document.getElementById("chart-pie" + i), config);
 }
 
-var totalData = fetchTrackerTask(userData)
-totalData = totalData.then(data => {
+fetchTrackerTask(userData).then(data => {
   return formatData(data);
-});
-console.log(totalData);
-
-//wait for the promise to resolve
-totalData.then(data => {
-  createPie(data, 1);
+}).then(data => {
+  createPie(data, 1, "Summarization of total time in every task");
 });
 
 document.getElementById("graph-container").innerHTML = '<canvas id="chart-pie1" class="graph-canvas"></canvas>';
