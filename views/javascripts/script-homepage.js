@@ -43,7 +43,7 @@ signUpForm.addEventListener('submit', (e) => {
         email: signUpEmail.value
     };
 
-    fetch ('/signup', {
+    fetch ('/user/signup', {
         method: 'POST',
         headers: {
             "Content-Type": 'application/json',
@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', (e) => {
         password: loginPassword.value
     };
 
-    fetch ('/login', {
+    fetch ('/user/login', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -74,9 +74,9 @@ loginForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(loginUser),
     })
-    .then(res => res.json())
     .then(data => {
-        console.log('Success:', data);
+        if(data.redirected)
+            window.location.href = data.url;
       })
     .catch((error) => {
         console.error('Error:', error);

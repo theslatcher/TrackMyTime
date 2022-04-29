@@ -3,6 +3,7 @@ const userTable = document.getElementById("userTable")
 const statTable = document.getElementById("statTable")
 const statDiv = document.getElementById("Stats")
 var sorted = "Descending"
+var sortedBy = "username"
 
 async function fetchTasks(username){
     return fetch("http://localhost:3000/task/user/" + username, {
@@ -33,9 +34,9 @@ async function fetchUsers(){
 function buildUserTable(info){
     userTable.innerHTML = `<thead>
         <tr>
-            <th onclick="javascript:sortTable('username')"> Username </th>
-            <th onclick="javascript:sortTable('first_name')"> First Name </th>
-            <th onclick="javascript:sortTable('last_name')"> Last Name </th>
+            <th onclick="javascript:sortTable('username', 'Users')"> Username </th>
+            <th onclick="javascript:sortTable('first_name', 'Users')"> First Name </th>
+            <th onclick="javascript:sortTable('last_name', 'Users')"> Last Name </th>
         </tr>
         </thead>`
     for(user of info){
@@ -49,16 +50,15 @@ function buildUserTable(info){
     }
 }
 
-async function getSpecific(username){
-    const info = await fetchTasks(username)
+function buildTaskTable(info, username){
     var current = 0
     var totalGoal = 0
 
     statTable.innerHTML = `
     <tr>
-        <th> Name </th>
-        <th> Current Time </th>
-        <th> Goal </th>
+        <th onclick="javascript:sortTable('name', 'Tasks', '` + username + `')"> Name </th>
+        <th onclick="javascript:sortTable('currenttime', 'Tasks', '` + username + `')"> Current Time </th>
+        <th onclick="javascript:sortTable('goal', 'Tasks', '` + username + `')"> Goal </th>
     </tr>
     `
 
@@ -85,28 +85,51 @@ async function getSpecific(username){
     statDiv.style.display = "block"
 }
 
-async function sortTable(sortBy){
-    var info = await fetchUsers()
-    if(sorted == "Ascending"){
+async function getUsers(){
+    const info = await fetchUsers()
+    buildUserTable(info)
+}
+
+async function getSpecific(username){
+    const info = await fetchTasks(username)
+    buildTaskTable(info, username)
+}
+
+async function sortTable(sortBy, Type, optional){
+    var info
+    if(Type == "Users"){
+        info = await fetchUsers()
+    }else{
+        info = await fetchTasks(optional)
+    }
+    
+    if(sorted == "Ascending" && sortBy == sortedBy){
         sorted = "Descending"
         info.sort((a, b) => {
-            if(!a[sortBy] || !b[sortBy]){
-                return b
-            }else{
+            if(isNaN(a[sortBy])){
                 return b[sortBy].localeCompare(a[sortBy])
+            }else{
+                return b[sortBy]-a[sortBy]
             }
         })
     }else{
         sorted = "Ascending"
         info.sort((a, b) => {
-            if(!a[sortBy] || !b[sortBy]){
-                return a
-            }else{
+            if(isNaN(a[sortBy])){
                 return a[sortBy].localeCompare(b[sortBy])
+            }else{
+                return a[sortBy]-b[sortBy]
             }
         })
     }
-    buildUserTable(info)
+
+    sortedBy = sortBy
+    if(Type == "Users"){
+        buildUserTable(info)
+    }else{
+        buildTaskTable(info, optional)
+    }
+    
 }
 
-sortTable("username")
+getUsers()
