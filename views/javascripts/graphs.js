@@ -7,15 +7,44 @@ const testData = {
 const userData = "testuser";
 
 
-function createPie(i) {
+function fetchTrackerTask(user) {
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost:3000/task/user/${user}`)
+      .then(res => res.json())
+      .then(data => {
+        resolve(data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+function formatData(data) {
+  let labels = [];
+  let datasets = [];
+  let colors = [];
+  data.forEach(task => {
+    labels.push(task.name);
+    datasets.push(task.currenttime);
+    colors.push(task.color);
+  });
+  return {
+    labels: labels,
+    datasets: datasets,
+    colors: colors
+  };
+}
+
+function createPie(d, i) {
   const data = {
-    labels: testData.labels,
+    labels: d.labels,
     datasets: [
       {
         label: "Summarization of total time in every ",
-        borderColor: testData.colors, // line color
-        backgroundColor: testData.colors, // fill color
-        data: testData.datasets
+        borderColor: d.colors, // line color
+        backgroundColor: d.colors, // fill color
+        data: d.datasets
       },
     ],
   };
@@ -40,9 +69,19 @@ function createPie(i) {
       },
     },
   };
-  
+  console.log("done!");
   const myChart = new Chart(document.getElementById("chart-pie" + i), config);
 }
 
+var totalData = fetchTrackerTask(userData)
+totalData = totalData.then(data => {
+  return formatData(data);
+});
+console.log(totalData);
+
+//wait for the promise to resolve
+totalData.then(data => {
+  createPie(data, 1);
+});
+
 document.getElementById("graph-container").innerHTML = '<canvas id="chart-pie1" class="graph-canvas"></canvas>';
-createPie(1);
