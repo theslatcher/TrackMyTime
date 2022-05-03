@@ -47,7 +47,7 @@ body{
 .card *{
     margin: 1rem 0rem 1rem 2rem;
     white-space: nowrap; 
-  font-size: 3rem;
+    font-size: 3rem;
 
 }
 .card h2{
@@ -135,17 +135,23 @@ input{
     outline: 0;
     
 }
-.form_element{
-    margin: 0;
-    display: flex;
-    justify-content: space-between;
+
+.form_text{
+    grid-row: 2;
 }
-.form_element *{
-    margin:0 1rem;
+.form_number{
+    grid-row: 3;
+    font-size: 1rem;
+}
+.form_color{
+    grid-row: 4;
 }
 .form_title{
-    margin: 0;
     text-align: center;
+}
+.form_buttons{
+    grid-row: 5;
+    grid-column:1 ;
 }
 .form_button{
     height: 40px;

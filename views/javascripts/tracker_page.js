@@ -153,26 +153,15 @@ function trackerButtons_template() {
 
 function form_template() {
     return (`
-    <form action="" class="card" style=" border: 3px solid var(--font-color)">
-                <div class="form_title">
+    <form class="card" style=" border: 3px solid var(--font-color)">
                     <h2>Create New</h2>
-                    
-                </div>
-                <div class="form_element">
-                    <label for="">name</label>
-                    <input type="text">
-                </div>
 
-                <div class="form_element">
-                    <label for="">goal</label>
-                    <input type="number">
-                </div>
-                <div class="form_element">
-                    <label for="">color</label>
-                    <input type="color">
+                    <input class = "form_text"type="text">
 
-                </div>
-                <div class="form_element">
+                    <input class = "form_number" type="number">
+                    <input class = "form_color" type="color">
+
+                <div class="form_buttons">
                     <button class="negative form_button" type="button" onclick="load_trackers()" >x</button>
                     <button class="possetive form_button" type="button">(y)</button>
                     </div>
