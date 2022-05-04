@@ -36,6 +36,9 @@ DB_Connection = postgres://username:password@example.com/database
 Insert a secret for the session
 SessionSecret = "secret"
 
+Insert a secret for jasonwebtoken
+JWTSecret = "hi";
+
 ```
 
 ## Running
