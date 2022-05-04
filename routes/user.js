@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const User = require('../models/user');
 const db = require('../db');
 const req = require('express/lib/request');
+const jwt = require("jsonwebtoken");
 
 async function hashPassword(password) {
 	return new Promise( (resolve, reject) => {
@@ -45,7 +46,8 @@ passport.use(new LocalStrategy((username, password, done) => {
 		validPassword = await verifyPassword(response.password, password);
 
 		if (validPassword)
-			return done(null, response);
+			return done(null, {username: response.username, first_name: response.first_name,
+						last_name: response.last_name, email: response.email});
 		else
 			return done(null, false, {message: 'Incorrect username or password.'});
     })
@@ -59,7 +61,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-	User.findOne({where: {username: user.username}})
+	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where: {username: user.username}})
 	.then(response => {
         return done(null, response);
     })
@@ -83,11 +85,13 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {
+	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
 	res.redirect('/');
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
+	res.clearCookie("user_details");
 	res.redirect('/');
 });
 
