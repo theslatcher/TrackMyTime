@@ -2,6 +2,11 @@ const DataTypes = require('sequelize').DataTypes;
 const sequelize = require('../db').db;
 
 var User = sequelize.define('User', {
+	userId: {
+		type: DataTypes.INTEGER,
+		autoIncrement: true,
+		primaryKey: true
+	},
 	username: {
 		type: DataTypes.STRING,
 		primaryKey: true
@@ -35,7 +40,14 @@ var User = sequelize.define('User', {
 },
 {
 	timestamps: false,
-    freezeTableName: true
+    freezeTableName: true,
+	indexes: [
+		{
+		  unique: true, 
+		  name: 'unique_username',  
+		  fields: [sequelize.fn('lower', sequelize.col('username'))]
+		}
+	]
 });
 
 User.removeAttribute('id');
