@@ -8,7 +8,7 @@ body{
 }
 
 #Users, #Stats{
-    margin-left: 27.5%;
+    margin-left: 5%;
     margin-top: 2.5%;
     float: left;
 }
@@ -24,18 +24,29 @@ td, tr{
     border-collapse: collapse;
 }
 
-#userTable tr:hover td {
-    background: grey;
+.userEdit:hover{
+    background-color: grey;
     color: white;
     cursor: pointer;
 }
 
+#userTable .userInfo:hover ~ .userInfo, .userInfo:hover{
+    cursor: pointer;
+    background-color: grey;
+    color: white;
+}
+
 th:hover{
-    background-color: rgb(90, 90, 90);
+    background-color: rgb(70, 70, 70);
     cursor: pointer;
 }
 
-td, th{
+.userEdit{
+    text-align: center;
+    width: 5%;
+}
+
+.userInfo{
     text-align: center;
     width: 25%;
     padding-top: 5px;
