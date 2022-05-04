@@ -170,6 +170,7 @@ button{
 .graph-container {
     max-width: 40rem;
     margin:auto;
+    padding-bottom: 100px;
 }
   
 .graph-canvas {
