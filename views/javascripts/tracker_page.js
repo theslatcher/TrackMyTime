@@ -1,15 +1,25 @@
 const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
-const username = "testuser9"
+
+const user = () => {
+    return (JSON.parse(atob(document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user_details='))
+        .split('=')[1]
+        .split('.')[1]
+        .replace('-', '+')
+        .replace('_', '/'))));
+}
 
 const load_trackers = async () => {
+    const username = user().user.username;
     document.getElementById('trackers').innerHTML = ""
     document.getElementById('trackers').innerHTML += trackerButtons_template()
-    const res = await fetch('http://localhost:3000/task')
+    const res = await fetch('http://localhost:3000/task/user/' + username)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
         document.getElementById("cards").innerHTML += card_template(trackers[index])
-        var opt = document.createElement('option');
+        const opt = document.createElement('option');
         opt.value = trackers[index].trackerid;
         opt.innerHTML = trackers[index].name;
         document.getElementById("cars").appendChild(opt);
@@ -20,6 +30,7 @@ const create_tracker = async () => {
 
     //todo validate?
 
+    const username = user().user.username;
 
     const response = await fetch("http://localhost:3000/task", {
         headers: {
@@ -43,13 +54,15 @@ const create_tracker = async () => {
 }
 
 
-const delete_tracker = async (btton) => {
+const delete_tracker = async () => {
     console.log(document.getElementById("cars").value
     );
 }
 
 
 function profile_template() {
+    const user1 = user().user;
+    console.log(user1);
     return (`<h1>Profile page</h1>
             <form id="profile-form">
                 <div class="form-group">
@@ -58,7 +71,7 @@ function profile_template() {
                         type="text"
                         name="username"
                         id="username"
-                        placeholder="Username"
+                        placeholder="${user1.username}"
                         />
                     <div class="error"></div>
                 </div>
@@ -68,7 +81,7 @@ function profile_template() {
                         type="text"
                         name="firstName"
                         id="firstName"
-                        placeholder="First name"
+                        placeholder="${user1.first_name}"
                         />
                     <div class="error"></div>
                 </div>
@@ -78,7 +91,7 @@ function profile_template() {
                         type="text"
                         name="lastName"
                         id="lastName"
-                        placeholder="Last name"
+                        placeholder="${user1.last_name}"
                         />
                     <div class="error"></div>
                 </div>
@@ -88,7 +101,7 @@ function profile_template() {
                         type="email"
                         name="Email"
                         id="email"
-                        placeholder="name@something.com"
+                        placeholder="${user1.email}"
                         />
                     <div class="error"></div>
                 </div>
