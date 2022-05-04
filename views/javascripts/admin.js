@@ -123,9 +123,11 @@ async function saveUser(username){
            "Content-Type": "application/json"
         },
         body: JSON.stringify(savedUser)
+    }).then(response => {
+        console.log(response)
     })
 
-    sortTable("username", "Users")
+    updateTable()
 }
 
 async function deleteUser(username){
@@ -149,7 +151,7 @@ async function deleteUser(username){
             "Content-Type": "application/json"
         }
     }).then(response => {
-        console.log(response);
+        updateTable()
     })
 }
 
@@ -190,5 +192,52 @@ async function sortTable(sortBy, Type, username){
     }
     
 }
+
+async function updateTable(){
+    const info = await fetchUsers()
+
+    if(sorted == "Ascending"){
+        info.sort((a, b) => {
+            if(isNaN(a[sortedBy])){
+                return a[sortedBy].localeCompare(b[sortedBy])
+            }else{
+                return a[sortedBy]-b[sortedBy]
+            }
+        })
+    }else{
+        info.sort((b, a) => {
+            if(isNaN(a[sortedBy])){
+                return a[sortedBy].localeCompare(b[sortedBy])
+            }else{
+                return a[sortedBy]-b[sortedBy]
+            }
+        })
+    }
+
+    buildUserTable(info)
+}
+
+function changeStyle(){
+    const current = localStorage.getItem('theme');
+    switch (current) {
+        case "theme-dark":
+            localStorage.setItem('theme', "theme-light")
+            break
+        case "theme-light":
+            localStorage.setItem('theme', "theme-dark")
+            break
+        default:
+            localStorage.setItem('theme', "theme-dark")
+            break
+
+    }
+    document.body.removeAttribute("class")
+    document.body.classList.add(localStorage.getItem('theme'))
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem('theme')) theme_switch()
+    document.body.classList.add(localStorage.getItem('theme'))
+})
 
 getUsers()

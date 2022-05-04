@@ -4,7 +4,7 @@ body{
     font-family: 'Inter', sans-serif;
 }
 
-#homeButton{
+button{
     margin-left: 1rem;
     margin-top: 2rem;
     padding: 0.5rem;
@@ -92,6 +92,7 @@ td, tr{
 table{
     border-spacing: 0px;
     box-shadow: var(--shadows);
+    border: 1px var(--font-color) solid;
 }
 
 th{
