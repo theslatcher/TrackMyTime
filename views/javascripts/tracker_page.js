@@ -1,20 +1,52 @@
 const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
-const username = "test8"
+const username = "testuser9"
 
 const load_trackers = async () => {
     document.getElementById('trackers').innerHTML = ""
     document.getElementById('trackers').innerHTML += trackerButtons_template()
     const res = await fetch('http://localhost:3000/task')
     const trackers = await res.json()
-    console.log(trackers);
     for (let index = 0; index < trackers.length; index++) {
         document.getElementById("cards").innerHTML += card_template(trackers[index])
+        var opt = document.createElement('option');
+        opt.value = trackers[index].trackerid;
+        opt.innerHTML = trackers[index].name;
+        document.getElementById("cars").appendChild(opt);
     }
+}
+
+const create_tracker = async () => {
+
+    //todo validate?
+
+
+    const response = await fetch("http://localhost:3000/task", {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            "name": document.getElementById('create_new_card').children[0].value,
+            "goal": document.getElementById('create_new_card').children[1].value,
+            "color": document.getElementById('create_new_card').children[2].value,
+            "username": username
+        })
+    }
+    )
+
+    load_trackers()
+
 
 
 }
 
+
+const delete_tracker = async (btton) => {
+    console.log(document.getElementById("cars").value
+    );
+}
 
 
 function profile_template() {
@@ -80,15 +112,10 @@ function profile_template() {
 `)
 }
 
-async function test(button) {
-
-
-
-
-    const h = button.parentElement.children[4].firstElementChild.value
-    const min = button.parentElement.children[4].lastElementChild.value / 60
+async function add_new_time(button) {
+    const h = button.parentElement.children[3].value
+    const min = button.parentElement.children[5].value / 60
     const time = Number(h) + Number(min)
-
     const response = await fetch("http://localhost:3000/time", {
         headers: {
             'Accept': 'application/json',
@@ -102,25 +129,34 @@ async function test(button) {
         })
     }
     )
-    console.log(response);
+    load_trackers()
+}
+
+function card_form_toggle(button) {
+    button.parentElement.children[3].classList.toggle("card-hidden");
+    button.parentElement.children[5].classList.toggle("card-hidden");
+    button.parentElement.children[7].classList.toggle("card-hidden");
 }
 
 function card_template(tracker) {
     const h = Math.floor(tracker.currenttime)
-    const min = (tracker.currenttime - h) * 60
+    let min = (tracker.currenttime - h) * 60
+    if (min == 0) min = ""
+    else min += "m"
     return (`
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
                 <h2 > ${tracker.name}</h2>
-                <button class = "card-button" style="${"color:" + tracker.color}" onclick="test(this)" >+</button>
+                <button class = "card-button" style="${"color:" + tracker.color}" onclick="card_form_toggle(this)" >+</button>
                 <h1 class="">${h + "h"}</h1>
-                <h1 class="">${min + "m"}</h1>
                 
-                 <div class="card-current">
-                <input class="card-input" type="number" min="1" max="99">
-                <input class="card-input" type="number" min="1" max="59">
-                 </div>
+                <input class="form-input card-hidden" type="number" min="1" max="99">
+                <h1 class="">${min}</h1>
+
+                <input class="form-input card-hidden" type="number" min="1" max="59">
+
                 <h2 class = "card-goal">${"Goal is " + tracker.goal}</h2>
+                <button class = "card-button card-hidden" style="${"color:" + tracker.color}" onclick="add_new_time(this)" >=</button>
             </div>
     `)
 
@@ -139,7 +175,13 @@ function trackerButtons_template() {
 
 
         <div class="add-remove-tracker">
-            <button class="negative">Delete</button>
+            <div class="delete add-remove-tracker">
+                <select class="" id="cars">
+                    
+                </select>
+            <button class="negative" onclick="delete_tracker()">Delete</button>
+                    </div>
+
             <button onclick="add_card()" id="bAdd" class="possetive">Add</button>
         </div>
     </div>
@@ -153,27 +195,19 @@ function trackerButtons_template() {
 
 function form_template() {
     return (`
-    <form class="card" style=" border: 3px solid var(--font-color)">
-                    <h2>Create New</h2>
-
-                    <input class = "form_text"type="text">
-
-                    <input class = "form_number" type="number">
+    <form id="create_new_card" class="card" style=" border: 3px solid var(--font-color)">
+                    <input class = "form_text"type="text" placeholder="Name">
+                    <input class = "form_number" type="number" placeholder="0">
                     <input class = "form_color" type="color">
-
-                <div class="form_buttons">
                     <button class="negative form_button" type="button" onclick="load_trackers()" >x</button>
-                    <button class="possetive form_button" type="button">(y)</button>
-                    </div>
+                    <button class="possetive form_button" type="button" onclick="create_tracker()" >(y)</button>
 
             </form>`)
 }
 
 
 function theme_switch() {
-
     const current = localStorage.getItem('theme');
-    console.log(current);
     switch (current) {
         case "theme-dark":
             localStorage.setItem('theme', "theme-light")
@@ -218,8 +252,8 @@ tabs.forEach(tab => {
 })
 
 function add_card() {
-    document.getElementById("cards").innerHTML = form_template() + document.getElementById("cards").innerHTML
-
+    if (!document.getElementById("create_new_card"))
+        document.getElementById("cards").innerHTML = form_template() + document.getElementById("cards").innerHTML
 
 }
 
@@ -233,7 +267,7 @@ function filterButton(button) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const theme = localStorage.getItem('theme')
-    if (!theme) theme_switch()
-    else document.body.classList.add(theme)
+    if (!localStorage.getItem('theme')) theme_switch()
+    document.body.classList.add(localStorage.getItem('theme'))
     load_trackers()
 })
