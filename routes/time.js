@@ -13,13 +13,16 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  await TrackerTime.findOne({where: {trackerid: req.params.id}})
+  await TrackerTime.findAll({ where: { trackerid: req.params.id } })
     .then((response) => {
-      res.status(200).send(response);
+      // sort by date
+      response.sort((b, a) => {
+        return new Date(a.dayofyear) - new Date(b.dayofyear);
+      });
+      res.status(200);
+      res.send(response);
     })
-    .catch((err) => {
-      res.status(404).send(err);
-    });
+    .catch((err) => console.log(err));
 });
 
 router.post("/", async (req, res) => {
