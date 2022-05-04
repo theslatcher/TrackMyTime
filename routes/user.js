@@ -74,7 +74,7 @@ router.post('/signup', async (req, res) => {
 	if (req.body.password)
 			req.body.password = await hashPassword(req.body.password);
 
-	await User.create(req.body)
+	User.create(req.body)
 		.then(response => {
 			res.status(200).json({message: 'Success!'});
 		})
@@ -96,29 +96,32 @@ router.get('/signout', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-	await User.findAll().then(response => {
-		res.status(200)
-		res.send(response)
-	})
-})
+	//MW: Should all info be included?
+	User.findAll({attributes: ['username', 'first_name', 'last_name', 'email']})
+		.then(response => {
+			res.status(200).send(response);
+		});
+});
 
 router.get('/:username', async (req, res) => {
-	await User.findOne({where: {username: req.params.username}}).then(response => {
-		res.status(200)
-		res.send(response)
-	})
-})
+	//MW: Only admin, and the user itself, should be able to get this info.
+	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where: {username: req.params.username}})
+		.then(response => {
+			res.status(200).send(response);
+		});
+});
 
 router.delete('/:username', async (req, res) => {
-	const test = await User.destroy({where: {username: req.params.username}}).then(response => {
-		console.log(response);
-		res.status(200)
-		res.send({message: "Success!"})
-	}).catch(err => {
-		res.status(404)
-		res.send({error: err})
-	})
-})
+	//MW: Should check to see if the correct user is sending the request.
+	User.destroy({where: {username: req.params.username}})
+		.then(response => {
+			console.log(JSON.stringify(response));
+			res.status(200).send({message: "Success!"});
+		}).catch(err => {
+			console.log(err);
+			res.status(404).send({error: err});
+		});
+});
 
 router.put('/:username', async (req, res) => {
 	await User.update({username: req.body.username, first_name: req.body.first_name, last_name: req.body.last_name}, 

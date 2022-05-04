@@ -51,6 +51,13 @@ router.put("/:id", async (req, res) => {
     })
 })
 
+router.delete("/user/:username", async (req, res) => {
+	//MW: Should check to see if the correct user is sending the request.
+    TrackerTask.destroy({where: {username: req.params.username}}).then(response => {
+		res.sendStatus(200, response)
+    }).catch(err => console.log(err))
+})
+
 router.get("/user/:username", async (req, res) => {
     await TrackerTask.findAll({where: {username: req.params.username}}).then(response => {
         res.status(200)

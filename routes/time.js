@@ -1,4 +1,6 @@
+const TrackerTask = require('../models/trackerTask');
 const TrackerTime = require('../models/trackerTime');
+const { Op } = require("sequelize");
 const express = require("express");
 const router = express.Router();
 
@@ -42,6 +44,25 @@ router.delete("/", async (req, res) => {
     .catch((err) => {
       res.status(409).send(err);
     });
+});
+
+router.delete("/user/:username", async (req, res) => {
+	//MW: Should check to see if the correct user is sending the request.
+	await TrackerTask.findAll({attributes: ['trackerid'], where: {username: req.params.username}})
+		.then(async (response) => {
+			const trackerids = response.map(elem => elem.trackerid);
+			await TrackerTime.destroy({where: {trackerid: {[Op.or]: trackerids}}})
+				.then((deletedElems) => {
+					res.status(200).send(`Deleted ${deletedElems} rows`);
+				})
+				.catch((err) => {
+					res.status(409).send(err);
+				});
+				
+		})
+		.catch((err) => {
+			res.status(409).send(err);
+		});    
 });
 
 router.put("/:id", async (req, res) => {
