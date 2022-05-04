@@ -34,9 +34,11 @@ async function fetchUsers(){
 function buildUserTable(info){
     userTable.innerHTML = `<thead>
         <tr class="userInfo">
-            <th onclick="javascript:sortTable('username', 'Users')"> Username </th>
-            <th onclick="javascript:sortTable('first_name', 'Users')"> First Name </th>
-            <th onclick="javascript:sortTable('last_name', 'Users')"> Last Name </th>
+            <th class="userHeader" onclick="javascript:sortTable('username', 'Users')"> Username </th>
+            <th class="userHeader" onclick="javascript:sortTable('first_name', 'Users')"> First Name </th>
+            <th class="userHeader" onclick="javascript:sortTable('last_name', 'Users')"> Last Name </th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>`
     for(user of info){
@@ -58,9 +60,9 @@ function buildTaskTable(info, username){
 
     statTable.innerHTML = `
     <tr>
-        <th onclick="javascript:sortTable('name', 'Tasks', '` + username + `')"> Name </th>
-        <th onclick="javascript:sortTable('currenttime', 'Tasks', '` + username + `')"> Current Time </th>
-        <th onclick="javascript:sortTable('goal', 'Tasks', '` + username + `')"> Goal </th>
+        <th class="taskHeader" onclick="javascript:sortTable('name', 'Tasks', '` + username + `')"> Name </th>
+        <th class="taskHeader" onclick="javascript:sortTable('currenttime', 'Tasks', '` + username + `')"> Current Time </th>
+        <th class="taskHeader" onclick="javascript:sortTable('goal', 'Tasks', '` + username + `')"> Goal </th>
     </tr>
     `
 
@@ -69,18 +71,18 @@ function buildTaskTable(info, username){
         totalGoal += task.goal
         statTable.insertAdjacentHTML("beforeend", `
         <tr>
-            <td>` + task.name + `</td>
-            <td>` + task.currenttime + `h</td>
-            <td>` + task.goal + `h</td>
+            <td class="taskColumn">` + task.name + `</td>
+            <td class="taskColumn">` + task.currenttime + `h</td>
+            <td class="taskColumn">` + task.goal + `h</td>
         </tr>    
         `)
     }
 
     statTable.insertAdjacentHTML("beforeend", `
     <tr>
-        <td style="font-weight: bold"> Total </td>
-        <td style="font-weight: bold"> `+ current +`h </td>
-        <td style="font-weight: bold"> ` + totalGoal + `h </td>
+        <td class="taskColumn" style="font-weight: bold"> Total </td>
+        <td class="taskColumn" style="font-weight: bold"> `+ current +`h </td>
+        <td class="taskColumn" style="font-weight: bold"> ` + totalGoal + `h </td>
     </tr>
         `)
 
@@ -127,7 +129,20 @@ async function saveUser(username){
 }
 
 async function deleteUser(username){
-    console.log(username);
+    await fetch('http://localhost:3000/time/user/' + username, {
+        method: "DELETE",
+        headers:{
+            "Content-Type": "application/json"
+        }
+    })
+
+    await fetch('http://localhost:3000/task/user/' + username, {
+        method: "DELETE",
+        headers:{
+            "Content-Type": "application/json"
+        }
+    })
+
     await fetch('http://localhost:3000/user/' + username, {
         method: "DELETE",
         headers:{

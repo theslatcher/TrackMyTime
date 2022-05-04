@@ -14,6 +14,7 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
+app.use(express.static('views'));
 
 const passport = require('passport');
 app.use(require('express-session')({
@@ -38,8 +39,6 @@ app.use('/user/', userRouter);
 
 const timeRouter = require('./routes/time');
 app.use('/time/', timeRouter);
-
-app.use(express.static('views'));
 
 app.get('/', (req, res) => {
 	if (req.isAuthenticated())
