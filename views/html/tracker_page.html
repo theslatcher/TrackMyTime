@@ -5,7 +5,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../css/reset.css">
+        <link rel="stylesheet" href="../css/theme.css">
+        <link rel="stylesheet" href="../css/profile.css">
         <link rel="stylesheet" href="../css/tracker_page.css">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
@@ -14,54 +17,21 @@
             defer> </script>
         <title>TrackMyTime</title>
     </head>
-    <body class="theme-dark">
+    <body>
         <div class="nav-container">
-
             <ul>
                 <li data-tab-target="#profile">Profile</li>
                 <li data-tab-target="#trackers">Home</li>
                 <li data-tab-target="#graphs">Graphs</li>
             </ul>
-
         </div>
-
-
         <div id="profile" data-tab-content>
-            <button id="theme-switch">theme</button>
-
         </div>
-
-
-
         <div id="graphs" data-tab-content>
-
         </div>
-
         <div id="trackers" data-tab-content class="active">
 
-            <div class="button-container">
-                <div class="filter-buttons">
-                    <button id="day">Day</button>
-                    <button id="week" class="bActive">Week</button>
-                    <button id="month">Month</button>
-                    <button id="year">Year</button>
-
-                </div>
-
-
-                <div class="add-remove-tracker">
-                    <button class="negative">Delete</button>
-                    <button id="bAdd" class="possetive">Add</button>
-                </div>
-            </div>
-
-            <div id="cards" class="card-container">
-
-
-
-            </div>
         </div>
-
 
     </body>
 </html>

@@ -1,0 +1,25 @@
+
+#profile h1 {
+  background: var(--color-possetive);
+  letter-spacing: 0.1rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  color: var(--font-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--font-color);
+  outline: 0;
+}
+
+
+@media screen  and (min-width: 600px) { 
+#profile{
+    margin: 2rem;
+   
+}
+}
