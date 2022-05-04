@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const TrackerTask = require("../models/trackerTask")
+const TrackerTime = require("../models/trackerTime")
+const Sequelize = require("sequelize")
 
 router.post("/", async (req, res) => {
     req.body.currenttime = 0;
@@ -34,13 +36,19 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/:id", async (req, res) => {
-    await TrackerTask.findOne({where: {trackerid: req.params.id}}).then(response => {
-        res.status(200)
-        res.send(response)
-    }).catch(err => {
-        res.status(404)
-        res.status({err: err.detail})
-    })
+    await TrackerTask.findOne({attributes: { 
+            include: [[Sequelize.fn("SUM", Sequelize.col("TrackerTime.totaltime")), "currenttime"]] 
+        }, 
+        where: {trackerid: req.params.id}, 
+        include: { model: TrackerTime, as: 'TrackerTime', attributes: [] }, 
+        group: ['TrackerTask.trackerid']})
+        .then(response => {
+            res.status(200)
+            res.send(response)
+        }).catch(err => {
+            res.status(404)
+            res.send({err: err.detail})
+        })
 })
 
 router.put("/:id", async (req, res) => {
