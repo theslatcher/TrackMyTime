@@ -22,18 +22,16 @@
 .text-white{color:var(--clr-white);}
 .bg-purple{background:var(--clr-purple);}
 
-.tabs {
+.tabs, .list {
   display: flex;
   gap: var(--gap, 1rem);
   list-style-type: none;
-
 }
 
 .tab {
   cursor: pointer;
   padding: 10px;
 }
-
 
 .tab:hover {
   background-color: #AAA;
@@ -60,7 +58,7 @@
   font-weight:bold;
 }
 
-.primary-header{
+.primary-header, .footer{
   display: flex;
   align-items:center;
   justify-content:space-between;
@@ -87,7 +85,7 @@
 }
 
 @media (max-width: 800px) {
-  .primary-header {
+  .primary-header,.guide-container, .list {
       flex-direction: column;
       align-items: flex-start;
   }
@@ -131,29 +129,37 @@ h1 {
 .guide-container{
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-evenly;
   gap: 2rem;
   padding: 0.5rem;
   margin-inline: auto;
 }
 
 .guide-item{
-  padding: 2rem;
-  border: 0.5rem solid red;
+  padding: 0 0;
   max-width: 30em;
+  display: flex;
+  flex-direction: column;
 }
 
-.number {
-  width: 3em;
-  font-size: 40px;
+.number h1{
   text-align: center;
-  color: var(--clr-white);
-  background-color:var(--clr-purple);
+  color: var(--clr-dark);
   border-radius: 50%;
-}
+  display:inline;
+} 
 
 .guide-content {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  text-align: center;
+  justify-content:center;
+  padding: 1em 1em;
+}
+
+.guide-content img {
+  max-width: 5em;
+  max-height: 5em;
+  object-fit:cover;
 }
 
 h3,p{
