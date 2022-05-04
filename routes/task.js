@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
 })
 
 router.delete("/", async (req, res) => {
-    await TrackerTask.destroy({where: {name: req.body.name}}).then(response => {
+    await TrackerTask.destroy({where: {trackerid: req.body.trackerid}}).then(response => {
         res.status(200)
         res.send("Success!")
     }).catch(err => {

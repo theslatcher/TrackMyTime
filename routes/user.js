@@ -4,6 +4,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
 const User = require('../models/user');
+const db = require('../db');
+const req = require('express/lib/request');
 const jwt = require("jsonwebtoken");
 
 async function hashPassword(password) {
@@ -120,5 +122,16 @@ router.delete('/:username', async (req, res) => {
 			res.status(404).send({error: err});
 		});
 });
+
+router.put('/:username', async (req, res) => {
+	await User.update({username: req.body.username, first_name: req.body.first_name, last_name: req.body.last_name}, 
+		{where:{username: req.params.username}}).then(response => {
+			res.status(200)
+        	res.send("Success!")
+		}).catch(err => {
+			res.status(409)
+			res.send({err})
+		})
+})
 
 module.exports = router;
