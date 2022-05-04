@@ -55,8 +55,31 @@ const create_tracker = async () => {
 
 
 const delete_tracker = async () => {
-    console.log(document.getElementById("cars").value
-    );
+    await fetch("http://localhost:3000/time", {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'DELETE',
+        body: JSON.stringify({
+            "trackerid": document.getElementById("cars").value
+        })
+    }
+    )
+    await fetch("http://localhost:3000/task", {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'DELETE',
+        body: JSON.stringify({
+            "trackerid": document.getElementById("cars").value
+        })
+    }
+    )
+    load_trackers()
+
+
 }
 
 
@@ -281,6 +304,6 @@ function filterButton(button) {
 document.addEventListener("DOMContentLoaded", () => {
     const theme = localStorage.getItem('theme')
     if (!localStorage.getItem('theme')) theme_switch()
-    document.body.classList.add(localStorage.getItem('theme'))
+    else document.body.classList.add(localStorage.getItem('theme'))
     load_trackers()
 })
