@@ -60,8 +60,7 @@ signUpForm.addEventListener('submit', (e) => {
       body: JSON.stringify(signUpUser),
     })
       .then((data) => {
-        if(data.ok)
-          alert('Success create an account')
+        if(data.ok) alert('Success create an account');
       })
       .catch((error) => {
         console.error('Error:', error)
@@ -86,9 +85,14 @@ loginForm.addEventListener('submit', (e) => {
     body: JSON.stringify(loginUser),
   })
     .then((data) => {
-      if(data.status !==401)
+      if(data.ok){
         console.log('Success to login' +data)
         location.href = '/'
+      }
+      else{
+        console.log("error "+data.status);
+        alert("invalid username or password");
+      }
     })
     .catch((error) => {
       console.error('Error:', error)
