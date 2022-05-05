@@ -3,7 +3,8 @@ const userTable = document.getElementById("userTable")
 const statTable = document.getElementById("statTable")
 const statDiv = document.getElementById("Stats")
 var sorted = "Descending"
-var sortedBy = "username"
+var userSortedBy = "username"
+var taskSortedBy
 
 async function fetchTasks(userId){
     return fetch("http://localhost:3000/task/user/" + userId, {
@@ -158,7 +159,9 @@ async function deleteUser(userId){
 // The userId in this function is optional and only needed if the tasks table is to be sorted
 async function sortTable(sortBy, Type, userId){
     var info
+    var sortedBy
     if(Type == "Users"){
+        sortedBy = userSortedBy
         info = await fetchUsers()
     }else{
         info = await fetchTasks(userId)
@@ -184,8 +187,8 @@ async function sortTable(sortBy, Type, userId){
         })
     }
 
-    sortedBy = sortBy
     if(Type == "Users"){
+        userSortedBy = sortBy
         buildUserTable(info)
     }else{
         buildTaskTable(info, userId)
@@ -198,19 +201,11 @@ async function updateTable(){
 
     if(sorted == "Ascending"){
         info.sort((a, b) => {
-            if(isNaN(a[sortedBy])){
-                return a[sortedBy].localeCompare(b[sortedBy])
-            }else{
-                return a[sortedBy]-b[sortedBy]
-            }
+            return a[userSortedBy].localeCompare(b[userSortedBy])
         })
     }else{
         info.sort((b, a) => {
-            if(isNaN(a[sortedBy])){
-                return a[sortedBy].localeCompare(b[sortedBy])
-            }else{
-                return a[sortedBy]-b[sortedBy]
-            }
+            return a[userSortedBy].localeCompare(b[userSortedBy])
         })
     }
 

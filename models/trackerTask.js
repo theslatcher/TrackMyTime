@@ -18,11 +18,11 @@ var TrackerTask = sequelize.define('TrackerTask', {
         type: DataTypes.INTEGER,
         defaultValue: 0
     },
-    username: {
-        type: DataTypes.STRING,
+    userId: {
+        type: DataTypes.INTEGER,
         references: 'User',
-        referencesKey: 'username',
-        field: 'username'
+        referencesKey: 'userId',
+        field: 'userId'
     }
 },
 {
