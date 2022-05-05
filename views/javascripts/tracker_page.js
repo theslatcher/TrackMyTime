@@ -23,7 +23,7 @@ const load_trackers = async () => {
     document.getElementById(localStorage.getItem('filter')).classList.add("bActive")
 
 
-    const res = await fetch('http://localhost:3000/task/user/' + user1.username)
+    const res = await fetch('http://localhost:3000/task/user/' + user1.userId)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
         //temp code
@@ -54,7 +54,7 @@ const create_tracker = async () => {
             "name": document.getElementById('create_new_card').children[0].value,
             "goal": document.getElementById('create_new_card').children[2].value,
             "color": document.getElementById('create_new_card').children[4].value,
-            "username": user1.username
+            "username": user1.userId
         })
     }
     )
