@@ -1,10 +1,37 @@
 body{
-    background-color: grey;
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    font-family: 'Inter', sans-serif;
+}
+
+button{
+    margin-left: 1rem;
+    margin-top: 2rem;
+    padding: 0.5rem;
+    color: var(--font-color);
+    background-color: var(--color-active);
+    outline: none;
+}
+
+h1{
+    background: var(--color-possetive);
+    font-size: x-large;
+    padding: 1rem;
+    letter-spacing: 0.1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: var(--font-color);
+}
+
+h2{
+    margin-bottom: 1rem;
+    font-size: x-large;
 }
 
 #main-div{
-    text-align: center;
+    margin-top: 2%;
 }
 
 #Users, #Stats{
@@ -19,25 +46,30 @@ body{
 }
 
 td, tr{
-    background-color: lightgrey;
-    color: black;
+    background-color: var(--color-background);
+    color: var(--font-color);
     border-collapse: collapse;
 }
 
 .userEdit:hover{
-    background-color: grey;
-    color: white;
+    background-color: var(--color-columnhover);
+    color: var(--font-color);
     cursor: pointer;
 }
 
 #userTable .userInfo:hover ~ .userInfo, .userInfo:hover{
     cursor: pointer;
-    background-color: grey;
-    color: white;
+    background-color: var(--color-columnhover);
+    color: var(--font-color);
 }
 
-th:hover{
-    background-color: rgb(70, 70, 70);
+.userHeader:hover{
+    background-color: var(--color-headerhover);
+    cursor: pointer;
+}
+
+.taskHeader:hover{
+    background-color: var(--color-headerhover);
     cursor: pointer;
 }
 
@@ -49,16 +81,28 @@ th:hover{
 .userInfo{
     text-align: center;
     width: 25%;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.userInfo, .userEdit{
+    margin-bottom: 1rem;
 }
 
 table{
     border-spacing: 0px;
-    border: 2px black solid
+    box-shadow: var(--shadows);
+    border: 1px var(--font-color) solid;
 }
 
 th{
-    background-color: grey;
-    color: white;
+    padding: 0.5rem;
+    background-color: var(--color-possetive);
+    color: var(--font-color);
+}
+
+.taskColumn{
+    margin-left: 0.1rem;
+    margin-bottom: 0.3rem;
+    padding: 0.25rem;
 }

@@ -5,7 +5,8 @@ var TrackerTime = sequelize.define('TrackerTime', {
     trackerid: {
         type: DataTypes.INTEGER,
         references: 'TrackerTask',
-        referencesKey: 'trackerid'
+        referencesKey: 'trackerid',
+        field: 'trackerid'
     },
     totaltime: DataTypes.STRING,
     dayofyear: DataTypes.DATE
