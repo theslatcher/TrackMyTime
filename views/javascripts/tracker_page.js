@@ -194,7 +194,7 @@ function profile_template(user1) {
 
 async function add_new_time(button) {
     const h = button.parentElement.children[3].value
-    const min = (button.parentElement.children[5].value / 60).toFixed(2)
+    const min = (button.parentElement.children[5].value / 60)
     const time = Number(h) + Number(min)
     await fetch("http://localhost:3000/time", {
         headers: {
@@ -219,8 +219,12 @@ function card_form_toggle(button) {
 }
 
 function card_template(tracker) {
-    const h = Math.floor(tracker.currenttime)
-    let min = Math.floor((tracker.currenttime - h) * 60)
+    let h = Math.floor(tracker.currenttime)
+    let min = Math.round((tracker.currenttime - h) * 60)
+    if (min == 60) {
+        h++
+        min = 0
+    }
     if (min == 0) min = ""
     else min += "m"
     return (`
