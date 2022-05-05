@@ -10,7 +10,7 @@ async function user() {
         .replace('-', '+')
         .replace('_', '/')));
 
-    const res = await fetch('http://localhost:3000/user/' + data.user.username)
+    const res = await fetch('http://localhost:3000/user/' + data.user.userId)
     const user1 = await res.json()
     return (user1)
 }
@@ -54,7 +54,7 @@ const create_tracker = async () => {
             "name": document.getElementById('create_new_card').children[0].value,
             "goal": document.getElementById('create_new_card').children[2].value,
             "color": document.getElementById('create_new_card').children[4].value,
-            "username": user1.userId
+            "userId": user1.userId
         })
     }
     )
@@ -119,7 +119,7 @@ async function editUser() {
 
     const user1 = await user();
 
-    await fetch("http://localhost:3000/user/" + user1.username,
+    await fetch("http://localhost:3000/user/" + user1.userId,
         {
             headers: {
                 'Accept': 'application/json',
