@@ -21,6 +21,7 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
+app.use(express.static('views'));
 
 app.use(express.static('views'));
 
