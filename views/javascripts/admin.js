@@ -5,8 +5,8 @@ const statDiv = document.getElementById("Stats")
 var sorted = "Descending"
 var sortedBy = "username"
 
-async function fetchTasks(username){
-    return fetch("http://localhost:3000/task/user/" + username, {
+async function fetchTasks(userId){
+    return fetch("http://localhost:3000/task/user/" + userId, {
         method: "GET",
         headers:{
             "Content-Type": "application/json"
@@ -43,26 +43,26 @@ function buildUserTable(info){
         </thead>`
     for(user of info){
         userTable.insertAdjacentHTML("beforeend", `
-        <tr id='` + user.username + `'>
-            <td onclick="javascript:getSpecific('`+ user.username +`')" class="userInfo">` + user.username + ` </td>
-            <td onclick="javascript:getSpecific('`+ user.username +`')" class="userInfo">` + user.first_name + `</td>
-            <td onclick="javascript:getSpecific('`+ user.username +`')" class="userInfo">` + user.last_name + ` </td>
-            <td onclick="javascript:editUser('` + user.username + `')" class="userEdit"> Edit </td>
-            <td onclick="javascript:deleteUser('` + user.username + `')"class="userEdit"> Delete </td>
+        <tr id='` + user.userId + `'>
+            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.username + ` </td>
+            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.first_name + `</td>
+            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.last_name + ` </td>
+            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit"> Edit </td>
+            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit"> Delete </td>
         </tr>    
         `)
     }
 }
 
-function buildTaskTable(info, username){
+function buildTaskTable(info, userId){
     var current = 0
     var totalGoal = 0
 
     statTable.innerHTML = `
     <tr>
-        <th class="taskHeader" onclick="javascript:sortTable('name', 'Tasks', '` + username + `')"> Name </th>
-        <th class="taskHeader" onclick="javascript:sortTable('currenttime', 'Tasks', '` + username + `')"> Current Time </th>
-        <th class="taskHeader" onclick="javascript:sortTable('goal', 'Tasks', '` + username + `')"> Goal </th>
+        <th class="taskHeader" onclick="javascript:sortTable('name', 'Tasks', '` + userId + `')"> Name </th>
+        <th class="taskHeader" onclick="javascript:sortTable('currenttime', 'Tasks', '` + userId + `')"> Current Time </th>
+        <th class="taskHeader" onclick="javascript:sortTable('goal', 'Tasks', '` + userId + `')"> Goal </th>
     </tr>
     `
 
@@ -93,22 +93,22 @@ function getUsers(){
     sortTable("username", "Users")
 }
 
-function getSpecific(username){
-    sortTable("name", "Tasks", username)
+function getSpecific(userId){
+    sortTable("name", "Tasks", userId)
 }
 
-function editUser(username){
-    const selectedUserRow = document.getElementById(username);
+function editUser(userId){
+    const selectedUserRow = document.getElementById(userId);
     selectedUserRow.innerHTML = `
     <td> ${selectedUserRow.children[0].innerHTML} </td>
     <td> <input type="text" id="update_firstname" value="${selectedUserRow.children[1].innerHTML}" </td>
     <td> <input type="text" id="update_lastname" value="${selectedUserRow.children[2].innerHTML}" </td>
-    <td onclick="javascript:saveUser('` + username + `')" class="userEdit"> Save </td>
-    <td onclick="javascript:deleteUser('` + username + `')" class="userEdit"> Delete </td>
+    <td onclick="javascript:saveUser('` + userId + `')" class="userEdit"> Save </td>
+    <td onclick="javascript:deleteUser('` + userId + `')" class="userEdit"> Delete </td>
     `
 }
 
-async function saveUser(username){
+async function saveUser(userId){
     const savedFirstName = document.getElementById("update_firstname")
     const savedLastName = document.getElementById("update_lastname")
     
@@ -117,7 +117,7 @@ async function saveUser(username){
         last_name: savedLastName.value
     }
 
-    await fetch('http://localhost:3000/user/' + username, {
+    await fetch('http://localhost:3000/user/' + userId, {
         method: "PUT",
         headers:{
            "Content-Type": "application/json"
@@ -130,22 +130,22 @@ async function saveUser(username){
     updateTable()
 }
 
-async function deleteUser(username){
-    await fetch('http://localhost:3000/time/user/' + username, {
+async function deleteUser(userId){
+    await fetch('http://localhost:3000/time/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
         }
     })
 
-    await fetch('http://localhost:3000/task/user/' + username, {
+    await fetch('http://localhost:3000/task/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
         }
     })
 
-    await fetch('http://localhost:3000/user/' + username, {
+    await fetch('http://localhost:3000/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
@@ -155,13 +155,13 @@ async function deleteUser(username){
     })
 }
 
-// The username in this function is optional and only needed if the tasks table is to be sorted
-async function sortTable(sortBy, Type, username){
+// The userId in this function is optional and only needed if the tasks table is to be sorted
+async function sortTable(sortBy, Type, userId){
     var info
     if(Type == "Users"){
         info = await fetchUsers()
     }else{
-        info = await fetchTasks(username)
+        info = await fetchTasks(userId)
     }
     
     if(sorted == "Ascending" && sortBy == sortedBy){
@@ -188,7 +188,7 @@ async function sortTable(sortBy, Type, username){
     if(Type == "Users"){
         buildUserTable(info)
     }else{
-        buildTaskTable(info, username)
+        buildTaskTable(info, userId)
     }
     
 }
