@@ -12,10 +12,10 @@ const user = () => {
 }
 
 const load_trackers = async () => {
-    const username = user().user.username;
+    const userId = user().user.userId;
     document.getElementById('trackers').innerHTML = ""
     document.getElementById('trackers').innerHTML += trackerButtons_template()
-    const res = await fetch('http://localhost:3000/task/user/' + username)
+    const res = await fetch('http://localhost:3000/task/user/' + userId)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
         document.getElementById("cards").innerHTML += card_template(trackers[index])
@@ -30,7 +30,7 @@ const create_tracker = async () => {
 
     //todo validate?
 
-    const username = user().user.username;
+    const userId = user().user.userId;
 
     const response = await fetch("http://localhost:3000/task", {
         headers: {
@@ -42,7 +42,7 @@ const create_tracker = async () => {
             "name": document.getElementById('create_new_card').children[0].value,
             "goal": document.getElementById('create_new_card').children[1].value,
             "color": document.getElementById('create_new_card').children[2].value,
-            "username": username
+            "userId": userId
         })
     }
     )
@@ -55,14 +55,12 @@ const create_tracker = async () => {
 
 
 const delete_tracker = async () => {
-    console.log(document.getElementById("cars").value
-    );
+    console.log(document.getElementById("cars").value);
 }
 
 
 function profile_template() {
     const user1 = user().user;
-    console.log(user1);
     return (`<h1>Profile page</h1>
             <form id="profile-form">
                 <div class="form-group">
