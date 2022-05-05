@@ -230,7 +230,7 @@ function card_template(tracker) {
     return (`
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
-                <h2 class = "form_text"> ${tracker.name}</h2>
+                <h2 class = ""> ${tracker.name}</h2>
                 <button class = "card-button" style="${"color:" + tracker.color}" onclick="card_form_toggle(this)" >+</button>
                 <h1 class="">${h + "h"}</h1>
                 
@@ -260,7 +260,7 @@ function trackerButtons_template() {
 
         <div class="add-remove-tracker">
             <div class="delete add-remove-tracker">
-                <select class="" id="select">
+                <select class="select" id="select">
                     
                 </select>
             <button class="negative" onclick="delete_tracker()">Delete</button>

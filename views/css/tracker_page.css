@@ -77,11 +77,19 @@ body{
 }
 .card h2{
   font-size: 1.25rem;
+  width: 10ch;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+        text-align: center;
+
 }
 
 .card-goal{
  grid-column: 1;
   grid-row: 4;
+      text-align: center;
+
 }
 
 
@@ -140,11 +148,19 @@ input{
     outline: 0;
     
 }
-
+.select{
+    width: 10ch;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2rem;
+}
 .form_text{
     grid-row: 1;
+    grid-column: 1/3;
     font-size: 1.25rem;
     border: 0;
+    border-bottom: 1px solid black;
     text-align: center;
 
 }
