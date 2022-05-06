@@ -64,7 +64,6 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-	console.log('deserialize');
 	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where: {userId: user.userId}})
 	.then(response => {
         return done(null, response);
@@ -90,7 +89,6 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {
 	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
-	console.log('redirect');
 	res.status(200).send("Success!");
 	//res.redirect('/');
 }); 

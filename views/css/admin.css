@@ -57,7 +57,7 @@ td, tr{
     cursor: pointer;
 }
 
-#userTable .userInfo:hover ~ .userInfo, .userInfo:hover{
+#userTable tr:hover td{
     cursor: pointer;
     background-color: var(--color-columnhover);
     color: var(--font-color);

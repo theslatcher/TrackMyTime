@@ -7,7 +7,7 @@ var userSortedBy = "username"
 var taskSortedBy
 
 async function fetchTasks(userId){
-    return fetch("http://localhost:3000/task/user/" + userId, {
+    return fetch("/task/user/" + userId, {
         method: "GET",
         headers:{
             "Content-Type": "application/json"
@@ -20,7 +20,7 @@ async function fetchTasks(userId){
 }
 
 async function fetchUsers(){
-    return fetch("http://localhost:3000/user", {
+    return fetch("/user", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -118,7 +118,7 @@ async function saveUser(userId){
         last_name: savedLastName.value
     }
 
-    await fetch('http://localhost:3000/user/' + userId, {
+    await fetch('/user/' + userId, {
         method: "PUT",
         headers:{
            "Content-Type": "application/json"
@@ -132,21 +132,21 @@ async function saveUser(userId){
 }
 
 async function deleteUser(userId){
-    await fetch('http://localhost:3000/time/user/' + userId, {
+    await fetch('/time/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
         }
     })
 
-    await fetch('http://localhost:3000/task/user/' + userId, {
+    await fetch('/task/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
         }
     })
 
-    await fetch('http://localhost:3000/user/' + userId, {
+    await fetch('/user/' + userId, {
         method: "DELETE",
         headers:{
             "Content-Type": "application/json"
@@ -230,8 +230,15 @@ function changeStyle(){
     document.body.classList.add(localStorage.getItem('theme'))
 }
 
+async function logout() {
+    await fetch('/user/signout')
+    location.href = '/'
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem('theme')) theme_switch()
+    if (!localStorage.getItem('theme')){
+        changeStyle()
+    }
     document.body.classList.add(localStorage.getItem('theme'))
 })
 
