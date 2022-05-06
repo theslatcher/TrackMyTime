@@ -86,64 +86,6 @@ body{
   font-weight:bold;
 }
 
-.primary-header, .footer{
-  display: flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-direction: row;
-  box-shadow: var(--shadow);
-}
-
-.toggle-btn {
-  position: absolute;
-  top: .75rem;
-  right: 1rem;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 21px;
-}
-
-.toggle-btn .bar {
-  height: 3px;
-  width: 100%;
-  background-color: var(--toggle-btn);
-  border-radius: 10px;
-}
-
-@media (max-width: 800px) {
-  .primary-header,.guide-container, .list {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-
-  .toggle-btn {
-      display: flex;
-  }
-
-  .navbar-links {
-      display: none;
-      width: 100%;
-  }
-
-  .navbar-links ul {
-      width: 100%;
-      flex-direction: column;
-  }
-
-  .navbar-links ul li {
-      text-align: center;
-  }
-
-  .navbar-links ul li a {
-      padding: .5rem 1rem;
-  }
-
-  .navbar-links.active {
-      display: flex;
-  }
-}
 
 h1 {
   text-align: center;

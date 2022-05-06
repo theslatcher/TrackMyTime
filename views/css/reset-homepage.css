@@ -144,19 +144,6 @@ h2 {
   height: 2.6rem;
 }
 
-.submit {
-  font-weight: bold;
-  margin-top: 1rem;
-  padding: 1rem 1.5rem;
-  border: none;
-  background: var(--clr-purple);
-  cursor: pointer;
-  color: var(--clr-white);;
-}
-
-.submit:hover {
-  background-color: var(--clr-submitHover);
-}
 .form-group input[type="text"]:focus,
 .form-group input[type="email"]:focus,
 .form-group input[type="password"] {
@@ -173,6 +160,6 @@ h2 {
 
 .form-group .error {
   color: var(--clr-error);
-  font-size: 9px;
+  font-size: 15px;
   height: 13px;
 }
