@@ -52,7 +52,10 @@ app.use('/time/', timeRouter);
 
 app.get('/', (req, res) => {
 	if (req.isAuthenticated())
-		res.sendFile(path.join(__dirname, '/views/html/tracker_page.html'));
+		if (req.user.username === 'admin')
+			res.sendFile(path.join(__dirname, '/views/html/admin.html'));
+		else
+			res.sendFile(path.join(__dirname, '/views/html/tracker_page.html'));
 	else
 		res.sendFile(path.join(__dirname, '/views/html/homepage.html'));
 });

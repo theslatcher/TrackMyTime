@@ -8,10 +8,9 @@ dayjs.Ls.en.weekStart = 1; //might need to be placed someplace else if dayjs wil
 const { Op } = require("sequelize")
 
 router.post("/", async (req, res) => {
-    req.body.currenttime = 0;
     await TrackerTask.create(req.body).then(response => {
         res.status(200)
-        res.send("Success!")
+        res.send({body: response.dataValues})
     }).catch(err => {
         res.status(409),
             res.send({ err: err.detail })

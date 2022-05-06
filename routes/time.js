@@ -46,9 +46,9 @@ router.delete("/", async (req, res) => {
     });
 });
 
-router.delete("/user/:username", async (req, res) => {
+router.delete("/user/:userId", async (req, res) => {
 	//MW: Should check to see if the correct user is sending the request.
-	await TrackerTask.findAll({attributes: ['trackerid'], where: {username: req.params.username}})
+	await TrackerTask.findAll({attributes: ['trackerid'], where: {userId: req.params.userId}})
 		.then(async (response) => {
 			const trackerids = response.map(elem => elem.trackerid);
 			await TrackerTime.destroy({where: {trackerid: {[Op.or]: trackerids}}})
