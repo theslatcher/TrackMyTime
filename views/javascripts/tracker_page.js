@@ -80,8 +80,20 @@ const create_tracker = async () => {
         }
 
         )
-
-        console.log(await res.json());
+        const tracker = await res.json()
+        await fetch("http://localhost:3000/time", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                "trackerid": tracker.body.trackerid,
+                "totaltime": 0,
+                "dayofyear": new Date()
+            })
+        }
+        )
         load_trackers()
 
     }
