@@ -227,3 +227,8 @@ function theme_switch() {
   document.body.removeAttribute("class")
   document.body.classList.add(localStorage.getItem('theme'))
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem('theme')) theme_switch()
+  else document.body.classList.add(localStorage.getItem('theme'))
+});
