@@ -21,7 +21,7 @@ function isNameValid(myName) {
     }
 }
 function isPassValid(pass) {
-    if (!pass.value || pass.value.length < 6) {
+    if (pass.value.length > 5) {
         return true;
     }
     else {
@@ -29,50 +29,52 @@ function isPassValid(pass) {
         return false;
     }
 }
+
+function isDatavalid() {
+
+}
 async function editUser() {
-    let username = document.getElementById("username")
-    if (!username.value)
-        username.value = document.getElementById("username").getAttribute("placeholder")
-    let first_name = document.getElementById("first_name")
-    if (!first_name.value)
-        first_name.value = document.getElementById("first_name").getAttribute("placeholder")
-    let last_name = document.getElementById("last_name")
-    if (!last_name.value)
-        last_name.value = document.getElementById('last_name').getAttribute("placeholder")
-    let email = document.getElementById("email")
-    if (!email.value)
-        email.value = document.getElementById("email").getAttribute("placeholder")
-    let pass = document.getElementById("password")
+    const data = {}
+    const username = document.getElementById("username")
+    const first_name = document.getElementById("first_name")
+    const last_name = document.getElementById("last_name")
+    const email = document.getElementById("email")
+    const pass = document.getElementById("password")
 
 
-    if ((isNameValid(username) && isNameValid(first_name) && isNameValid(last_name) && isEmailValid(email) && isPassValid(pass))) {
-        const user1 = await user();
-        const password = window.prompt("Enter your current password", "");
-        //todo check if pass is good
-
-        const user = {
-            "username": username.value,
-            "first_name": first_name.value,
-            "last_name": last_name.value,
-            "email": email.value
-        }
-        if (pass) user.password = pass
-
-        console.log(user);
-        await fetch("http://localhost:3000/user/" + user1.userId,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(user)
-            })
+    if (isNameValid(username) && username.value != "")
+        data.username = username.value
+    if (isNameValid(first_name) && first_name.value != "")
+        data.first_name = first_name.value
+    if (isNameValid(last_name) && last_name.value != "")
+        data.last_name = last_name.value
+    if (isNameValid(email) && email.value != "")
+        data.email = email.value
+    if (isNameValid(pass) && pass.value != "")
+        data.new_password = pass.value
+    //need a better way. pass is shown
+    data.curr_password = window.prompt("Enter your current password", "")
+    const user1 = await user();
+    console.log(data);
+    const res = await fetch("http://localhost:3000/user/" + user1.userId,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT',
+            body: JSON.stringify(data)
+        })
+    if (res.ok) {
         const user2 = await user();
         document.getElementById("profile").innerHTML = profile_template(user2)
+        alert("yaaay, it worked, new info displayed")
     }
-    else console.log("false");
+    else alert("shitty password")
+
 }
+
+
 function profile_template(user1) {
     return (`<h1>Profile page</h1>
             <form id="profile-form">

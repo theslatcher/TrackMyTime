@@ -55,27 +55,37 @@ const create_tracker = async () => {
 
     //todo validate?
 
-    const user1 = await user();
-    const res = await fetch("http://localhost:3000/task", {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({
-            "name": document.getElementById('create_new_card').children[0].value,
-            "goal": document.getElementById('create_new_card').children[2].value,
-            "color": document.getElementById('create_new_card').children[4].value,
-            "userId": user1.userId
-        })
+    const name = document.getElementById('create_new_card').children[0].value
+
+    const goal = document.getElementById('create_new_card').children[2].value
+
+    if (name.length < 1)
+        alert("name of tracker cant be empty")
+    else if (goal.length < 1)
+        alert("goal cant be empty")
+
+    else {
+        const user1 = await user();
+        const res = await fetch("http://localhost:3000/task", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                "name": name,
+                "goal": goal,
+                "color": document.getElementById('create_new_card').children[4].value,
+                "userId": user1.userId
+            })
+        }
+
+        )
+
+        console.log(await res.json());
+        load_trackers()
+
     }
-    )
-    console.log(res);
-
-    load_trackers()
-
-
-
 }
 
 
