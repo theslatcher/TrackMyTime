@@ -4,7 +4,9 @@ const testData = {
   colors: ["#00bcd4", "#ff9800", "#9c27b0", "#009688", "#4caf50", "#795548"],
 };
 
-const userData = "user";
+let chartAmount = 0;
+let trackerIds = ["107", "103"];
+const userData = "16";
 
 function fetchTrackerTask(user) {
   return new Promise((resolve, reject) => {
@@ -58,7 +60,6 @@ function formatTime(data) {
     labels.push(time.dayofyear);
     datasets.push(time.totaltime);
 
-
     colors.push(color);
   });
   return {
@@ -67,7 +68,6 @@ function formatTime(data) {
     colors: colors,
   };
 }
-
 
 function createPie(d, i, title) {
   let data = {
@@ -150,21 +150,36 @@ function createLine(d, i, title) {
   };
   let myChart = new Chart(document.getElementById("chart-pie" + i), config);
 }
-
-fetchTimeTracker("15").then((data) => {
-  return formatTime(data)
-}).then((data) => {
-  createLine(data, 2, "Time spent in each day");
-});
-
 fetchTrackerTask(userData)
   .then((data) => {
-    console.log(data);
     return formatData(data);
   })
   .then((data) => {
-    createPie(data, 1, "Summarization of total time in every task");
+    createPie(data, ++chartAmount, "Summarization of total time in every task");
   });
 
+// makes a line graph for each task that the user has
+for (let i = 0; i < trackerIds.length; i++) {
+  fetchTimeTracker(trackerIds[i])
+    .then((data) => {
+      return formatTime(data);
+    })
+    .then((data) => {
+      console.log(data);
+      createLine(
+        data,
+        ++chartAmount,
+        "Summarization of total time in " + trackerIds[i]
+      );
+    }).then(() => {
+      let canvas = ``;
+      for (let i = 1; i < chartAmount; ++i) {
+        canvas += `<canvas id="chart-pie${i} class="graph-canvas"></canvas>`;
+      }
+      document.getElementById("graphs").innerHTML += canvas;
+    }
+    );
+}
+
 document.getElementById("graph-container").innerHTML =
-  '<canvas id="chart-pie1" class="graph-canvas"></canvas><canvas id="chart-pie2" class="graph-canvas"></canvas>';
+  '<canvas id="chart-pie1" class="graph-canvas"></canvas>';
