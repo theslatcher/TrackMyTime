@@ -26,12 +26,8 @@ const load_trackers = async () => {
     const res = await fetch('http://localhost:3000/task/user/' + user1.userId)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
-        //temp code
-        const res = await fetch('http://localhost:3000/task/' + trackers[index].trackerid)
-        const tracker = await res.json()
-        //
 
-        document.getElementById("cards").innerHTML += card_template(tracker)
+        document.getElementById("cards").innerHTML += card_template(trackers[index])
         const opt = document.createElement('option');
         opt.value = trackers[index].trackerid;
         opt.innerHTML = trackers[index].name;
@@ -284,15 +280,16 @@ function trackerButtons_template() {
 
 function test(some) {
     document.getElementById("create_new_card").setAttribute("style", "border: 3px solid" + some.value)
-    document.getElementById("newgoal").setAttribute("style", "border-bottom: 1px solid" + some.value)
+    document.getElementById("form_text").setAttribute("style", "border-bottom: 1px solid" + some.value)
+    document.getElementById("form_number").setAttribute("style", "border-bottom: 1px solid" + some.value)
 
 }
 function form_template() {
     return (`
     <form id="create_new_card" class="card" style=" border: 3px solid var(--font-color)">
-                    <input class = "form_text"type="text" placeholder="Name">
+                    <input id="form_text"class = "form_text"type="text" placeholder="Name">
                     <h1 class="form-title">Goal</h1>
-                    <input class = "form-input" type="number" id="newgoal"placeholder="0" min="0">
+                    <input style="border-bottom: 1px solid var(--font-color)" id="form_number"class = "form-input" type="number" placeholder="0" min="0">
                     <h1 class="form-title">Color</h1>
 
                     <input class = "form-input form_color" onchange="test(this)"type="color">
