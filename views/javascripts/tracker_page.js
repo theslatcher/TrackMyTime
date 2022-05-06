@@ -56,7 +56,6 @@ const create_tracker = async () => {
     //todo validate?
 
     const name = document.getElementById('create_new_card').children[0].value
-
     const goal = document.getElementById('create_new_card').children[2].value
 
     if (name.length < 1)
