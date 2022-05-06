@@ -111,7 +111,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:userId', async (req, res) => {
 	//MW: Only admin, and the user itself, should be able to get this info.
-	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
+	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
 		.then(response => {
 			console.log(response);
 			res.status(200).send(response);
