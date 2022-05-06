@@ -4,9 +4,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
 const User = require('../models/user');
-const db = require('../db');
 const req = require('express/lib/request');
 const jwt = require("jsonwebtoken");
+const Sequelize = require('sequelize');
 
 async function hashPassword(password) {
 	return new Promise( (resolve, reject) => {
@@ -37,7 +37,10 @@ async function verifyPassword(hashedPassword, password) {
 }
 
 passport.use(new LocalStrategy((username, password, done) => {
-  return User.findOne({where: {username: username}})
+  return User.findOne({where: Sequelize.where(
+		Sequelize.fn('lower', Sequelize.col('username')), 
+		Sequelize.fn('lower', username)
+  	)})
 	.then(async (response) => {
         if (!response) {
 			return done(null, false, {message: 'Incorrect username or password 5.'}); 
@@ -46,7 +49,7 @@ passport.use(new LocalStrategy((username, password, done) => {
 		validPassword = await verifyPassword(response.password, password);
 
 		if (validPassword)
-			return done(null, {username: response.username, first_name: response.first_name,
+			return done(null, {userId: response.userId, username: response.username, first_name: response.first_name,
 						last_name: response.last_name, email: response.email});
 		else
 			return done(null, false, {message: 'Incorrect username or password.'});
@@ -57,11 +60,12 @@ passport.use(new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser(function(user, done) {
-	done(null, { username: user.username });
+	done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where: {username: user.username}})
+	console.log('deserialize');
+	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where: {userId: user.userId}})
 	.then(response => {
         return done(null, response);
     })
@@ -74,7 +78,7 @@ router.post('/signup', async (req, res) => {
 	if (req.body.password)
 			req.body.password = await hashPassword(req.body.password);
 
-	User.create(req.body)
+	await User.create(req.body)
 		.then(response => {
 			res.status(200).json({message: 'Success!'});
 		})
@@ -86,7 +90,9 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {
 	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
-	res.redirect('/');
+	console.log('redirect');
+	res.status(200).send("Success!");
+	//res.redirect('/');
 }); 
 
 router.get('/signout', async (req, res) => {
@@ -97,25 +103,25 @@ router.get('/signout', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	//MW: Should all info be included?
-	User.findAll({attributes: ['username', 'first_name', 'last_name', 'email']})
+	User.findAll({attributes: ['userId', 'username', 'first_name', 'last_name', 'email']})
 		.then(response => {
 			res.status(200).send(response);
 		});
 });
 
-router.get('/:username', async (req, res) => {
+router.get('/:userId', async (req, res) => {
 	//MW: Only admin, and the user itself, should be able to get this info.
-	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where: {username: req.params.username}})
+	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
 		.then(response => {
+			console.log(response);
 			res.status(200).send(response);
 		});
 });
 
-router.delete('/:username', async (req, res) => {
+router.delete('/:userId', async (req, res) => {
 	//MW: Should check to see if the correct user is sending the request.
-	User.destroy({where: {username: req.params.username}})
+	User.destroy({where:{userId: req.params.userId}})
 		.then(response => {
-			console.log(JSON.stringify(response));
 			res.status(200).send({message: "Success!"});
 		}).catch(err => {
 			console.log(err);
@@ -123,9 +129,9 @@ router.delete('/:username', async (req, res) => {
 		});
 });
 
-router.put('/:username', async (req, res) => {
+router.put('/:userId', async (req, res) => {
 	await User.update({username: req.body.username, first_name: req.body.first_name, last_name: req.body.last_name}, 
-		{where:{username: req.params.username}}).then(response => {
+		{where:{userId: req.params.userId}}).then(response => {
 			res.status(200)
         	res.send("Success!")
 		}).catch(err => {

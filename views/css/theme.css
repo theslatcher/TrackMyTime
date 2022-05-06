@@ -1,19 +1,26 @@
 .theme-light {
   --color-primary: ffffff;
   --color-background: ffffff;
+  --color-columnhover: #aaaaaa;
+  --color-headerhover: #9877a9;
   --font-color: #000000;
   --color-possetive:  #926AA6;
   --color-negative: #DC3131;
   --color-active :  #926AA6;
   --shadows : rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  --theme:light
 }
+
 .theme-dark {
   --color-primary: #000000;
   --color-background: #101010;
+  --color-header: #050505;
+  --color-columnhover: #202020;
+  --color-headerhover: #8e56aa;
   --font-color: #d3d1d1;
   --color-possetive:  #926AA6;
   --color-negative: #DC3131; 
   --color-active :  #926AA6;
   --shadows : rgba(148, 148, 148, 0.25) 0px 6px 12px -2px, rgba(255, 254, 254, 0.3) 0px 3px 7px -3px;
-
+  --theme:dark
 }
