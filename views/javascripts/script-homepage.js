@@ -106,7 +106,7 @@ const checkFirstName = () => {
     setError(signUpFirstName, 'First name is required')
   } else {
     if (/^[0-9]+$/.test(firstName)) {
-      setError(signUpFirstName, 'your first name should not be number')
+      setError(signUpFirstName, 'your first name should not be/have number')
     } else {
       setSuccess(signUpFirstName);
       valid = true;
@@ -121,7 +121,7 @@ const checkLastName = () => {
     setError(signUpLastName, 'Last name is required')
   } else {
     if (/^[0-9]+$/.test(lastName)) {
-      setError(signUpLastName, 'your last name should not be number')
+      setError(signUpLastName, 'your last name should not be/have number')
     } else {
       setSuccess(signUpLastName)
       valid= true;
@@ -135,7 +135,7 @@ const checkUserName = () => {
   if(userNameValue === '' || userNameValue === null){
     setError(signUpUserName, 'User name is required')
   }else if (!isValidUserName(userNameValue)){
-    setError(signUpUserName, 'invalid username')
+    setError(signUpUserName, 'username must have around 4 to 20 characters, alphabetic or/and numeric, . - _')
   }else{
     setSuccess(signUpUserName)
     valid= true;
@@ -163,7 +163,7 @@ const checkPassword = () => {
   if(password === '' || password === null){
     setError(signUpPassword, 'Password is required')
   }else if(!isValidPassword(password)){
-    setError(signUpPassword, 'invalid password')
+    setError(signUpPassword, 'only alphabetic or/and numeric characters allowed')
   }else{
     setSuccess(signUpPassword);
     valid = true;
@@ -204,3 +204,33 @@ const isValidPassword = password => {
   const re = /^[0-9a-zA-Z]{6,}$/;
   return re.test(password);
 }
+
+function theme_switch() {
+  const current = localStorage.getItem('theme');
+  switch (current) {
+      case "theme-dark":
+          localStorage.setItem('theme', "theme-light")
+          document.getElementById("themeSwitch").classList.remove("fa-moon");
+          document.getElementById("themeSwitch").classList.add("fa-sun");
+          break
+      case "theme-light":
+          localStorage.setItem('theme', "theme-dark")
+          document.getElementById("themeSwitch").classList.remove("fa-sun");
+          document.getElementById("themeSwitch").classList.add("fa-moon");
+          break
+      default:
+          localStorage.setItem('theme', "theme-dark")
+          console.log("click case default")
+          break
+
+  }
+  document.body.removeAttribute("class")
+  document.body.classList.add(localStorage.getItem('theme'))
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem('theme')) theme_switch();
+  else document.body.classList.add(localStorage.getItem('theme'));
+  if(localStorage.getItem('theme')==="theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
+  if(localStorage.getItem('theme')==="theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
+});
