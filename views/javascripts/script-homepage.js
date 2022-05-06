@@ -208,18 +208,18 @@ const isValidPassword = password => {
 function theme_switch() {
   const current = localStorage.getItem('theme');
   switch (current) {
-      case "theme-dark":
+      case "darkMode":
           localStorage.setItem('theme', "lightMode")
           document.getElementById("themeSwitch").classList.remove("fa-sun");
           document.getElementById("themeSwitch").classList.add("fa-moon");
           break
       case "lightMode":
-          localStorage.setItem('theme', "theme-dark")
+          localStorage.setItem('theme', "darkMode")
           document.getElementById("themeSwitch").classList.remove("fa-moon");
           document.getElementById("themeSwitch").classList.add("fa-sun");
           break
       default:
-          localStorage.setItem('theme', "theme-dark")
+          localStorage.setItem('theme', "darkMode")
           console.log("click case default")
           break
 
