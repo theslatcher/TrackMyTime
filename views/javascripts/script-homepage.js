@@ -210,13 +210,13 @@ function theme_switch() {
   switch (current) {
       case "theme-dark":
           localStorage.setItem('theme', "theme-light")
-          document.getElementById("themeSwitch").classList.remove("fa-sun");
-          document.getElementById("themeSwitch").classList.add("fa-moon");
+          document.getElementById("themeSwitch").classList.remove("fa-moon");
+          document.getElementById("themeSwitch").classList.add("fa-sun");
           break
       case "theme-light":
           localStorage.setItem('theme', "theme-dark")
-          document.getElementById("themeSwitch").classList.remove("fa-moon");
-          document.getElementById("themeSwitch").classList.add("fa-sun");
+          document.getElementById("themeSwitch").classList.remove("fa-sun");
+          document.getElementById("themeSwitch").classList.add("fa-moon");
           break
       default:
           localStorage.setItem('theme', "theme-dark")
@@ -229,6 +229,8 @@ function theme_switch() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!localStorage.getItem('theme')) theme_switch()
-  else document.body.classList.add(localStorage.getItem('theme'))
+  if (!localStorage.getItem('theme')) theme_switch();
+  else document.body.classList.add(localStorage.getItem('theme'));
+  if(localStorage.getItem('theme')==="theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
+  if(localStorage.getItem('theme')==="theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
 });
