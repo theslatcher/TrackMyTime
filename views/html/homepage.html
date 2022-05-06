@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style-homepage.css">
     <link rel="stylesheet" href="../css/reset-homepage.css">
+    <link rel="stylesheet" href="../css/nav-bar-btn.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <script src="../javascripts/script-homepage.js" defer></script>
     <title>Track my time</title>
   </head>
-  <body class="bg-color">
+  <body>
     <header class = "primary-header container">
       <div class = "logo">
-        <img src="../assets/logo.PNG" alt="logo of the website">
+        <!-- <img src="../assets/logo.PNG" alt="logo of the website"> -->
+        <i class="fas fa-clock"></i>
       </div>
-      <div class ="brand-title">Track my time</div>
+      <div class ="brand-title" onclick ="window.location = '/';">Track my time</div>
       <a href = "#" class = "toggle-btn">
         <span class = "bar"></span>
         <span class = "bar"></span>
@@ -27,13 +29,13 @@
           <li data-tab-target="#about" class="tab">About us</li>
           <li data-tab-target="#registration" class="tab">Registration</li>
           <li data-tab-target="#log-in" class="tab">Log in</li>
+          <li class="tab" onClick = "theme_switch()"><span id="themeSwitch" class ="fas"></span></li>
+          <li></li>
         </ul>
       </div>
     
   </header>
-
     <div class="page-content container">
-
       <div id="home" data-tab-content class="active">
         <h1>Get started</h1>
         <div class = "guide-container">
@@ -62,15 +64,13 @@
               <p>Organize your schedule </p>
               <center><img src="../assets/img3-home.svg" alt ="setup targets"> </center>
             </div>
-
           </div>
         </div>
-   
       </div>
 
       <div id="registration" data-tab-content>
         <div>
-          <h2> Cutomer form</h2>
+          <h2> Registration form</h2>
           <form id="sign-up-form">
             <div class="form-group">
               <label for="username">Username</label>
@@ -131,11 +131,26 @@
 
         <div id="how-it-work" data-tab-content>
           <h1>Manual</h1>
+          <p>First you need an account. The username should have around 4 to 20 characters, you are free to choose among alphabetic and/or nummeric characters, only special characters are "-  _  ." allowed
+            . Your first name 
+          </p>
         </div>
 
         <div id="about" data-tab-content>
           <h1>Who are we?</h1>
-          <img src="../assets/sologan.PNG" alt="our sologon">
+          <h3>Our story</h3>
+          <img src="../assets/sologan.PNG" alt="our sologon" class = "right">
+          <p>Far away, in Sweden, a group of student need to finish a project to pass a course of cs programme. <br/>
+            They kept wondering, "What should we do?” and “How could we finish it in 1 month?" So, they created a time tracking tool.<br/>
+            And they named it Track My Time.<br/>
+          </p>
+          <h3>Our team members</h3>
+          <p> Hampus Sjöstedt Nilsson: Backend Developer
+            Kristian Åkerblom: Supporter
+            Marcus Weman: Backend Developer
+            Niklas Ling: Frondend Developer
+            Xuan Dung Tran: Frontend Developer
+          </p>
         </div>
       </div>
 
