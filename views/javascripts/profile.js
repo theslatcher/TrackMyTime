@@ -48,9 +48,9 @@ async function editUser() {
         data.first_name = first_name.value
     if (isNameValid(last_name) && last_name.value != "")
         data.last_name = last_name.value
-    if (isNameValid(email) && email.value != "")
+    if (isEmailValid(email) && email.value != "")
         data.email = email.value
-    if (isNameValid(pass) && pass.value != "")
+    if (isPassValid(pass) && pass.value != "")
         data.new_password = pass.value
     //need a better way. pass is shown
     data.curr_password = window.prompt("Enter your current password", "")
