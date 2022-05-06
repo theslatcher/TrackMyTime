@@ -204,3 +204,26 @@ const isValidPassword = password => {
   const re = /^[0-9a-zA-Z]{6,}$/;
   return re.test(password);
 }
+
+function theme_switch() {
+  const current = localStorage.getItem('theme');
+  switch (current) {
+      case "theme-dark":
+          localStorage.setItem('theme', "lightMode")
+          document.getElementById("themeSwitch").classList.remove("fa-sun");
+          document.getElementById("themeSwitch").classList.add("fa-moon");
+          break
+      case "lightMode":
+          localStorage.setItem('theme', "theme-dark")
+          document.getElementById("themeSwitch").classList.remove("fa-moon");
+          document.getElementById("themeSwitch").classList.add("fa-sun");
+          break
+      default:
+          localStorage.setItem('theme', "theme-dark")
+          console.log("click case default")
+          break
+
+  }
+  document.body.removeAttribute("class")
+  document.body.classList.add(localStorage.getItem('theme'))
+}

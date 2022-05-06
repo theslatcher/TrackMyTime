@@ -87,3 +87,92 @@ i {
   text-align: center;
   font-weight:bold;
 }
+
+#registration, #log-in{
+  margin:auto;
+  width: 50%;
+  padding-top: 20px;
+}
+
+#about > img {
+  height: auto; 
+  width: auto; 
+  max-width: 500px; 
+  max-height: 500px;
+}
+
+@media (max-width: 800px){
+  #about > img {
+    max-width: 300px; 
+    max-height: 300px;
+  }
+}
+
+#about > p {
+  white-space: pre-line;
+}
+
+.right {
+  float: right;
+  margin-left: 1em;
+}
+
+h2 {
+  background: var(--clr-purple);
+  letter-spacing: 0.1rem;
+  padding: 1rem;
+  cursor: default;
+  color: var(--clr-white);
+}
+
+.form-group label {
+  display: block;
+  margin: 1rem 0 0.5rem 0;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 1rem 0.8rem;
+  border: 1px solid var(--clr-dark);
+  outline: 0;
+  transition: border 0.15s;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  height: 2.6rem;
+}
+
+.submit {
+  font-weight: bold;
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: var(--clr-purple);
+  cursor: pointer;
+  color: var(--clr-white);;
+}
+
+.submit:hover {
+  background-color: var(--clr-submitHover);
+}
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"] {
+  border: 1px solid var(--clr-dark);
+}
+
+.form-group.success input {
+  border-color: var(--clr-success);
+}
+
+.form-group.error input {
+  border-color: var(--clr-error);
+}
+
+.form-group .error {
+  color: var(--clr-error);
+  font-size: 9px;
+  height: 13px;
+}
