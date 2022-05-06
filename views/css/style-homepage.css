@@ -10,7 +10,7 @@
 /* ------------------- */
 /* Custome properties  */
 /* ------------------- */
-.darkMode{
+.theme-dark{
   --clr-dark: #0B0D17;
   --clr-white: #ffffff;
   --clr-purple: #926AA6;
@@ -25,7 +25,7 @@
   --background: var(--clr-dark);
 }
 
-.lightMode{
+.theme-light{
   --clr-dark: #0B0D17;
   --clr-white: #ffffff;
   --clr-purple: #926AA6;
