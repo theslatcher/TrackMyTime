@@ -42,7 +42,7 @@ async function editUser() {
     const pass = document.getElementById("password")
 
 
-    if (isNameValid(username) && username.value != "")
+    if (username.value != "")
         data.username = username.value
     if (isNameValid(first_name) && first_name.value != "")
         data.first_name = first_name.value
