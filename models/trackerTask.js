@@ -14,10 +14,6 @@ var TrackerTask = sequelize.define('TrackerTask', {
     },
     color: DataTypes.STRING,
     goal: DataTypes.INTEGER,
-    currenttime: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
-    },
     userId: {
         type: DataTypes.INTEGER,
         references: 'User',

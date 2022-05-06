@@ -53,7 +53,10 @@ const create_tracker = async () => {
             "userId": user1.userId
         })
     }
-    )
+    ).then(response => response.json())
+    .then(tracker => {
+        console.log(tracker);
+    })
 
     load_trackers()
 
