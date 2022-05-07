@@ -4,6 +4,7 @@ const TrackerTask = require("../models/trackerTask")
 const TrackerTime = require("../models/trackerTime")
 const Sequelize = require("sequelize")
 const dayjs = require("dayjs")
+dayjs.Ls.en.weekStart = 1; //might need to be placed someplace else if dayjs will be used elsewhere.
 const { Op } = require("sequelize")
 
 router.post("/", async (req, res) => {
@@ -51,6 +52,18 @@ function getDateQuery(query) {
 			}
 		}
 	}
+    else if (query.w)
+    {
+        const week = dayjs(new Date(query.w))
+        const start = week.startOf('week').format()
+        const end = week.endOf('week').format()
+
+		dateQuery = {
+			dayofyear: {
+				[Op.between]: [start, end]
+			}
+		}
+    }
     else if (query.m)
     {
         const month = dayjs(new Date(query.m))
