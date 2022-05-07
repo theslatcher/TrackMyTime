@@ -4,8 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
 const User = require('../models/user');
-const req = require('express/lib/request');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 
 async function hashPassword(password) {
@@ -17,7 +16,7 @@ async function hashPassword(password) {
 			if (err)
 				return reject(err);
 
-			resolve(salt + ":" + hash.toString('base64'));
+			resolve(salt + ':' + hash.toString('base64'));
 		});
 	});
 }
@@ -36,6 +35,8 @@ async function verifyPassword(hashedPassword, password) {
 	});
 }
 
+const invalidCredsMessage = 'Incorrect username or password.';
+
 passport.use(new LocalStrategy((username, password, done) => {
   return User.findOne({where: Sequelize.where(
 		Sequelize.fn('lower', Sequelize.col('username')), 
@@ -43,16 +44,16 @@ passport.use(new LocalStrategy((username, password, done) => {
   	)})
 	.then(async (response) => {
         if (!response) {
-			return done(null, false, {message: 'Incorrect username or password 5.'}); 
+			return done(null, false, invalidCredsMessage); 
 		}
 
-		const validPassword = await verifyPassword(response.password, password);
+		validPassword = await verifyPassword(response.password, password);
 
 		if (validPassword)
 			return done(null, {userId: response.userId, username: response.username, first_name: response.first_name,
-						last_name: response.last_name, email: response.email});
+						last_name: response.last_name, email: response.email, is_admin: response.username === 'admin'});
 		else
-			return done(null, false, {message: 'Incorrect username or password.'});
+			return done(null, false, invalidCredsMessage);
     })
 	.catch(err => {
         return done(err);
@@ -66,6 +67,8 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
 	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where: {userId: user.userId}})
 	.then(response => {
+		response.is_admin = response.username === 'admin';
+
         return done(null, response);
     })
 	.catch(err => {
@@ -79,29 +82,31 @@ router.post('/signup', async (req, res) => {
 
 	await User.create(req.body)
 		.then(response => {
-			res.status(200).json({message: 'Success!'});
+			res.status(200).json('Success!');
 		})
 		.catch(err => {
-			console.log(err);
-			res.status(409).json({err: err});
+			res.status(409).json({error: err});
 		});
 });
 
 router.post('/login', passport.authenticate('local'), async (req, res) => {
-	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
-	res.status(200).send("Success!");
-	//res.redirect('/');
+	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
+	res.status(200).send('Success!');
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	res.clearCookie("user_details");
-	res.redirect('/');
+	res.clearCookie('user_details');
+	res.status(200).send('Success!');
 });
 
 router.get('/', async (req, res) => {
-	//MW: Should all info be included?
-	User.findAll({attributes: ['userId', 'username', 'first_name', 'last_name', 'email']})
+	let user_attributes = ['userId', 'username'];
+
+	if (req.user && req.user.is_admin)
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findAll({attributes: user_attributes})
 		.then(response => {
 			res.status(200).send(response);
 		})
@@ -112,8 +117,12 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:userId', async (req, res) => {
-	//MW: Only admin, and the user itself, should be able to get this info.
-	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
+	let user_attributes = ['userId', 'username'];
+
+	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findOne({attributes: user_attributes, where:{userId: req.params.userId}})
 		.then(response => {
 			res.status(200).send(response);
 		})
@@ -124,25 +133,29 @@ router.get('/:userId', async (req, res) => {
 });
 
 router.delete('/:userId', async (req, res) => {
-	//MW: Should check to see if the correct user is sending the request.
-	User.destroy({where:{userId: req.params.userId}})
-		.then(response => {
-			res.status(200).send({message: "Success!"});
-		}).catch(err => {
-			console.log(err);
-			res.status(404).send({error: err});
-		});
+	if (req.user && (req.user.is_admin || req.user.userId === req.params.userId))
+	{
+		User.destroy({where:{userId: req.params.userId}})
+			.then(response => {
+				res.status(200).send({message: 'Success!'});
+			}).catch(err => {
+				console.log(err);
+				res.status(404).send({error: err});
+			});
+	}
+	else
+		res.status(409).send({error: new Error('Denied access.')});
 });
 
 router.put('/:userId', async (req, res) => {
-	const is_admin = req.user ? req.user.username === 'admin' : false;
+	const admin_request = (req.user && req.user.is_admin);
 
-	if (!is_admin && !req.body.curr_password)
+	if (!admin_request && !req.body.curr_password)
 		return res.status(409).send({error: new Error('Invalid password!')});
 
 	User.findOne({where: {userId : req.params.userId}})
 		.then(async (response) => {
-			if (is_admin || await verifyPassword(response.password, req.body.curr_password))
+			if (admin_request || await verifyPassword(response.password, req.body.curr_password))
 			{
 				let update_fields = {};
 
@@ -163,7 +176,7 @@ router.put('/:userId', async (req, res) => {
 
 				User.update(update_fields, {where:{userId: req.params.userId}})
 					.then(response => {
-						res.status(200).send("Success!");
+						res.status(200).send('Success!');
 					})
 					.catch(err => {
 						res.status(409).send({error: err});
@@ -175,6 +188,6 @@ router.put('/:userId', async (req, res) => {
 		.catch (err => {
 			res.status(409).send({error: err});
 		});
-})
+});
 
 module.exports = router;
