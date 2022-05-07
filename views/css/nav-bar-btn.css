@@ -67,6 +67,11 @@ background-color: var(--clr-submitHover);
       cursor: pointer;
 
 }
+  .logo-title-container{
+     display: flex;
+     align-items: center;
+
+   }
 .container {
   padding-inline: 2rem;
   margin-inline: auto;
@@ -79,17 +84,11 @@ background-color: var(--clr-submitHover);
         align-items: flex-start;
         min-height: 50px;
     }
-  
-    .logo{
-      position: relative;
-      top: 0.7rem;
-      left: 0.5rem;
-    }
-    .brand-title{
-        position: absolute;
-        top: .5rem;
-        left: 5rem;
-      }
+   .logo-title-container{
+     margin-top: 0.5rem;
+
+   }
+ 
     .toggle-btn {
         display: flex;
     }

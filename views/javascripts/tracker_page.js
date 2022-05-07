@@ -158,7 +158,7 @@ function card_template(tracker) {
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
                 <h2 class = ""> ${tracker.name}</h2>
-                <button class = "card-button" style="${"color:" + tracker.color}" onclick="card_form_toggle(this)" >+</button>
+                <button class = "card-button" " onclick="card_form_toggle(this)" >+</button>
                 <h1 class="">${time.hours + "h"}</h1>
                 
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
@@ -167,7 +167,7 @@ function card_template(tracker) {
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
 
                 <h2 class = "card-goal">${"Goal is " + tracker.goal}</h2>
-                <button class = "card-button card-hidden" style="${"color:" + tracker.color}" onclick="add_new_time(this)" >=</button>
+                <button class = "card-button card-hidden" " onclick="add_new_time(this)" >=</button>
             </div>
     `)
 

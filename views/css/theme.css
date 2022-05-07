@@ -50,6 +50,7 @@
 }
 
 body{
+  color-scheme: var(--theme); 
   font-family: var(--font);
   font-size: 18px;
   color: var(--foreground);

@@ -2,6 +2,10 @@
   display: block;
   margin: 1rem 0 0.5rem 0;
 }
+input{
+  background-color: var(--clr-white);
+  color: var(--clr-dark);
+}
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"] {
