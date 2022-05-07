@@ -133,12 +133,31 @@ router.get('/:userId', async (req, res) => {
 });
 
 router.delete('/:userId', async (req, res) => {
-	if (req.user && (req.user.is_admin || req.user.userId === req.params.userId))
+	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
 	{
-		User.destroy({where:{userId: req.params.userId}})
-			.then(response => {
-				res.status(200).send({message: 'Success!'});
-			}).catch(err => {
+		User.findOne({where: {userId : req.params.userId}})
+			.then(async (response) => {
+				if (response.username === 'admin')
+					return res.status(409).send({error: new Error('Cannot delete admin users.')});
+
+				let allowed = req.user.is_admin;
+
+				if (!allowed && req.body.password)
+					allowed = await verifyPassword(response.password, req.body.password);
+
+				if (!allowed)
+					return res.status(409).send({error: new Error('Cannot delete your account without providing password.')});
+
+				User.destroy({where:{userId: req.params.userId}})
+					.then(response => {
+						res.status(200).send({message: 'Success!'});
+					})
+					.catch(err => {
+						console.log(err);
+						res.status(404).send({error: err});
+					});
+			})
+			.catch(err => {
 				console.log(err);
 				res.status(404).send({error: err});
 			});
