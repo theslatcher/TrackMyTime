@@ -19,7 +19,6 @@ background-color: var(--clr-submitHover);
     display: flex;
     align-items:center;
     justify-content:space-between;
-    flex-direction: row;
     box-shadow: var(--shadows);
 }
 .logo {
@@ -28,12 +27,8 @@ background-color: var(--clr-submitHover);
 }
 /*This is toggle button style (=) hidden*/
 .toggle-btn {
-    position: absolute;
-    top: .75rem;
-    right: 1rem;
     display: none;
-    flex-direction: column;
-    justify-content: space-between;
+    
     width: 30px;
     height: 21px;
   }
@@ -86,11 +81,17 @@ background-color: var(--clr-submitHover);
     }
    .logo-title-container{
      margin-top: 0.5rem;
-
+     width: 100%;
+     text-overflow: ellipsis;
    }
  
     .toggle-btn {
         display: flex;
+        align-self: end;
+        flex-direction: column;
+        justify-content: space-between;
+
+
     }
   
     .navbar-links {
@@ -113,5 +114,8 @@ background-color: var(--clr-submitHover);
   
     .navbar-links.active {
         display: flex;
+        align-self: end;
+        flex-direction: column;
+        justify-content: space-between;
     }
   }
