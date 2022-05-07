@@ -23,8 +23,6 @@ app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
 app.use(express.static('views'));
 
-app.use(express.static('views'));
-
 app.use(require('express-session')({
 	secret: process.env.SessionSecret,
 	resave: false,
