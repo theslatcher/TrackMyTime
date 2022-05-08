@@ -158,7 +158,8 @@ function card_template(tracker) {
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
                 <h2 class = ""> ${tracker.name}</h2>
-                <button class = "card-button" " onclick="card_form_toggle(this)" >+</button>
+               
+               <i class="fas fa-plus card-button" onclick="card_form_toggle(this)"></i>  
                 <h1 class="">${time.hours + "h"}</h1>
                 
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
@@ -167,13 +168,12 @@ function card_template(tracker) {
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
 
                 <h2 class = "card-goal">${"Goal is " + tracker.goal}</h2>
-                <button class = "card-button card-hidden" " onclick="add_new_time(this)" >=</button>
+                <i class="fas fa-equals card-button card-hidden" onclick="add_new_time(this)"></i>
+                
             </div>
     `)
 
 }
-
-
 function trackerButtons_template() {
     return (`
     <div class="button-container">
@@ -212,14 +212,15 @@ function test(some) {
 function form_template() {
     return (`
     <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
-                    <input class = "form_text"type="text" placeholder="Name">
+                    <input class = "form_text"type="text" placeholder="Type name of new tracker">
                     <h1 class="form-title">Goal</h1>
                     <input class = "form-input" type="number" id="newgoal"placeholder="0" min="0">
                     <h1 class="form-title">Color</h1>
 
                     <input class = "form-input form_color" onchange="test(this)"type="color">
-                    <button class="negative form_button" type="button" onclick="load_trackers()" >x</button>
-                    <button class="possetive form_button" type="button" onclick="create_tracker()" >(y)</button>
+                    <i class="far fa-window-close  form_button" onclick="load_trackers()"></i>
+                  <i class="far fa-check-square form_button"  onclick="create_tracker()"></i>
+                    
 
             </form>`)
 }
