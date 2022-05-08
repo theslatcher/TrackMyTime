@@ -29,12 +29,15 @@ router.get('/signout', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
+	const page_size = 10;
+	const page = req.query.p || req.query.page || 1;
+
 	let user_attributes = ['userId', 'username'];
 
 	if (req.user && req.user.is_admin)
 		user_attributes.push('first_name', 'last_name', 'email');
 
-	User.findAll({attributes: user_attributes})
+	User.findAll({attributes: user_attributes, offset: ((page-1)*page_size), limit: page_size})
 		.then(response => {
 			res.status(200).send(response);
 		})
