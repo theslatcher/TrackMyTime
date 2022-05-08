@@ -74,7 +74,7 @@ background-color: var(--clr-submitHover);
 }
   /*navbar, footer change to a column list when screensize smaller than 800px, toggle button appears*/
   @media (max-width: 840px) {
-    .primary-header,.guide-container, .list {
+    .primary-header, .list {
         flex-direction: column;
         align-items: flex-start;
         min-height: 50px;

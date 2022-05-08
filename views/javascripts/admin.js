@@ -48,8 +48,8 @@ function buildUserTable(info) {
             <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.username + ` </td>
             <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.first_name + `</td>
             <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.last_name + ` </td>
-            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit"> Edit </td>
-            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit"> Delete </td>
+            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit" id="edit"> Edit </td>
+            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit" id="delete"> Delete </td>
         </tr>    
         `)
     }
@@ -108,8 +108,8 @@ function editUser(userId) {
     <td class="userInfo"> ${selectedUserRow.children[0].innerHTML} </td>
     <td> <input type="text" onkeypress="this.style.width = (this.value.length ) + 'ch';" class="userInput" id="update_firstname" value="${selectedUserRow.children[1].innerHTML}" </td>
     <td> <input type="text" onkeypress="this.style.width = (this.value.length) + 'ch';" class="userInput"id="update_lastname" value="${selectedUserRow.children[2].innerHTML}" </td>
-    <td onclick="javascript:saveUser('` + userId + `')" class="userEdit"> Save </td>
-    <td onclick="javascript:deleteUser('` + userId + `')" class="userEdit"> Delete </td>
+    <td onclick="javascript:saveUser('` + userId + `')" class="userEdit" id="edit"> Save </td>
+    <td onclick="javascript:deleteUser('` + userId + `')" class="userEdit" id="delete"> Delete </td>
     `
 }
 
