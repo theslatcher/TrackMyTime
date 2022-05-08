@@ -1,81 +1,87 @@
-body{
-    background-color: var(--color-primary);
-    color: var(--font-color);
-    font-family: 'Inter', sans-serif;
-}
-
 button{
     margin-left: 1rem;
     margin-top: 2rem;
     padding: 0.5rem;
-    color: var(--font-color);
-    background-color: var(--color-active);
+    color: var(--foreground);
+    background-color: var(--clr-purple);
     outline: none;
 }
 
 h1{
-    background: var(--color-possetive);
+    background: var(--clr-purple);
     font-size: x-large;
     padding: 1rem;
     letter-spacing: 0.1rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    color: var(--font-color);
+    color: var(--clr-white);
+    margin:5% 0;
 }
 
 h2{
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     font-size: x-large;
 }
 
 #main-div{
-    margin-top: 2%;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
-#Users, #Stats{
-    margin-left: 5%;
-    margin-top: 2.5%;
-    float: left;
-}
+
 
 #Stats{
-    margin-left: 10%;
     display: none;
 }
 
 td, tr{
-    background-color: var(--color-background);
-    color: var(--font-color);
+    background-color: var(--background);
+    color: var(--foreground);
     border-collapse: collapse;
 }
 
-.userEdit:hover{
-    background-color: var(--color-columnhover);
-    color: var(--font-color);
-    cursor: pointer;
+.userEdit{
+    padding: 3px;
 }
 
-#userTable tr:hover td{
+#delete{
+    background-color: rgb(212, 23, 23);
+}
+
+#edit{
+    background-color: rgb(50, 107, 206);
+}
+
+#userTable tr:hover .userInfo{
     cursor: pointer;
-    background-color: var(--color-columnhover);
+    background-color: var(--clr-columnhover);
+    color: var(--font-color);
+}
+
+#userTable #delete:hover{
+    cursor: pointer;
+    background-color: rgb(255, 28, 28);
+    color: var(--font-color);
+}
+
+#userTable #edit:hover{
+    cursor: pointer;
+    background-color: dodgerblue;
     color: var(--font-color);
 }
 
 .userHeader:hover{
-    background-color: var(--color-headerhover);
+    background-color: var(--clr-headerhover);
     cursor: pointer;
 }
 
 .taskHeader:hover{
-    background-color: var(--color-headerhover);
+    background-color: var(--clr-headerhover);
     cursor: pointer;
 }
 
 .userEdit{
     text-align: center;
     width: 5%;
+    
 }
 
 .userInfo{
@@ -85,24 +91,63 @@ td, tr{
     padding-bottom: 0.5rem;
 }
 
+.userInput{
+    width: 25%;
+    min-width: 5ch;
+    max-width: 50%;
+    display: block;
+    margin-inline: auto;
+    text-align: center;
+    color: var(--foreground);
+    background-color: var(--background);
+    border: 2px solid var(--foreground);
+
+}
 .userInfo, .userEdit{
+    
     margin-bottom: 1rem;
 }
 
 table{
+    font-size: 1rem;
     border-spacing: 0px;
     box-shadow: var(--shadows);
-    border: 1px var(--font-color) solid;
+    border: 1px var(--foreground) solid;
+    width: 100%;
 }
 
 th{
     padding: 0.5rem;
-    background-color: var(--color-possetive);
-    color: var(--font-color);
+    background-color: var(--clr-possetive);
+    color: var(--foreground);
 }
 
 .taskColumn{
     margin-left: 0.1rem;
     margin-bottom: 0.3rem;
     padding: 0.25rem;
+    text-align: center;
+}
+
+@media screen  and (min-width: 400px) { 
+    #main-div{
+        margin-inline: 5%;
+    }
+    h1{
+        margin-inline: 5%;
+    }
+}
+
+@media screen  and (min-width: 766px) { 
+    #main-div{
+    
+    grid-template-columns:  70% 30%;
+}
+table{
+    font-size: 1.2rem;
+    
+}
+#Stats{
+    margin-left: 2rem;
+}
 }

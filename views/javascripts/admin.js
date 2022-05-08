@@ -6,33 +6,33 @@ var sorted = "Descending"
 var userSortedBy = "username"
 var taskSortedBy
 
-async function fetchTasks(userId){
+async function fetchTasks(userId) {
     return fetch("/task/user/" + userId, {
         method: "GET",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         }
     })
-    .then(response => response.json())
-    .then(info => {
-        return info
-    })
+        .then(response => response.json())
+        .then(info => {
+            return info
+        })
 }
 
-async function fetchUsers(){
+async function fetchUsers() {
     return fetch("/user", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
         }
     })
-    .then(response => response.json())
-    .then(info => {
-        return info
-    })
+        .then(response => response.json())
+        .then(info => {
+            return info
+        })
 }
 
-function buildUserTable(info){
+function buildUserTable(info) {
     userTable.innerHTML = `<thead>
         <tr class="userInfo">
             <th class="userHeader" onclick="javascript:sortTable('username', 'Users')"> Username </th>
@@ -42,47 +42,51 @@ function buildUserTable(info){
             <th></th>
         </tr>
         </thead>`
-    for(user of info){
+    for (user of info) {
         userTable.insertAdjacentHTML("beforeend", `
         <tr id='` + user.userId + `'>
-            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.username + ` </td>
-            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.first_name + `</td>
-            <td onclick="javascript:getSpecific('`+ user.userId +`')" class="userInfo">` + user.last_name + ` </td>
-            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit"> Edit </td>
-            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit"> Delete </td>
+            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.username + ` </td>
+            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.first_name + `</td>
+            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.last_name + ` </td>
+            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit" id="edit"> Edit </td>
+            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit" id="delete"> Delete </td>
         </tr>    
         `)
     }
 }
 
-function buildTaskTable(info, userId){
+function buildTaskTable(info, userId) {
     var current = 0
     var totalGoal = 0
 
     statTable.innerHTML = `
     <tr>
         <th class="taskHeader" onclick="javascript:sortTable('name', 'Tasks', '` + userId + `')"> Name </th>
-        <th class="taskHeader" onclick="javascript:sortTable('currenttime', 'Tasks', '` + userId + `')"> Current Time </th>
+        <th class="taskHeader" onclick="javascript:sortTable('currenttime', 'Tasks', '` + userId + `')"> Time </th>
         <th class="taskHeader" onclick="javascript:sortTable('goal', 'Tasks', '` + userId + `')"> Goal </th>
     </tr>
     `
 
-    for(task of info){
+    for (task of info) {
         current += task.currenttime
         totalGoal += task.goal
+        time = calc_time_from_db(task.currenttime)
+
+
         statTable.insertAdjacentHTML("beforeend", `
         <tr>
             <td class="taskColumn">` + task.name + `</td>
-            <td class="taskColumn">` + task.currenttime + `h</td>
+            <td class="taskColumn">` + (time.hours + "h " + time.min + "m") + `</td>
             <td class="taskColumn">` + task.goal + `h</td>
         </tr>    
         `)
     }
+    time = calc_time_from_db(current)
 
     statTable.insertAdjacentHTML("beforeend", `
     <tr>
         <td class="taskColumn" style="font-weight: bold"> Total </td>
-        <td class="taskColumn" style="font-weight: bold"> `+ current +`h </td>
+        <td class="taskColumn" style="font-weight: bold"> `+ (time.hours + "h " + time.min + "m") + ` </td>
         <td class="taskColumn" style="font-weight: bold"> ` + totalGoal + `h </td>
     </tr>
         `)
@@ -90,29 +94,29 @@ function buildTaskTable(info, userId){
     statDiv.style.display = "block"
 }
 
-function getUsers(){
+function getUsers() {
     sortTable("username", "Users")
 }
 
-function getSpecific(userId){
+function getSpecific(userId) {
     sortTable("name", "Tasks", userId)
 }
 
-function editUser(userId){
+function editUser(userId) {
     const selectedUserRow = document.getElementById(userId);
     selectedUserRow.innerHTML = `
-    <td> ${selectedUserRow.children[0].innerHTML} </td>
-    <td> <input type="text" id="update_firstname" value="${selectedUserRow.children[1].innerHTML}" </td>
-    <td> <input type="text" id="update_lastname" value="${selectedUserRow.children[2].innerHTML}" </td>
-    <td onclick="javascript:saveUser('` + userId + `')" class="userEdit"> Save </td>
-    <td onclick="javascript:deleteUser('` + userId + `')" class="userEdit"> Delete </td>
+    <td class="userInfo"> ${selectedUserRow.children[0].innerHTML} </td>
+    <td> <input type="text" onkeypress="this.style.width = (this.value.length ) + 'ch';" class="userInput" id="update_firstname" value="${selectedUserRow.children[1].innerHTML}" </td>
+    <td> <input type="text" onkeypress="this.style.width = (this.value.length) + 'ch';" class="userInput"id="update_lastname" value="${selectedUserRow.children[2].innerHTML}" </td>
+    <td onclick="javascript:saveUser('` + userId + `')" class="userEdit" id="edit"> Save </td>
+    <td onclick="javascript:deleteUser('` + userId + `')" class="userEdit" id="delete"> Delete </td>
     `
 }
 
-async function saveUser(userId){
+async function saveUser(userId) {
     const savedFirstName = document.getElementById("update_firstname")
     const savedLastName = document.getElementById("update_lastname")
-    
+
     const savedUser = {
         first_name: savedFirstName.value,
         last_name: savedLastName.value
@@ -120,8 +124,8 @@ async function saveUser(userId){
 
     await fetch('/user/' + userId, {
         method: "PUT",
-        headers:{
-           "Content-Type": "application/json"
+        headers: {
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(savedUser)
     }).then(response => {
@@ -131,24 +135,24 @@ async function saveUser(userId){
     updateTable()
 }
 
-async function deleteUser(userId){
+async function deleteUser(userId) {
     await fetch('/time/user/' + userId, {
         method: "DELETE",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         }
     })
 
     await fetch('/task/user/' + userId, {
         method: "DELETE",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         }
     })
 
     await fetch('/user/' + userId, {
         method: "DELETE",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         }
     }).then(response => {
@@ -157,53 +161,53 @@ async function deleteUser(userId){
 }
 
 // The userId in this function is optional and only needed if the tasks table is to be sorted
-async function sortTable(sortBy, Type, userId){
+async function sortTable(sortBy, Type, userId) {
     var info
     var sortedBy
-    if(Type == "Users"){
+    if (Type == "Users") {
         sortedBy = userSortedBy
         info = await fetchUsers()
-    }else{
+    } else {
         info = await fetchTasks(userId)
     }
-    
-    if(sorted == "Ascending" && sortBy == sortedBy){
+
+    if (sorted == "Ascending" && sortBy == sortedBy) {
         sorted = "Descending"
         info.sort((a, b) => {
-            if(isNaN(a[sortBy])){
+            if (isNaN(a[sortBy])) {
                 return b[sortBy].localeCompare(a[sortBy])
-            }else{
-                return b[sortBy]-a[sortBy]
+            } else {
+                return b[sortBy] - a[sortBy]
             }
         })
-    }else{
+    } else {
         sorted = "Ascending"
         info.sort((a, b) => {
-            if(isNaN(a[sortBy])){
+            if (isNaN(a[sortBy])) {
                 return a[sortBy].localeCompare(b[sortBy])
-            }else{
-                return a[sortBy]-b[sortBy]
+            } else {
+                return a[sortBy] - b[sortBy]
             }
         })
     }
 
-    if(Type == "Users"){
+    if (Type == "Users") {
         userSortedBy = sortBy
         buildUserTable(info)
-    }else{
+    } else {
         buildTaskTable(info, userId)
     }
-    
+
 }
 
-async function updateTable(){
+async function updateTable() {
     const info = await fetchUsers()
 
-    if(sorted == "Ascending"){
+    if (sorted == "Ascending") {
         info.sort((a, b) => {
             return a[userSortedBy].localeCompare(b[userSortedBy])
         })
-    }else{
+    } else {
         info.sort((b, a) => {
             return a[userSortedBy].localeCompare(b[userSortedBy])
         })
@@ -212,23 +216,6 @@ async function updateTable(){
     buildUserTable(info)
 }
 
-function changeStyle(){
-    const current = localStorage.getItem('theme');
-    switch (current) {
-        case "theme-dark":
-            localStorage.setItem('theme', "theme-light")
-            break
-        case "theme-light":
-            localStorage.setItem('theme', "theme-dark")
-            break
-        default:
-            localStorage.setItem('theme', "theme-dark")
-            break
-
-    }
-    document.body.removeAttribute("class")
-    document.body.classList.add(localStorage.getItem('theme'))
-}
 
 async function logout() {
     await fetch('/user/signout')
@@ -236,10 +223,6 @@ async function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem('theme')){
-        changeStyle()
-    }
-    document.body.classList.add(localStorage.getItem('theme'))
+    theme_check()
+    getUsers()
 })
-
-getUsers()
