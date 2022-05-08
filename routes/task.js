@@ -6,35 +6,42 @@ const Sequelize = require("sequelize")
 const dayjs = require("dayjs")
 dayjs.Ls.en.weekStart = 1; //might need to be placed someplace else if dayjs will be used elsewhere.
 const { Op } = require("sequelize")
+const auth = require("../lib/auth")
 
-router.post("/", async (req, res) => {
-    await TrackerTask.create(req.body).then(response => {
+router.post("/", auth.require_logged_in, async (req, res) => {
+    if (!req.user.is_admin)
+        req.body.userId = req.user.userId;
+
+    TrackerTask.create(req.body).then(response => {
         res.status(200)
         res.send({body: response.dataValues})
-    }).catch(err => {
-        res.status(409),
-            res.send({ err: err.detail })
-    })
+    }).catch(err => {res.send(409).send({error: err})})
 })
 
-router.delete("/", async (req, res) => {
-    await TrackerTask.destroy({ where: { trackerid: req.body.trackerid } }).then(response => {
+router.delete("/", auth.require_logged_in, async (req, res) => {
+    let whereStatement = { trackerid: req.body.trackerid }
+
+    if (!req.user.is_admin)
+        whereStatement["userId"] = req.user.userId
+
+    TrackerTask.destroy({ where: whereStatement }).then(response => {
         res.status(200)
         res.send("Success!")
     }).catch(err => {
-        res.status(409)
-        res.send({ err: err.detail })
+        res.status(409).send({ error: err })
     })
 })
 
-router.get("/", async (req, res) => {
-    await TrackerTask.findAll().then(response => {
+router.get("/", auth.require_logged_in, async (req, res) => {
+    let whereStatement = {}
+
+    if (!req.user.is_admin)
+        whereStatement["userId"] = req.user.userId
+
+    TrackerTask.findAll({where: whereStatement}).then(response => {
         res.status(200)
         res.send(response)
-    }).catch(err => {
-        res.status(404)
-        res.send({ err: err.detail })
-    })
+    }).catch(err => {res.send(409).send({error: err})})
 })
 
 function getDateQuery(query) {
@@ -92,45 +99,57 @@ function getDateQuery(query) {
     return dateQuery
 }
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth.require_logged_in, async (req, res) => {
+    let whereStatement = { trackerid: req.params.trackerid }
+
+    if (!req.user.is_admin)
+        whereStatement["userId"] = req.user.userId
+
 	const dateQuery = getDateQuery(req.query)
 	
-    await TrackerTask.findOne({
+    TrackerTask.findOne({
         attributes: {
             include: [[Sequelize.fn("SUM", Sequelize.col("TrackerTime.totaltime")), "currenttime"]]
         },
-        where: { trackerid: req.params.id },
+        where: whereStatement,
         include: { model: TrackerTime, as: 'TrackerTime', attributes: [], where: dateQuery },
         group: ['TrackerTask.trackerid']
     })
         .then(response => {
             res.status(200)
             res.send(response)
-        }).catch(err => {
-            res.status(404)
-            res.send({ err: err.detail })
-        })
+        }).catch(err => {res.send(404).send({error: err})})
 })
 
-router.put("/:id", async (req, res) => {
-    await TrackerTask.update({ name: req.body.name, color: req.body.color, goal: req.body.goal },
-        { where: { trackerid: req.params.id } }).then(response => {
+router.put("/:id", auth.require_logged_in, async (req, res) => {
+    let whereStatement = { trackerid: req.params.id };
+
+    if (!req.user.is_admin)
+        whereStatement["userId"] = req.user.userId;
+
+    TrackerTask.update({ name: req.body.name, color: req.body.color, goal: req.body.goal },
+        { where: whereStatement }).then(response => {
             res.status(200)
             res.send("Success!")
-        })
+        }).catch(err => {res.send(409).send({error: err})})
 })
 
-router.delete("/user/:userId", async (req, res) => {
-    //MW: Should check to see if the correct user is sending the request.
+router.delete("/user/:userId", auth.require_logged_in, async (req, res) => {
+    if (!(req.user.is_admin || (req.user.userId == req.params.userId)))
+        return res.status(403).send({error: new Error('Forbidden Access.')})
+
     TrackerTask.destroy({ where: { userId: req.params.userId } }).then(response => {
         res.sendStatus(200, response)
-    }).catch(err => console.log(err))
+    }).catch(err => {res.send(409).send({error: err})})
 })
 
-router.get("/user/:userId", async (req, res) => {
+router.get("/user/:userId", auth.require_logged_in, async (req, res) => {
+    if (!(req.user.is_admin || (req.user.userId == req.params.userId)))
+        return res.status(403).send({error: new Error('Forbidden Access')})
+
     const dateQuery = getDateQuery(req.query)
 
-    await TrackerTask.findAll(({
+    TrackerTask.findAll(({
         attributes: {
             include: [[Sequelize.fn("SUM", Sequelize.col("TrackerTime.totaltime")), "currenttime"]]
         },
@@ -140,7 +159,7 @@ router.get("/user/:userId", async (req, res) => {
     })).then(response => {
         res.status(200)
         res.send(response)
-    }).catch(err => console.log(err))
+    }).catch(err => {res.send(409).send({error: err})})
 })
 
 

@@ -34,7 +34,7 @@ router.get('/signout', async (req, res) => {
     });
 });
 
-router.get('/', async (req, res) => {
+router.get('/', auth.require_logged_in, async (req, res) => {
 	const page_size = 10;
 	const page = req.query.p || req.query.page || 1;
 
@@ -53,10 +53,10 @@ router.get('/', async (req, res) => {
 		});
 });
 
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', auth.require_logged_in, async (req, res) => {
 	let user_attributes = ['userId', 'username'];
 
-	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
+	if (req.user.is_admin || (req.user.userId == req.params.userId))
 		user_attributes.push('first_name', 'last_name', 'email');
 
 	User.findOne({attributes: user_attributes, where:{userId: req.params.userId}})
@@ -69,8 +69,8 @@ router.get('/:userId', async (req, res) => {
 		});
 });
 
-router.delete('/:userId', async (req, res) => {
-	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
+router.delete('/:userId', auth.require_logged_in, async (req, res) => {
+	if (req.user.is_admin || (req.user.userId == req.params.userId))
 	{
 		User.findOne({where: {userId : req.params.userId}})
 			.then(async (response) => {
@@ -100,13 +100,11 @@ router.delete('/:userId', async (req, res) => {
 			});
 	}
 	else
-		res.status(409).send({error: new Error('Denied access.')});
+		res.status(403).send({error: new Error('Forbidden Access.')});
 });
 
-router.put('/:userId', async (req, res) => {
-	const admin_request = (req.user && req.user.is_admin);
-
-	if (!admin_request && !req.body.curr_password)
+router.put('/:userId', auth.require_logged_in, async (req, res) => {
+	if (!req.user.is_admin && !req.body.curr_password)
 		return res.status(409).send({error: new Error('Invalid password!')});
 
 	User.findOne({where: {userId : req.params.userId}})
