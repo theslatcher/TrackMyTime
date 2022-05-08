@@ -19,7 +19,6 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', auth.authenticate, async (req, res) => {
 	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
-	console.log('logged in.');
 	
 	req.session.save(function() {             
         return res.status(200).send('Success!');
@@ -27,7 +26,7 @@ router.post('/login', auth.authenticate, async (req, res) => {
 }); 
 
 router.get('/signout', async (req, res) => {
-	await req.logOut();
+	req.logOut();
 	res.clearCookie('user_details');
 	
 	req.session.save(function() {             

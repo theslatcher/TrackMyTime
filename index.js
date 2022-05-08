@@ -56,7 +56,6 @@ const timeRouter = require('./routes/time');
 app.use('/time/', timeRouter);
 
 app.get('/', (req, res) => {
-	console.log('get root');
 	if (req.user)
 		if (req.user.is_admin)
 			res.sendFile(path.join(__dirname, '/views/html/admin.html'));
