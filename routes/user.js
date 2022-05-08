@@ -19,13 +19,19 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', auth.authenticate, async (req, res) => {
 	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
-	res.status(200).send('Success!');
+	
+	req.session.save(function() {             
+        return res.status(200).send('Success!');
+    });
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
 	res.clearCookie('user_details');
-	res.status(200).send('Success!');
+	
+	req.session.save(function() {             
+        return res.status(200).send('Success!');
+    });
 });
 
 router.get('/', async (req, res) => {

@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const path = require('path');
+const cron = require('node-cron');
 
 app.use(function (req, res, next) {
 	if (req.url != '/favicon.ico') {
@@ -23,10 +24,16 @@ app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
 app.use(express.static('views'));
 
-app.use(require('express-session')({
+const db = require('./db');
+const expressSession = require('express-session');
+const sequelizeStore = require("connect-session-sequelize")(expressSession.Store);
+const sessionStore = new sequelizeStore({db: db.db});
+
+app.use(expressSession({
 	secret: process.env.SessionSecret,
 	resave: false,
 	saveUninitialized: false,
+	store: sessionStore,
 	cookie: {
 		expires: false,
 		secure: false, //HTTPS-only
@@ -49,7 +56,7 @@ const timeRouter = require('./routes/time');
 app.use('/time/', timeRouter);
 
 app.get('/', (req, res) => {
-	if (req.isAuthenticated())
+	if (req.user)
 		if (req.user.is_admin)
 			res.sendFile(path.join(__dirname, '/views/html/admin.html'));
 		else
@@ -59,3 +66,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Running on ${port}!`));
+
+cron.schedule('0 * * * *', () => {
+	sessionStore.stopExpiringSessions();
+});
