@@ -1,12 +1,7 @@
 
 
 
-body{
-    background-color: var(--color-primary);
-    color: var(--font-color);
-    font-family: 'Inter', sans-serif;
-    color-scheme: var(--theme) ;
-}
+
 
 .card-container{
     display: grid;
@@ -23,11 +18,11 @@ body{
 
 }
 .possetive{
-        background-color:var(--color-possetive);
+        background-color:var(--clr-purple);
         color: black;
 }
 .negative{
-        background-color:var(--color-negative);
+        background-color:var(--clr-error);
         color: black;
 }
 
@@ -44,8 +39,8 @@ body{
 }
 
 .bActive{
-    background-color:var(--color-active);
-    color: var(--color-background);
+    background-color:var(--clr-purple);
+    color: var(--clr-white);
 }
 
 
@@ -53,13 +48,14 @@ body{
     display: grid;
     width: 238px;
     height: 284px;
-    background-color: var(--color-background);
+    background-color: var(--background);
     z-index: 1;
     grid-template-columns: 1fr  1fr;
     
     grid-template-rows: 1fr  1fr 1fr 1fr;
 }
 .card *{
+
     font-size: 3rem;
     justify-self: center;
     align-self: center;
@@ -69,10 +65,12 @@ body{
   grid-column: 1;
 }
 .card h2{
+    color: var(--foreground);
   font-size: 1.25rem;
   width: 10ch;
   white-space: nowrap; 
   overflow: hidden;
+  background-color: var(--background);
   text-overflow: ellipsis;
         text-align: center;
 
@@ -112,31 +110,14 @@ body{
       justify-self: center;
 }
 
-ul{
-    display: flex;
-    justify-content: space-evenly;
-    background-color: var(--color-background);
-    box-shadow:var(--shadows);
-    margin-inline: auto;
-    max-width: 60rem;
-} 
 
 
-li {
-    display: inline;
-    font-size: 1.5rem;
-    margin: 1rem;
-    cursor: pointer;
 
-  
-}
-
-
-input{
+.card input{
     height: 2.7rem;
     width: 50%;
-    background-color: var(--color-background);
-    color: var(--font-color);
+    background-color: var(--background);
+    color: var(--foreground);
 
     outline: 0;
     
@@ -148,16 +129,15 @@ input{
     height: 2rem;
     margin: 0.2rem 0 0 0.2rem;
     font-size: 1.2rem;
-    background-color: var(--color-primary);
+    background-color: var(--background);
     border: 0;
-    color: var(--font-color);
 }
 .form_text{
     grid-row: 1;
     grid-column: 1/3;
     font-size: 1.25rem;
     border: 0;
-    border-bottom: 1px solid var(--font-color);
+    border-bottom: 1px solid var(--foreground);
     text-align: center;
 
 }
@@ -189,14 +169,17 @@ button{
     margin: 0.2rem;
     width: 70px;
     height: 60px;
-    border: 1px solid var(--font-color);
     text-align: center;
     font-size: 1rem;
-    background-color:var(--color-background) ;
-    color: var(--font-color);
+    background-color:var(--background) ;
+    color: var(--foreground);
     cursor: pointer;
+    
 }
+button:hover{
+      background-color: var(--clr-hover);
 
+}
 [data-tab-content] {
     display: none;
 }

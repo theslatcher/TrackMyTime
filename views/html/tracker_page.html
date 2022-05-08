@@ -6,27 +6,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../css/reset.css">
         <link rel="stylesheet" href="../css/theme.css">
-        <link rel="stylesheet" href="../css/profile.css">
-        <link rel="stylesheet" href="../css/tracker_page.css">
+        <link rel="stylesheet" href="../css/input-forms.css">
+        <link rel="stylesheet" href="../css/nav-bar-btn.css">
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+        <link rel="stylesheet" href="../css/tracker_page.css">
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
             rel="stylesheet">
-        <script src="../javascripts/tracker_page.js" type="text/javascript"
-            defer> </script>
-        <script src="../javascripts/profile.js" type="text/javascript"
-            defer> </script>
+        <script src="../javascripts/tracker_page.js" defer> </script>
+        <script src="../javascripts/shared.js" defer></script>
+        <script src="../javascripts/profile.js" defer> </script>
         <title>TrackMyTime</title>
     </head>
     <body>
-        <div class="nav-container">
-            <ul>
-                <li data-tab-target="#profile">Profile</li>
-                <li data-tab-target="#trackers">Home</li>
-                <li data-tab-target="#graphs">Graphs</li>
-            </ul>
-        </div>
+        <header class="primary-header container">
+            <div class="logo">
+                <!-- <img src="../assets/logo.PNG" alt="logo of the website"> -->
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="brand-title" onclick="window.location= '/';">Track my
+                time</div>
+            <a href="#" class="toggle-btn">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+            <div class="navbar-links">
+                <ul class="tabs">
+                    <li data-tab-target="#profile" class="tab">Profile</li>
+                    <li data-tab-target="#trackers" class="tab">Trackers</li>
+                    <li data-tab-target="#graphs" class="tab">Graphs</li>
+                    <li class="tab" onclick="logout()">Log out</li>
+                    <li class="tab" onClick="theme_switch()"><span
+                            id="themeSwitch"
+                            class="fas"></span></li>
+
+                </ul>
+            </div>
+
+        </header>
         <div id="profile" data-tab-content>
         </div>
         <div id="graphs" data-tab-content>

@@ -42,7 +42,7 @@ async function editUser() {
     const pass = document.getElementById("password")
 
 
-    if (isNameValid(username) && username.value != "")
+    if (username.value != "")
         data.username = username.value
     if (isNameValid(first_name) && first_name.value != "")
         data.first_name = first_name.value
@@ -76,7 +76,7 @@ async function editUser() {
 
 
 function profile_template(user1) {
-    return (`<h1>Profile page</h1>
+    return (`<h2>Profile page</h2>
             <form id="profile-form">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -86,7 +86,8 @@ function profile_template(user1) {
                         id="username"
                         placeholder="${user1.username}"
                         />
-                    
+                                    </div>
+
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input
@@ -95,7 +96,8 @@ function profile_template(user1) {
                         id="first_name"
                         placeholder="${user1.first_name}"
                         />
-                    
+                                    </div>
+
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
                     <input
@@ -104,6 +106,8 @@ function profile_template(user1) {
                         id="last_name"
                         placeholder="${user1.last_name}"
                         />
+                                        </div>
+
                    
                 <div class="form-group">
                     <label for="email">Email Address</label>
@@ -113,6 +117,8 @@ function profile_template(user1) {
                         id="email"
                         placeholder="${user1.email}"
                         />
+                                        </div>
+
                 <div class="form-group">
                     <label for="password">New Password</label>
                     <input
@@ -121,13 +127,13 @@ function profile_template(user1) {
                         id="password"
                         placeholder="******"
                         />
+                                        </div>
+
                 <div class="button-group">
-                <button onclick="logout()"type="button" class="negative">
-                     Log out
-                    </button>
-                <button type="button" onclick="theme_switch()"id="theme-switch">theme</button>
-                    <button onclick="editUser()"type="button" class="possetive">
-                     save
+              
+                    <button onclick="editUser()"type="button" class="submit"> 
+                    <i class="far fa-paper-plane"></i>
+                     Send
                     </button>
                 </div>
              </form>

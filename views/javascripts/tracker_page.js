@@ -26,11 +26,6 @@ const load_trackers = async () => {
     const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
     url.searchParams.append(localStorage.getItem('filter'), date)
 
-
-
-
-
-
     const res = await fetch(url)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
@@ -123,10 +118,7 @@ const delete_tracker = async () => {
 
 }
 
-async function logout() {
-    await fetch('http://localhost:3000/user/signout')
-    location.href = '/'
-}
+
 
 
 
@@ -156,24 +148,21 @@ function card_form_toggle(button) {
     button.parentElement.children[7].classList.toggle("card-hidden");
 }
 
+
+
+
 function card_template(tracker) {
-    let h = Math.floor(tracker.currenttime)
-    let min = Math.round((tracker.currenttime - h) * 60)
-    if (min == 60) {
-        h++
-        min = 0
-    }
-    if (min == 0) min = ""
-    else min += "m"
+    const time = calc_time_from_db(tracker.currenttime)
+
     return (`
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
                 <h2 class = ""> ${tracker.name}</h2>
                 <button class = "card-button" style="${"color:" + tracker.color}" onclick="card_form_toggle(this)" >+</button>
-                <h1 class="">${h + "h"}</h1>
+                <h1 class="">${time.hours + "h"}</h1>
                 
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
-                <h1 class="">${min}</h1>
+                <h1 class="">${time.min + "m"}</h1>
 
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
 
@@ -212,11 +201,6 @@ function trackerButtons_template() {
     </div>
     `)
 
-
-
-
-
-
 }
 
 
@@ -227,7 +211,7 @@ function test(some) {
 }
 function form_template() {
     return (`
-    <form id="create_new_card" class="card" style=" border: 3px solid var(--font-color)">
+    <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
                     <input class = "form_text"type="text" placeholder="Name">
                     <h1 class="form-title">Goal</h1>
                     <input class = "form-input" type="number" id="newgoal"placeholder="0" min="0">
@@ -241,25 +225,7 @@ function form_template() {
 }
 
 
-function theme_switch() {
-    const current = localStorage.getItem('theme');
-    switch (current) {
-        case "theme-dark":
-            localStorage.setItem('theme', "theme-light")
-            break
-        case "theme-light":
-            localStorage.setItem('theme', "theme-dark")
-            break
-        default:
-            localStorage.setItem('theme', "theme-dark")
-            break
 
-    }
-    document.body.removeAttribute("class")
-    document.body.classList.add(localStorage.getItem('theme'))
-
-
-}
 
 
 
@@ -303,9 +269,7 @@ function filterButton(button) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem('theme')) theme_switch()
-    else document.body.classList.add(localStorage.getItem('theme'))
-
+    theme_check()
 
     if (!localStorage.getItem('filter'))
         localStorage.setItem('filter', "w")
