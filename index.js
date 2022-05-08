@@ -23,8 +23,6 @@ app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
 app.use(express.static('views'));
 
-app.use(express.static('views'));
-
 app.use(require('express-session')({
 	secret: process.env.SessionSecret,
 	resave: false,
@@ -52,7 +50,7 @@ app.use('/time/', timeRouter);
 
 app.get('/', (req, res) => {
 	if (req.isAuthenticated())
-		if (req.user.username === 'admin')
+		if (req.user.is_admin)
 			res.sendFile(path.join(__dirname, '/views/html/admin.html'));
 		else
 			res.sendFile(path.join(__dirname, '/views/html/tracker_page.html'));
