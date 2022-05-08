@@ -102,7 +102,7 @@ const checkFirstName = () => {
   if (firstName === '') {
     setError(signUpFirstName, 'First name is required')
   } else {
-    if (/^[0-9]+$/.test(firstName)) {
+    if (isValidName(firstName)) {
       setError(signUpFirstName, 'your first name should not be/have number')
     } else {
       setSuccess(signUpFirstName);
@@ -117,7 +117,7 @@ const checkLastName = () => {
   if (lastName === '') {
     setError(signUpLastName, 'Last name is required')
   } else {
-    if (/^[0-9]+$/.test(lastName)) {
+    if (isValidName(lastName)) {
       setError(signUpLastName, 'your last name should not be/have number')
     } else {
       setSuccess(signUpLastName)
@@ -168,39 +168,7 @@ const checkPassword = () => {
   return valid;
 }
 
-const setError = (element, message) => {
-  const inputControl = element.parentElement
-  const errorDisplay = inputControl.querySelector('.error')
 
-  errorDisplay.innerText = message
-  inputControl.classList.add('error')
-  inputControl.classList.remove('success')
-}
-
-const setSuccess = (element) => {
-  const inputControl = element.parentElement
-  const errorDisplay = inputControl.querySelector('.error')
-
-  errorDisplay.innerText = ''
-  inputControl.classList.add('success')
-  inputControl.classList.remove('error')
-}
-
-const isValidEmail = (email) => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(email).toLowerCase())
-}
-
-const isValidUserName = username => {
-  const re = /^(?=.{4,20}$)(?:[a-zA-Z\d]+(?:(?:\.|-|_)[a-zA-Z\d])*)+$/;
-  return re.test(username);
-}
-
-const isValidPassword = password => {
-  const re = /^[0-9a-zA-Z]{6,}$/;
-  return re.test(password);
-}
 
 
 

@@ -19,7 +19,6 @@ background-color: var(--clr-submitHover);
     display: flex;
     align-items:center;
     justify-content:space-between;
-    flex-direction: row;
     box-shadow: var(--shadows);
 }
 .logo {
@@ -28,12 +27,8 @@ background-color: var(--clr-submitHover);
 }
 /*This is toggle button style (=) hidden*/
 .toggle-btn {
-    position: absolute;
-    top: .75rem;
-    right: 1rem;
     display: none;
-    flex-direction: column;
-    justify-content: space-between;
+    
     width: 30px;
     height: 21px;
   }
@@ -67,6 +62,11 @@ background-color: var(--clr-submitHover);
       cursor: pointer;
 
 }
+  .logo-title-container{
+     display: flex;
+     align-items: center;
+
+   }
 .container {
   padding-inline: 2rem;
   margin-inline: auto;
@@ -79,19 +79,18 @@ background-color: var(--clr-submitHover);
         align-items: flex-start;
         min-height: 50px;
     }
-  
-    .logo{
-      position: relative;
-      top: 0.7rem;
-      left: 0.5rem;
-    }
-    .brand-title{
-        position: absolute;
-        top: .5rem;
-        left: 5rem;
-      }
+   .logo-title-container{
+     margin-top: 0.5rem;
+     width: 100%;
+     text-overflow: ellipsis;
+   }
+ 
     .toggle-btn {
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+
     }
   
     .navbar-links {
@@ -114,5 +113,8 @@ background-color: var(--clr-submitHover);
   
     .navbar-links.active {
         display: flex;
+        align-self: end;
+        flex-direction: column;
+        justify-content: space-between;
     }
   }
