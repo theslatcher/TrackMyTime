@@ -1,38 +1,3 @@
-
-function isEmailValid(email) {
-    const regex = new RegExp(/[^@\s]+@[^@\s]+\.[^@\s]+/);
-    if (regex.test(email.value)) {
-        return true;
-    }
-    else {
-        alert(email.value)
-        return false;
-    }
-}
-function isNameValid(myName) {
-    const regex = new RegExp(/^([^0-9]*)$/);
-
-    if (regex.test(myName.value)) {
-        return true;
-    }
-    else {
-        alert(myName.value)
-        return false;
-    }
-}
-function isPassValid(pass) {
-    if (pass.value.length > 5) {
-        return true;
-    }
-    else {
-        pass.setAttribute
-        return false;
-    }
-}
-
-function isDatavalid() {
-
-}
 async function editUser() {
     const data = {}
     const username = document.getElementById("username")
@@ -40,44 +5,54 @@ async function editUser() {
     const last_name = document.getElementById("last_name")
     const email = document.getElementById("email")
     const pass = document.getElementById("password")
+    const current_pass = document.getElementById("current_password")
 
-
-    if (username.value != "")
-        data.username = username.value
-    if (isNameValid(first_name) && first_name.value != "")
-        data.first_name = first_name.value
-    if (isNameValid(last_name) && last_name.value != "")
-        data.last_name = last_name.value
-    if (isEmailValid(email) && email.value != "")
-        data.email = email.value
-    if (isPassValid(pass) && pass.value != "")
-        data.new_password = pass.value
-    //need a better way. pass is shown
-    data.curr_password = window.prompt("Enter your current password", "")
-    const user1 = await user();
-    console.log(data);
-    const res = await fetch("http://localhost:3000/user/" + user1.userId,
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT',
-            body: JSON.stringify(data)
-        })
-    if (res.ok) {
-        const user2 = await user();
-        document.getElementById("profile").innerHTML = profile_template(user2)
-        alert("yaaay, it worked, new info displayed")
+    if (username.value != "") {
+        if (isValidUserName(username.value)) data.username = username.value
+        else setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
     }
-    else alert("shitty password")
+    if (first_name.value != "") {
+        if (isValidName(first_name.value)) data.first_name = first_name.value
+        else setError(first_name, 'your first name should not be / have number')
+    }
 
+    if (last_name.value != "") {
+        if (isValidName(last_name.value)) data.last_name = last_name.value
+        else setError(last_name, 'your last name should not be / have number')
+    }
+    if (email.value != "") {
+        if (isValidEmail(email.value)) data.email = email.value
+        else setError(email, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+    }
+    if (pass.value != "") {
+        if (isValidPassword(pass.value)) data.pass = pass.value
+        else setError(pass, 'only alphabetic or/and numeric characters allowed') //why?
+    }
+
+    if (Object.entries(data).length > 0) {
+        data.curr_password = current_pass.value
+        const user1 = await user();
+        const res = await fetch("http://localhost:3000/user/" + user1.userId,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(data)
+            })
+        if (res.ok) {
+            location.href = '/' //should i stay or should i go?
+
+        }
+        else setError(current_pass, 'invalid password')
+    }
 }
 
 
 function profile_template(user1) {
-    return (`<h2>Profile page</h2>
-            <form id="profile-form">
+    return (`<h2>Edit profile</h2>
+            <form  id="profile-form">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input
@@ -86,7 +61,9 @@ function profile_template(user1) {
                         id="username"
                         placeholder="${user1.username}"
                         />
-                                    </div>
+                    <div class="error"></div>
+
+                </div>
 
                 <div class="form-group">
                     <label for="firstName">First Name</label>
@@ -96,7 +73,9 @@ function profile_template(user1) {
                         id="first_name"
                         placeholder="${user1.first_name}"
                         />
-                                    </div>
+                <div class="error"></div>
+
+                </div>
 
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
@@ -106,7 +85,8 @@ function profile_template(user1) {
                         id="last_name"
                         placeholder="${user1.last_name}"
                         />
-                                        </div>
+                <div class="error"></div>
+                </div>
 
                    
                 <div class="form-group">
@@ -117,7 +97,8 @@ function profile_template(user1) {
                         id="email"
                         placeholder="${user1.email}"
                         />
-                                        </div>
+                    <div class="error"></div>
+                </div>
 
                 <div class="form-group">
                     <label for="password">New Password</label>
@@ -127,11 +108,22 @@ function profile_template(user1) {
                         id="password"
                         placeholder="******"
                         />
-                                        </div>
-
+                    <div class="error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="current password">Current Password*</label>
+                    <input
+                        type="password"
+                        name="current password"
+                        id="current_password"
+                        placeholder="******"
+                        required
+                        />
+                    <div class="error"></div>
+                </div>
                 <div class="button-group">
               
-                    <button onclick="editUser()"type="button" class="submit"> 
+                    <button type="submit" class="submit" id="submit"> 
                     <i class="far fa-paper-plane"></i>
                      Send
                     </button>

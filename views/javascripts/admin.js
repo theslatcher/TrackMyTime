@@ -217,10 +217,7 @@ async function updateTable() {
 }
 
 
-async function logout() {
-    await fetch('/user/signout')
-    location.href = '/'
-}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     theme_check()

@@ -244,6 +244,10 @@ tabs.forEach(tab => {
             case "profile":
                 const user1 = await user();
                 document.getElementById("profile").innerHTML = profile_template(user1)
+                document.getElementById('profile-form').addEventListener("submit", (e) => {
+                    e.preventDefault()
+                    editUser()
+                })
                 break
             case "trackers":
                 load_trackers()
