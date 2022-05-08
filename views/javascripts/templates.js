@@ -2,7 +2,6 @@
 function card_template(tracker) {
     const time = calc_time_from_db(tracker.currenttime)
     const goal = calc_goal(tracker.goal)
-    console.log(goal);
     return (`
         
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
@@ -50,9 +49,7 @@ function trackerButtons_template() {
             <button onclick="filterButton(id)" id="m">Month</button>
             <button onclick="filterButton(id)" id="y">Year</button>
         </div>
-
-
-            <button onclick="add_card()" id="bAdd" class="possetive">Add</button>
+            <button onclick="add_card()"  class="possetive add_tracker">Add</button>
         
     </div>
     <div id = "cards" class="card-container" >
