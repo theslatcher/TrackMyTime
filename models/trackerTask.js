@@ -29,6 +29,7 @@ var TrackerTask = sequelize.define('TrackerTask', {
 TrackerTask.removeAttribute('id');
 
 TrackerTask.hasMany(TrackerTime, { as: 'TrackerTime', foreignKey: 'trackerid' });
+TrackerTime.belongsTo(TrackerTask, { foreignKey: 'trackerid' });
 
 TrackerTask.schema('public');
 

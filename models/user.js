@@ -1,5 +1,6 @@
 const DataTypes = require('sequelize').DataTypes;
 const sequelize = require('../db').db;
+const TrackerTask = require('./trackerTask');
 
 var User = sequelize.define('User', {
 	userId: {
@@ -51,6 +52,9 @@ var User = sequelize.define('User', {
 });
 
 User.removeAttribute('id');
+
+User.hasMany(TrackerTask, { as: 'TrackerTask', foreignKey: 'userId' });
+TrackerTask.belongsTo(User, { foreignKey: 'userId' });
 
 User.schema('public');
 
