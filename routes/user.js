@@ -1,107 +1,43 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const crypto = require('crypto');
 const User = require('../models/user');
-const req = require('express/lib/request');
-const jwt = require("jsonwebtoken");
-const Sequelize = require('sequelize');
-
-async function hashPassword(password) {
-	return new Promise( (resolve, reject) => {
-		const salt = crypto.randomBytes(64).toString('base64');
-		const iterations = 100000;
-		const hashBytes = 64;
-		crypto.pbkdf2(password, salt, iterations, hashBytes, 'sha256', (err, hash) => {
-			if (err)
-				return reject(err);
-
-			resolve(salt + ":" + hash.toString('base64'));
-		});
-	});
-}
-
-async function verifyPassword(hashedPassword, password) {
-	return new Promise( (resolve, reject) => {
-		const salt = hashedPassword.substring(0,88);
-		const iterations = 100000;
-		const hashBytes = 64;
-		crypto.pbkdf2(password, salt, iterations, hashBytes, 'sha256', (err, hash) => {
-			if (err)
-				return reject(err);
-
-			resolve(hash.toString('base64') == hashedPassword.substring(89));
-		});
-	});
-}
-
-passport.use(new LocalStrategy((username, password, done) => {
-  return User.findOne({where: Sequelize.where(
-		Sequelize.fn('lower', Sequelize.col('username')), 
-		Sequelize.fn('lower', username)
-  	)})
-	.then(async (response) => {
-        if (!response) {
-			return done(null, false, {message: 'Incorrect username or password 5.'}); 
-		}
-
-		const validPassword = await verifyPassword(response.password, password);
-
-		if (validPassword)
-			return done(null, {userId: response.userId, username: response.username, first_name: response.first_name,
-						last_name: response.last_name, email: response.email});
-		else
-			return done(null, false, {message: 'Incorrect username or password.'});
-    })
-	.catch(err => {
-        return done(err);
-    });
-}));
-
-passport.serializeUser(function(user, done) {
-	done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where: {userId: user.userId}})
-	.then(response => {
-        return done(null, response);
-    })
-	.catch(err => {
-        return done(err);
-    });
-});
+const jwt = require('jsonwebtoken');
+const auth = require('../lib/auth');
 
 router.post('/signup', async (req, res) => {
 	if (req.body.password)
-			req.body.password = await hashPassword(req.body.password);
+		req.body.password = await auth.hash_password(req.body.password);
 
 	await User.create(req.body)
 		.then(response => {
-			res.status(200).json({message: 'Success!'});
+			res.status(200).json('Success!');
 		})
 		.catch(err => {
-			console.log(err);
-			res.status(409).json({err: err});
+			res.status(409).json({error: err});
 		});
 });
 
-router.post('/login', passport.authenticate('local'), async (req, res) => {
-	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
-	res.status(200).send("Success!");
-	//res.redirect('/');
+router.post('/login', auth.authenticate, async (req, res) => {
+	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
+	res.status(200).send('Success!');
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	res.clearCookie("user_details");
-	res.redirect('/');
+	res.clearCookie('user_details');
+	res.status(200).send('Success!');
 });
 
 router.get('/', async (req, res) => {
-	//MW: Should all info be included?
-	User.findAll({attributes: ['userId', 'username', 'first_name', 'last_name', 'email']})
+	const page_size = 10;
+	const page = req.query.p || req.query.page || 1;
+
+	let user_attributes = ['userId', 'username'];
+
+	if (req.user && req.user.is_admin)
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findAll({attributes: user_attributes, offset: ((page-1)*page_size), limit: page_size})
 		.then(response => {
 			res.status(200).send(response);
 		})
@@ -112,8 +48,12 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:userId', async (req, res) => {
-	//MW: Only admin, and the user itself, should be able to get this info.
-	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
+	let user_attributes = ['userId', 'username'];
+
+	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findOne({attributes: user_attributes, where:{userId: req.params.userId}})
 		.then(response => {
 			res.status(200).send(response);
 		})
@@ -124,25 +64,48 @@ router.get('/:userId', async (req, res) => {
 });
 
 router.delete('/:userId', async (req, res) => {
-	//MW: Should check to see if the correct user is sending the request.
-	User.destroy({where:{userId: req.params.userId}})
-		.then(response => {
-			res.status(200).send({message: "Success!"});
-		}).catch(err => {
-			console.log(err);
-			res.status(404).send({error: err});
-		});
+	if (req.user && (req.user.is_admin || (req.user.userId == req.params.userId)))
+	{
+		User.findOne({where: {userId : req.params.userId}})
+			.then(async (response) => {
+				if (response.username === 'admin')
+					return res.status(409).send({error: new Error('Cannot delete admin users.')});
+
+				let allowed = req.user.is_admin;
+
+				if (!allowed && req.body.password)
+					allowed = await auth.verify_password(response.password, req.body.password);
+
+				if (!allowed)
+					return res.status(409).send({error: new Error('Cannot delete your account without providing password.')});
+
+				User.destroy({where:{userId: req.params.userId}})
+					.then(response => {
+						res.status(200).send({message: 'Success!'});
+					})
+					.catch(err => {
+						console.log(err);
+						res.status(404).send({error: err});
+					});
+			})
+			.catch(err => {
+				console.log(err);
+				res.status(404).send({error: err});
+			});
+	}
+	else
+		res.status(409).send({error: new Error('Denied access.')});
 });
 
 router.put('/:userId', async (req, res) => {
-	const is_admin = req.user ? req.user.username === 'admin' : false;
+	const admin_request = (req.user && req.user.is_admin);
 
-	if (!is_admin && !req.body.curr_password)
+	if (!admin_request && !req.body.curr_password)
 		return res.status(409).send({error: new Error('Invalid password!')});
 
 	User.findOne({where: {userId : req.params.userId}})
 		.then(async (response) => {
-			if (is_admin || await verifyPassword(response.password, req.body.curr_password))
+			if (admin_request || await auth.verify_password(response.password, req.body.curr_password))
 			{
 				let update_fields = {};
 
@@ -159,11 +122,11 @@ router.put('/:userId', async (req, res) => {
 					update_fields['email'] = req.body.email;
 
 				if (req.body.new_password)
-					update_fields['password'] = await hashPassword(req.body.new_password);
+					update_fields['password'] = await auth.hash_password(req.body.new_password);
 
 				User.update(update_fields, {where:{userId: req.params.userId}})
 					.then(response => {
-						res.status(200).send("Success!");
+						res.status(200).send('Success!');
 					})
 					.catch(err => {
 						res.status(409).send({error: err});
@@ -175,6 +138,6 @@ router.put('/:userId', async (req, res) => {
 		.catch (err => {
 			res.status(409).send({error: err});
 		});
-})
+});
 
 module.exports = router;
