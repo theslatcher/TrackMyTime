@@ -1,5 +1,3 @@
-
-
 button{
     margin-left: 1rem;
     margin-top: 2rem;
@@ -40,15 +38,33 @@ td, tr{
     border-collapse: collapse;
 }
 
-.userEdit:hover{
-    background-color: var(--clr-columnhover);
-    color: var(--font-color);
-    cursor: pointer;
+.userEdit{
+    padding: 3px;
 }
 
-#userTable tr:hover td{
+#delete{
+    background-color: rgb(212, 23, 23);
+}
+
+#edit{
+    background-color: rgb(50, 107, 206);
+}
+
+#userTable tr:hover .userInfo{
     cursor: pointer;
     background-color: var(--clr-columnhover);
+    color: var(--font-color);
+}
+
+#userTable #delete:hover{
+    cursor: pointer;
+    background-color: rgb(255, 28, 28);
+    color: var(--font-color);
+}
+
+#userTable #edit:hover{
+    cursor: pointer;
+    background-color: dodgerblue;
     color: var(--font-color);
 }
 
