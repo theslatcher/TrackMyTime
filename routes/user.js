@@ -46,7 +46,7 @@ passport.use(new LocalStrategy((username, password, done) => {
 			return done(null, false, {message: 'Incorrect username or password 5.'}); 
 		}
 
-		const validPassword = await verifyPassword(response.password, password);
+		validPassword = await verifyPassword(response.password, password);
 
 		if (validPassword)
 			return done(null, {userId: response.userId, username: response.username, first_name: response.first_name,
@@ -104,10 +104,6 @@ router.get('/', async (req, res) => {
 	User.findAll({attributes: ['userId', 'username', 'first_name', 'last_name', 'email']})
 		.then(response => {
 			res.status(200).send(response);
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(404).send({error: err});
 		});
 });
 
@@ -116,10 +112,6 @@ router.get('/:userId', async (req, res) => {
 	User.findOne({attributes: ['userId', 'username', 'first_name', 'last_name', 'email'], where:{userId: req.params.userId}})
 		.then(response => {
 			res.status(200).send(response);
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(404).send({error: err});
 		});
 });
 
@@ -135,46 +127,14 @@ router.delete('/:userId', async (req, res) => {
 });
 
 router.put('/:userId', async (req, res) => {
-	const is_admin = req.user ? req.user.username === 'admin' : false;
-
-	if (!is_admin && !req.body.curr_password)
-		return res.status(409).send({error: new Error('Invalid password!')});
-
-	User.findOne({where: {userId : req.params.userId}})
-		.then(async (response) => {
-			if (is_admin || await verifyPassword(response.password, req.body.curr_password))
-			{
-				let update_fields = {};
-
-				if (req.body.username)
-					update_fields['username'] = req.body.username;
-
-				if (req.body.first_name)
-					update_fields['first_name'] = req.body.first_name;
-
-				if (req.body.last_name)
-					update_fields['last_name'] = req.body.last_name;
-
-				if (req.body.email)
-					update_fields['email'] = req.body.email;
-
-				if (req.body.new_password)
-					update_fields['password'] = await hashPassword(req.body.new_password);
-
-				User.update(update_fields, {where:{userId: req.params.userId}})
-					.then(response => {
-						res.status(200).send("Success!");
-					})
-					.catch(err => {
-						res.status(409).send({error: err});
-					});
-			}
-			else
-				res.status(409).send({error: new Error('Invalid password!')});
+	await User.update({username: req.body.username, first_name: req.body.first_name, last_name: req.body.last_name}, 
+		{where:{userId: req.params.userId}}).then(response => {
+			res.status(200)
+        	res.send("Success!")
+		}).catch(err => {
+			res.status(409)
+			res.send({err})
 		})
-		.catch (err => {
-			res.status(409).send({error: err});
-		});
 })
 
 module.exports = router;

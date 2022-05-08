@@ -1,58 +1,26 @@
-
-@import url('https://fonts.googleapis.com/css?family=Oswald:300,700');
-
-
-
 .theme-light {
-  --clr-dark: #0B0D17;
-  --clr-white: #ffffff;
-  --clr-black: black;
-  --clr-purple: #926AA6;
-  --clr-hover: #9877a9;
-
-  --clr-submitHover: #553f61;
-  --clr-error: #ff3860;
-  --clr-success: #09c372;
-  --clr-header: #050505;
-
-  --clr-columnhover: #aaaaaa;
-  --clr-headerhover: #9877a9;
-
-  --font : Oswald; 
+  --color-primary: ffffff;
+  --color-background: ffffff;
+  --color-columnhover: #aaaaaa;
+  --color-headerhover: #9877a9;
+  --font-color: #000000;
+  --color-possetive:  #926AA6;
+  --color-negative: #DC3131;
+  --color-active :  #926AA6;
   --shadows : rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-
-  --foreground: var(--clr-dark);
-  --background: var(--clr-white);
   --theme:light
 }
 
 .theme-dark {
-  --clr-dark: #0B0D17;
-  --clr-white: #ffffff;
-  --clr-black: black;
-  --clr-purple: #926AA6;
-  --clr-hover: #9877a9;
-
-  --clr-submitHover: #553f61;
-  --clr-error: #ff3860;
-  --clr-success: #09c372;
-
-  --clr-header: #050505;
-  --clr-columnhover: #202020;
-  --clr-headerhover: #8e56aa;
-
-  --font : Oswald; 
-  --shadows : rgba(185, 177, 177, 0.25) 0px 6px 12px -2px, rgba(255, 254, 254, 0.3) 0px 3px 7px -3px;
-
-  --foreground: var(--clr-white);
-  --background: var(--clr-dark);
+  --color-primary: #000000;
+  --color-background: #101010;
+  --color-header: #050505;
+  --color-columnhover: #202020;
+  --color-headerhover: #8e56aa;
+  --font-color: #d3d1d1;
+  --color-possetive:  #926AA6;
+  --color-negative: #DC3131; 
+  --color-active :  #926AA6;
+  --shadows : rgba(148, 148, 148, 0.25) 0px 6px 12px -2px, rgba(255, 254, 254, 0.3) 0px 3px 7px -3px;
   --theme:dark
 }
-
-body{
-  font-family: var(--font);
-  font-size: 18px;
-  color: var(--foreground);
-  background-color: var(--background);
-}
-

@@ -3,8 +3,6 @@
     margin-top: 1rem;
     padding: 1rem 1.5rem;
     border: none;
-    width: auto;
-    height: auto;
     background: var(--clr-purple);
     cursor: pointer;
     color: var(--clr-white);;
@@ -20,12 +18,9 @@ background-color: var(--clr-submitHover);
     align-items:center;
     justify-content:space-between;
     flex-direction: row;
-    box-shadow: var(--shadows);
+    box-shadow: var(--shadow);
 }
-.logo {
-  max-height: 100px;
-  max-width: 100px;
-}
+
 /*This is toggle button style (=) hidden*/
 .toggle-btn {
     position: absolute;
@@ -41,55 +36,17 @@ background-color: var(--clr-submitHover);
   .toggle-btn .bar {
     height: 3px;
     width: 100%;
-    background-color: var(--foreground);
+    background-color: var(--toggle-btn);
     border-radius: 10px;
   }
-  .tabs, .list {
-  display: flex;
-  gap: var(--gap, 1rem);
-  list-style-type: none;
-}
 
-.tab {
-  cursor: pointer;
-  padding: 10px;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.tab:hover {
-  background-color: var(--clr-hover);
-}
-  .brand-title{
-  font-size: 1.5rem;
-  flex-grow: 1;
-  font-weight:bold;
-      cursor: pointer;
-
-}
-.container {
-  padding-inline: 2rem;
-  margin-inline: auto;
-  max-width: 80rem;
-}
   /*navbar, footer change to a column list when screensize smaller than 800px, toggle button appears*/
-  @media (max-width: 840px) {
+  @media (max-width: 800px) {
     .primary-header,.guide-container, .list {
         flex-direction: column;
         align-items: flex-start;
-        min-height: 50px;
     }
   
-    .logo{
-      position: relative;
-      top: 0.7rem;
-      left: 0.5rem;
-    }
-    .brand-title{
-        position: absolute;
-        top: .5rem;
-        left: 5rem;
-      }
     .toggle-btn {
         display: flex;
     }

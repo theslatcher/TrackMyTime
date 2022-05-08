@@ -3,75 +3,66 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../assets/favicon.svg">
     <link rel="stylesheet" href="../css/style-homepage.css">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/theme.css">
-    <link rel="stylesheet" href="../css/input-forms.css">
+    <link rel="stylesheet" href="../css/reset-homepage.css">
     <link rel="stylesheet" href="../css/nav-bar-btn.css">
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
-      rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <script src="../javascripts/script-homepage.js" defer></script>
-    <script src="../javascripts/shared.js" defer></script>
-
     <title>Track my time</title>
   </head>
   <body>
-    <header class="primary-header container">
-      <div class="logo">
+    <header class = "primary-header container">
+      <div class = "logo">
         <!-- <img src="../assets/logo.PNG" alt="logo of the website"> -->
         <i class="fas fa-clock"></i>
       </div>
-      <div class="brand-title" onclick="window.location= '/';">Track my time</div>
-      <a href="#" class="toggle-btn">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
+      <div class ="brand-title" onclick ="window.location = '/';">Track my time</div>
+      <a href = "#" class = "toggle-btn">
+        <span class = "bar"></span>
+        <span class = "bar"></span>
+        <span class = "bar"></span>
       </a>
-      <div class="navbar-links">
+      <div class ="navbar-links">
         <ul class="tabs">
           <li data-tab-target="#Home" class="active tab">Home</li>
           <li data-tab-target="#how-it-work" class="tab">How it works</li>
           <li data-tab-target="#about" class="tab">About us</li>
           <li data-tab-target="#registration" class="tab">Registration</li>
           <li data-tab-target="#log-in" class="tab">Log in</li>
-          <li class="tab" onClick="theme_switch()"><span id="themeSwitch"
-              class="fas"></span></li>
+          <li class="tab" onClick = "theme_switch()"><span id="themeSwitch" class ="fas"></span></li>
           <li></li>
         </ul>
       </div>
-
-    </header>
+    
+  </header>
     <div class="page-content container">
       <div id="home" data-tab-content class="active">
         <h1>Get started</h1>
-        <div class="guide-container">
+        <div class = "guide-container">
           <div class="guide-item">
             <div class="guide-content">
               <div class="number"><h1>1</h1></div>
               <h2>Register</h2>
               <p>Create your account</p>
-              <center> <img src="../assets/img1-home.svg" alt="register"></center>
+             <center> <img src="../assets/img1-home.svg" alt="register"></center>
             </div>
           </div>
 
           <div class="guide-item">
             <div class="guide-content">
-              <div class= number> <h1>2</h1></div>
+              <div class = number> <h1>2</h1></div>
               <h2>Fill in information</h2>
               <p>Your personal profile and what things need to be track</p>
-              <center><img src="../assets/img2-home.svg" alt="fill in form"></center>
+              <center><img src="../assets/img2-home.svg" alt ="fill in form"></center>                 
             </div>
           </div>
 
           <div class="guide-item">
             <div class="guide-content">
-              <div class= number> <h1>3</h1></div>
+              <div class = number> <h1>3</h1></div>
               <h2>Setup your target</h2>
               <p>Organize your schedule </p>
-              <center><img src="../assets/img3-home.svg" alt="setup targets">
-              </center>
+              <center><img src="../assets/img3-home.svg" alt ="setup targets"> </center>
             </div>
           </div>
         </div>
@@ -83,32 +74,27 @@
           <form id="sign-up-form">
             <div class="form-group">
               <label for="username">Username</label>
-              <input type="text" name="username" id="sign-up-username"
-                placeholder="Username" />
+              <input type="text" name="username" id="sign-up-username" placeholder="Username"/>
               <div class="error"></div>
             </div>
             <div class="form-group">
               <label for="firstName">First Name</label>
-              <input type="text" name="firstName" id="firstName"
-                placeholder="First name" />
+              <input type="text" name="firstName" id="firstName" placeholder="First name"/>
               <div class="error"></div>
             </div>
             <div class="form-group">
               <label for="lastName">Last Name</label>
-              <input type="text" name="lastName" id="lastName"
-                placeholder="Last name" />
+              <input type="text" name="lastName"  id="lastName" placeholder="Last name"/>
               <div class="error"></div>
             </div>
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" name="Email" id="email"
-                placeholder="name@something.com" />
+              <input type="email" name="Email" id="email" placeholder="name@something.com" />
               <div class="error"></div>
             </div>
             <div class="form-group">
               <label for="password">Password (6 characters minimum)</label>
-              <input type="password" name="password" id="sign-up-password"
-                placeholder="Your password" />
+              <input type="password" name="password" id="sign-up-password" placeholder="Your password" />
               <div class="error"></div>
             </div>
             <div class="form-group">
@@ -120,74 +106,68 @@
         </div>
       </div>
 
-      <div id="log-in" data-tab-content>
-        <h2>User Login</h2>
-        <form id="login-form">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" name="username" id="login-username"
-              placeholder="Username" required />
-            <div class="error"></div>
-          </div>
-          <div class="form-group">
-            <label for="password">Password (6 characters minimum)</label>
-            <input type="password" name="password" id="login-password"
-              placeholder="Your password" required />
-            <div class="error"></div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="submit">
-              <i class="far fa-paper-plane"></i>Login
-            </button>
-          </div>
+        <div id="log-in" data-tab-content>
+          <h2>User Login</h2>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input  type="text" name="username" id="login-username" placeholder="Username" required />
+              <div class="error"></div>
+            </div>
+            <div class="form-group">
+              <label for="password">Password (6 characters minimum)</label>
+              <input type="password" name="password" id="login-password" placeholder="Your password" required />
+              <div class="error"></div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="submit">
+                <i class="far fa-paper-plane"></i>Login
+              </button>
+            </div>
 
-        </form>
+          </form>
+        </div>
+
+
+        <div id="how-it-work" data-tab-content>
+          <h1>Manual</h1>
+          <p>First you need an account. The username should have around 4 to 20 characters, you are free to choose among alphabetic and/or nummeric characters, only special characters are "-  _  ." allowed
+            . Your first name 
+          </p>
+        </div>
+
+        <div id="about" data-tab-content>
+          <h1>Who are we?</h1>
+          <h3>Our story</h3>
+          <img src="../assets/sologan.PNG" alt="our sologon" class = "right">
+          <p>Far away, in Sweden, a group of student need to finish a project to pass a course of cs programme. <br/>
+            They kept wondering, "What should we do?” and “How could we finish it in 1 month?" So, they created a time tracking tool.<br/>
+            And they named it Track My Time.<br/>
+          </p>
+          <h3>Our team members</h3>
+          <p> Hampus Sjöstedt Nilsson: Backend Developer
+            Kristian Åkerblom: Supporter
+            Marcus Weman: Backend Developer
+            Niklas Ling: Frondend Developer
+            Xuan Dung Tran: Frontend Developer
+          </p>
+        </div>
       </div>
 
-
-      <div id="how-it-work" data-tab-content>
-        <h1>Manual</h1>
-        <p>First you need an account. The username should have around 4 to 20
-          characters, you are free to choose among alphabetic and/or nummeric
-          characters, only special characters are "- _ ." allowed
-          . Your first name
-        </p>
-      </div>
-
-      <div id="about" data-tab-content>
-        <h1>Who are we?</h1>
-        <h3>Our story</h3>
-        <img src="../assets/sologan.PNG" alt="our sologon" class="right">
-        <p>Far away, in Sweden, a group of student need to finish a project to
-          pass a course of cs programme. <br/>
-            They kept wondering, "What should we do?” and “How could we finish
-            it in 1 month?" So, they created a time tracking tool.<br/>
-              And they named it Track My Time.<br/>
-              </p>
-              <h3>Our team members</h3>
-              <p> Hampus Sjöstedt Nilsson: Backend Developer
-                Kristian Åkerblom: Supporter
-                Marcus Weman: Backend Developer
-                Niklas Ling: Frondend Developer
-                Xuan Dung Tran: Frontend Developer
-              </p>
-            </div>
-          </div>
-
-          <foot class="footer container">
-            <ul class="list">
-              <li><a href="#">Term</a></li>
-              <li><a href="#">Policy</a></li>
-              <li><a href="#">Information</a></li>
-              <li><a href="#">Site Map</a></li>
-            </ul>
-            <div class="social">
-              <p>Join us</p>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-facebook"></i></a>
-              <a href="#"><i class="fab fa-linkedin"></i></a>
-              <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-          </foot>
-        </body>
-      </html>
+      <foot class="footer container">
+        <ul class="list">
+          <li><a href="#">Term</a></li>
+          <li><a href="#">Policy</a></li>
+          <li><a href="#">Information</a></li>
+          <li><a href="#">Site Map</a></li>
+        </ul>
+        <div class="social">
+          <p>Join us</p>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </foot>
+    </body>
+  </html>

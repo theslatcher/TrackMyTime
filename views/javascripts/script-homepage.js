@@ -1,6 +1,7 @@
 const tabs = document.querySelectorAll('[data-tab-target]')
 const tabContent = document.querySelectorAll('[data-tab-content]')
-
+const toggleButton = document.getElementsByClassName('toggle-btn')[0]
+const navbarLinks = document.getElementsByClassName('navbar-links')[0]
 const signUpForm = document.getElementById('sign-up-form')
 const loginForm = document.getElementById('login-form')
 const loginUserName = document.getElementById('login-username')
@@ -16,7 +17,7 @@ tabs.forEach((tab) => {
     //select the tab when click on
     const target = document.querySelector(tab.dataset.tabTarget)
 
-    //hide the tab content
+    //hidden the tab content
     tabContent.forEach((tabContent) => {
       tabContent.classList.remove('active')
     })
@@ -27,19 +28,21 @@ tabs.forEach((tab) => {
 })
 
 //show tabs when click to toggle button
-
+toggleButton.addEventListener('click', () => {
+  navbarLinks.classList.toggle('active')
+})
 
 signUpForm.addEventListener('submit', (e) => {
   e.preventDefault()
   let isUsernameValid = checkUserName(),
-    isEmailValid = checkEmail(),
-    isPasswordValid = checkPassword(),
-    isFirstNameValid = checkFirstName(),
-    isLastNameValid = checkLastName();
+      isEmailValid = checkEmail(),
+      isPasswordValid = checkPassword(),
+      isFirstNameValid = checkFirstName(),
+      isLastNameValid = checkLastName();
 
   let validateInputs = isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid;
 
-  if (validateInputs) {
+  if(validateInputs){
     console.log("validate input success");
     const signUpUser = {
       username: signUpUserName.value,
@@ -48,7 +51,7 @@ signUpForm.addEventListener('submit', (e) => {
       last_name: signUpLastName.value,
       email: signUpEmail.value,
     }
-
+  
     fetch('/user/signup', {
       method: 'POST',
       headers: {
@@ -57,14 +60,14 @@ signUpForm.addEventListener('submit', (e) => {
       body: JSON.stringify(signUpUser),
     })
       .then((data) => {
-        if (data.ok) alert('Success create an account');
+        if(data.ok) alert('Success create an account');
       })
       .catch((error) => {
         console.error('Error:', error)
       })
   }
-}
-)
+  }
+  )
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault()
@@ -82,12 +85,12 @@ loginForm.addEventListener('submit', (e) => {
     body: JSON.stringify(loginUser),
   })
     .then((data) => {
-      if (data.ok) {
-        console.log('Success to login' + data)
+      if(data.ok){
+        console.log('Success to login' +data)
         location.href = '/'
       }
-      else {
-        console.log("error " + data.status);
+      else{
+        console.log("error "+data.status);
         alert("invalid username or password");
       }
     })
@@ -121,7 +124,7 @@ const checkLastName = () => {
       setError(signUpLastName, 'your last name should not be/have number')
     } else {
       setSuccess(signUpLastName)
-      valid = true;
+      valid= true;
     }
   }
   return valid;
@@ -129,18 +132,18 @@ const checkLastName = () => {
 const checkUserName = () => {
   const userNameValue = signUpUserName.value.trim()
   let valid = false;
-  if (userNameValue === '' || userNameValue === null) {
+  if(userNameValue === '' || userNameValue === null){
     setError(signUpUserName, 'User name is required')
-  } else if (!isValidUserName(userNameValue)) {
+  }else if (!isValidUserName(userNameValue)){
     setError(signUpUserName, 'username must have around 4 to 20 characters, alphabetic or/and numeric, . - _')
-  } else {
+  }else{
     setSuccess(signUpUserName)
-    valid = true;
+    valid= true;
   }
   return valid;
 };
 
-const checkEmail = () => {
+const checkEmail = () =>{
   const emailValue = signUpEmail.value.trim()
   let valid = false;
   if (emailValue === '') {
@@ -149,25 +152,25 @@ const checkEmail = () => {
     setError(signUpEmail, 'Provide a valid email address')
   } else {
     setSuccess(signUpEmail)
-    valid = true;
+    valid= true;
   }
   return valid;
 }
-
+ 
 const checkPassword = () => {
   const password = signUpPassword.value;
   let valid = false;
-  if (password === '' || password === null) {
+  if(password === '' || password === null){
     setError(signUpPassword, 'Password is required')
-  } else if (!isValidPassword(password)) {
+  }else if(!isValidPassword(password)){
     setError(signUpPassword, 'only alphabetic or/and numeric characters allowed')
-  } else {
+  }else{
     setSuccess(signUpPassword);
     valid = true;
   }
   return valid;
 }
-
+ 
 const setError = (element, message) => {
   const inputControl = element.parentElement
   const errorDisplay = inputControl.querySelector('.error')
@@ -202,8 +205,32 @@ const isValidPassword = password => {
   return re.test(password);
 }
 
+function theme_switch() {
+  const current = localStorage.getItem('theme');
+  switch (current) {
+      case "theme-dark":
+          localStorage.setItem('theme', "theme-light")
+          document.getElementById("themeSwitch").classList.remove("fa-moon");
+          document.getElementById("themeSwitch").classList.add("fa-sun");
+          break
+      case "theme-light":
+          localStorage.setItem('theme', "theme-dark")
+          document.getElementById("themeSwitch").classList.remove("fa-sun");
+          document.getElementById("themeSwitch").classList.add("fa-moon");
+          break
+      default:
+          localStorage.setItem('theme', "theme-dark")
+          console.log("click case default")
+          break
 
+  }
+  document.body.removeAttribute("class")
+  document.body.classList.add(localStorage.getItem('theme'))
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-  theme_check()
+  if (!localStorage.getItem('theme')) theme_switch();
+  else document.body.classList.add(localStorage.getItem('theme'));
+  if(localStorage.getItem('theme')==="theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
+  if(localStorage.getItem('theme')==="theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
 });

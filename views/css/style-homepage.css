@@ -10,9 +10,42 @@
 /* ------------------- */
 /* Custome properties  */
 /* ------------------- */
+.theme-dark{
+  --clr-dark: #0B0D17;
+  --clr-white: #ffffff;
+  --clr-purple: #926AA6;
+  --clr-hover: #AAA;
+  --clr-submitHover: #553f61;
+  --clr-error: #ff3860;
+  --clr-success: #09c372;
+  --shadow: rgba(185, 177, 177, 0.25) 0px 6px 12px -2px, rgba(255, 254, 254, 0.3) 0px 3px 7px -3px;
+  --toggle-btn:#ffffff;
 
+  --foreground: var(--clr-white);
+  --background: var(--clr-dark);
+}
 
+.theme-light{
+  --clr-dark: #0B0D17;
+  --clr-white: #ffffff;
+  --clr-purple: #926AA6;
+  --clr-hover: #AAA;
+  --clr-submitHover: #553f61;
+  --clr-error: #ff3860;
+  --clr-success: #09c372;
+  --toggle-btn:#0B0D17;
+  --shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  
+  --foreground: var(--clr-dark);
+  --background: var(--clr-white);
+}
 
+body{
+  font-family: Oswald;
+  font-size: 18px;
+  color: var(--foreground);
+  background-color: var(--background);
+}
 
 .list li > a, .social a > i {
   color: var(--foreground);
@@ -42,7 +75,16 @@
   min-height: calc(100vh - 95px);
 }
 
+.logo{
+  max-height: 100px;
+  max-width: 100px;
+}
 
+.brand-title{
+  font-size: 1.5rem;
+  flex-grow: 1;
+  font-weight:bold;
+}
 
 
 h1 {
