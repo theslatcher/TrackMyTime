@@ -1,55 +1,66 @@
-async function editUser() {
-    const data = {}
-    const username = document.getElementById("username")
-    const first_name = document.getElementById("first_name")
-    const last_name = document.getElementById("last_name")
-    const email = document.getElementById("email")
-    const pass = document.getElementById("password")
-    const current_pass = document.getElementById("current_password")
 
-    if (username.value != "") {
-        if (isValidUserName(username.value)) data.username = username.value
-        else setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
-    }
-    if (first_name.value != "") {
-        if (isValidName(first_name.value)) data.first_name = first_name.value
-        else setError(first_name, 'your first name should not be / have number')
-    }
+function card_template(tracker) {
+    const time = calc_time_from_db(tracker.currenttime)
+    const goal = calc_goal(tracker.goal)
+    console.log(goal);
+    return (`
+        
+             <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
+                <h2 class = ""> ${tracker.name}</h2>
+                <div class ="card-buttons">
+                <i class="fas fa-trash card-button" onclick="delete_tracker(this.parentElement.parentElement.id)"></i>
+               <i class="fas fa-plus card-button" onclick="card_form_toggle(this)"></i>  
+                </div>
+                <h1 class="">${time.hours + "h"}</h1>
+                
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
+                <h1 class="">${time.min + "m"}</h1>
 
-    if (last_name.value != "") {
-        if (isValidName(last_name.value)) data.last_name = last_name.value
-        else setError(last_name, 'your last name should not be / have number')
-    }
-    if (email.value != "") {
-        if (isValidEmail(email.value)) data.email = email.value
-        else setError(email, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
-    }
-    if (pass.value != "") {
-        if (isValidPassword(pass.value)) data.pass = pass.value
-        else setError(pass, 'only alphabetic or/and numeric characters allowed') //why?
-    }
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
 
-    if (Object.entries(data).length > 0) {
-        data.curr_password = current_pass.value
-        const user1 = await user();
-        const res = await fetch("http://localhost:3000/user/" + user1.userId,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(data)
-            })
-        if (res.ok) {
-            location.href = '/' //should i stay or should i go?
+                <h2 class = "card-goal">${"Goal is " + goal}</h2>
+                <i class="fas fa-equals card-button card-hidden" onclick="add_new_time(this)"></i>
+                
+            </div>
+    `)
 
-        }
-        else setError(current_pass, 'invalid password')
-    }
 }
 
 
+function form_template() {
+    return (`
+    <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
+                    <input class = "form_text"type="text" placeholder="Type name of new tracker">
+                    <h1 class="form-title">Goal</h1>
+                    <input class ="form-input" type="number" id="newgoal"placeholder="hrs/day" min="1">
+                    <h1 class="form-title">Color</h1>
+                    <input class = "form-input form_color" onchange="test(this)"type="color">
+                    <i class="far fa-window-close  form_button" onclick="load_trackers()"></i>
+                  <i class="far fa-check-square form_button"  onclick="create_tracker()"></i>
+                    
+
+            </form>`)
+}
+function trackerButtons_template() {
+    return (`
+    <div class="button-container">
+        <div id="filter_buttons">
+            <button onclick="filterButton(id)" id="d">Day</button>
+            <button onclick="filterButton(id)" id="w" >Week</button>
+            <button onclick="filterButton(id)" id="m">Month</button>
+            <button onclick="filterButton(id)" id="y">Year</button>
+        </div>
+
+
+            <button onclick="add_card()" id="bAdd" class="possetive">Add</button>
+        
+    </div>
+    <div id = "cards" class="card-container" >
+
+    </div>
+    `)
+
+}
 function profile_template(user1) {
     return (`<h2>Edit profile</h2>
             <form  id="profile-form">

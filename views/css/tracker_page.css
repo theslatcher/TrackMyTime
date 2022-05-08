@@ -13,10 +13,13 @@
 .button-container{
     margin: 2rem 0rem;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-content: center;
+    justify-content: space-between;
 
 }
+
+
 .possetive{
         background-color:var(--clr-purple);
         color: black;
@@ -88,24 +91,22 @@
 }
 
 
-.card-button{
+.card-buttons{
     grid-column: 2;
-    width: 30px;
-    height: 30px;
-    margin-right: 0.2rem;
-    font-size: 1.5rem;
-    border: 0;
-    justify-self: end;
-    cursor: pointer;
+    margin: 0;
+    display: flex;
+    justify-content: center;
 
 }
-.add-remove-tracker{
-    height: 60px;
-    display: flex;
-    justify-self: center;
-    align-self: start;
-    margin-top: 0.2rem;
+.card-button{
+    margin: 0;
+    font-size: 1.5rem;
+    width: 30px;
+    cursor: pointer;
+
+    height: 30px;
 }
+
 #filter-buttons{
       justify-self: center;
 }
@@ -187,7 +188,12 @@ button:hover{
 .active[data-tab-content] {
   display: block;
 }
+@media screen  and (min-width: 400px) {  
+    .button-container{
+        grid-template-columns: 4fr 1fr ;
 
+}
+}
 
 @media screen  and (min-width: 600px) { 
     button{ width: 90px;
@@ -200,7 +206,7 @@ button:hover{
         
     }
     .button-container{
-        grid-template-columns: 2fr 1fr ;
+        grid-template-columns: 4fr 1fr ;
 
 }
 }

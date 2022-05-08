@@ -15,10 +15,6 @@ function theme_switch() {
             document.getElementById("themeSwitch").classList.remove("fa-sun");
             document.getElementById("themeSwitch").classList.add("fa-moon");
             break
-        default:
-            localStorage.setItem('theme', "theme-dark")
-            console.log("click case default")
-            break
 
     }
     document.body.removeAttribute("class")
@@ -35,7 +31,19 @@ async function logout() {
 }
 
 function theme_check() {
-    if (!localStorage.getItem('theme')) theme_switch()
+    if (!localStorage.getItem('theme')) {
+        if (window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            localStorage.setItem('theme', "theme-dark")
+
+
+        }
+        else {
+            localStorage.setItem('theme', "theme-light")
+        }
+        document.body.classList.add(localStorage.getItem('theme'))
+
+    }
     else document.body.classList.add(localStorage.getItem('theme'))
     if (localStorage.getItem('theme') === "theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
     if (localStorage.getItem('theme') === "theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
