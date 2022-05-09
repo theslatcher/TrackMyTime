@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 const auth = require('../lib/auth');
 
 router.post('/signup', async (req, res) => {
@@ -18,16 +17,13 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', auth.authenticate, async (req, res) => {
-	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
-	
-	req.session.save(function() {             
-        return res.status(200).send('Success!');
+	req.session.save(function() {
+        return res.status(200).json({user: req.user});
     });
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	res.clearCookie('user_details');
 	
 	req.session.save(function() {             
         return res.status(200).send('Success!');
