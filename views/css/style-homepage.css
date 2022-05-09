@@ -100,6 +100,18 @@ h3,p{
   max-width: 80rem;
 }
 
+@media screen and (max-width: 620px){
+  .guide-container{
+    display: block;
+  }
+}
+
+@media screen and (min-width: 620px) and (max-width: 1000px){
+  .guide-container{
+    align-items:center
+  }
+}
+
 
 
 
