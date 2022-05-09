@@ -15,10 +15,6 @@ function theme_switch() {
             document.getElementById("themeSwitch").classList.remove("fa-sun");
             document.getElementById("themeSwitch").classList.add("fa-moon");
             break
-        default:
-            localStorage.setItem('theme', "theme-dark")
-            console.log("click case default")
-            break
 
     }
     document.body.removeAttribute("class")
@@ -35,7 +31,19 @@ async function logout() {
 }
 
 function theme_check() {
-    if (!localStorage.getItem('theme')) theme_switch()
+    if (!localStorage.getItem('theme')) {
+        if (window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            localStorage.setItem('theme', "theme-dark")
+
+
+        }
+        else {
+            localStorage.setItem('theme', "theme-light")
+        }
+        document.body.classList.add(localStorage.getItem('theme'))
+
+    }
     else document.body.classList.add(localStorage.getItem('theme'))
     if (localStorage.getItem('theme') === "theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
     if (localStorage.getItem('theme') === "theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
@@ -52,4 +60,46 @@ function calc_time_from_db(currenttime) {
 
 
     return { "hours": h, "min": min }
+}
+
+
+const setError = (element, message) => {
+    const inputControl = element.parentElement
+    const errorDisplay = inputControl.querySelector('.error')
+
+    errorDisplay.innerText = message
+    inputControl.classList.add('error')
+    inputControl.classList.remove('success')
+}
+
+const setSuccess = (element) => {
+    const inputControl = element.parentElement
+    const errorDisplay = inputControl.querySelector('.error')
+
+    errorDisplay.innerText = ''
+    inputControl.classList.add('success')
+    inputControl.classList.remove('error')
+}
+
+const isValidName = (name) => {
+    const re =
+        /^[0-9]+$/
+    return re.test(String(name).toLowerCase())
+}
+
+
+const isValidEmail = (email) => {
+    const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase())
+}
+
+const isValidUserName = username => {
+    const re = /^(?=.{4,20}$)(?:[a-zA-Z\d]+(?:(?:\.|-|_)[a-zA-Z\d])*)+$/;
+    return re.test(username);
+}
+
+const isValidPassword = password => {
+    const re = /^[0-9a-zA-Z]{6,}$/;
+    return re.test(password);
 }

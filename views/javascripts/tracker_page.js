@@ -29,20 +29,13 @@ const load_trackers = async () => {
     const res = await fetch(url)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
-
-
         document.getElementById("cards").innerHTML += card_template(trackers[index])
-        const opt = document.createElement('option');
-        opt.value = trackers[index].trackerid;
-        opt.innerHTML = trackers[index].name;
-        document.getElementById("select").appendChild(opt);
+
     }
 }
 
 
 const create_tracker = async () => {
-
-    //todo validate?
 
     const name = document.getElementById('create_new_card').children[0].value
     const goal = document.getElementById('create_new_card').children[2].value
@@ -89,8 +82,9 @@ const create_tracker = async () => {
 }
 
 
-const delete_tracker = async () => {
-    if (confirm("Do you want to delete " + document.getElementById("select").options[document.getElementById("select").selectedIndex].text + "?")) {
+const delete_tracker = async (id) => {
+    console.log(id);
+    if (confirm("Do you want to delete " + id)) {
         await fetch("http://localhost:3000/time", {
             headers: {
                 'Accept': 'application/json',
@@ -98,7 +92,7 @@ const delete_tracker = async () => {
             },
             method: 'DELETE',
             body: JSON.stringify({
-                "trackerid": document.getElementById("select").value
+                "trackerid": id
             })
         }
         )
@@ -109,7 +103,7 @@ const delete_tracker = async () => {
             },
             method: 'DELETE',
             body: JSON.stringify({
-                "trackerid": document.getElementById("select").value
+                "trackerid": id
             })
         }
         )
@@ -117,9 +111,33 @@ const delete_tracker = async () => {
     }
 
 }
-
-
-
+function daysInYear() {
+    return isLeapYear(new Date().getFullYear()) ? 366 : 365
+}
+function daysInMonth() {
+    const year = new Date().getFullYear()
+    const month = new Date().getMonth() + 1
+    return new Date(year, month, 0).getDate()
+}
+function isLeapYear(year) {
+    return (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+}
+function calc_goal(goal) {
+    let new_goal = 0
+    switch (localStorage.getItem('filter')) {
+        case "w":
+            new_goal = goal * 7
+            break
+        case "m":
+            new_goal = goal * daysInMonth()
+            break
+        case "y":
+            new_goal = goal * daysInYear()
+            break
+        default: new_goal = goal
+    }
+    return new_goal
+}
 
 
 async function add_new_time(button) {
@@ -143,65 +161,16 @@ async function add_new_time(button) {
 }
 
 function card_form_toggle(button) {
-    button.parentElement.children[3].classList.toggle("card-hidden");
-    button.parentElement.children[5].classList.toggle("card-hidden");
-    button.parentElement.children[7].classList.toggle("card-hidden");
+    button.parentElement.parentElement.children[3].classList.toggle("card-hidden");
+    button.parentElement.parentElement.children[5].classList.toggle("card-hidden");
+    button.parentElement.parentElement.children[7].classList.toggle("card-hidden");
 }
 
 
 
 
-function card_template(tracker) {
-    const time = calc_time_from_db(tracker.currenttime)
-
-    return (`
-        
-             <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
-                <h2 class = ""> ${tracker.name}</h2>
-                <button class = "card-button" style="${"color:" + tracker.color}" onclick="card_form_toggle(this)" >+</button>
-                <h1 class="">${time.hours + "h"}</h1>
-                
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
-                <h1 class="">${time.min + "m"}</h1>
-
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
-
-                <h2 class = "card-goal">${"Goal is " + tracker.goal}</h2>
-                <button class = "card-button card-hidden" style="${"color:" + tracker.color}" onclick="add_new_time(this)" >=</button>
-            </div>
-    `)
-
-}
 
 
-function trackerButtons_template() {
-    return (`
-    <div class="button-container">
-        <div id="filter_buttons">
-            <button onclick="filterButton(id)" id="d">Day</button>
-            <button onclick="filterButton(id)" id="w" >Week</button>
-            <button onclick="filterButton(id)" id="m">Month</button>
-            <button onclick="filterButton(id)" id="y">Year</button>
-        </div>
-
-
-        <div class="add-remove-tracker">
-            <div class="delete add-remove-tracker">
-                <select class="select" id="select">
-                    
-                </select>
-            <button class="negative" onclick="delete_tracker()">Delete</button>
-                    </div>
-
-            <button onclick="add_card()" id="bAdd" class="possetive">Add</button>
-        </div>
-    </div>
-    <div id = "cards" class="card-container" >
-
-    </div>
-    `)
-
-}
 
 
 function test(some) {
@@ -209,24 +178,60 @@ function test(some) {
     document.getElementById("newgoal").setAttribute("style", "border-bottom: 1px solid" + some.value)
 
 }
-function form_template() {
-    return (`
-    <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
-                    <input class = "form_text"type="text" placeholder="Name">
-                    <h1 class="form-title">Goal</h1>
-                    <input class = "form-input" type="number" id="newgoal"placeholder="0" min="0">
-                    <h1 class="form-title">Color</h1>
 
-                    <input class = "form-input form_color" onchange="test(this)"type="color">
-                    <button class="negative form_button" type="button" onclick="load_trackers()" >x</button>
-                    <button class="possetive form_button" type="button" onclick="create_tracker()" >(y)</button>
 
-            </form>`)
+
+
+async function editUser() {
+    const data = {}
+    const username = document.getElementById("username")
+    const first_name = document.getElementById("first_name")
+    const last_name = document.getElementById("last_name")
+    const email = document.getElementById("email")
+    const pass = document.getElementById("password")
+    const current_pass = document.getElementById("current_password")
+
+    if (username.value != "") {
+        if (isValidUserName(username.value)) data.username = username.value
+        else setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+    }
+    if (first_name.value != "") {
+        if (isValidName(first_name.value)) data.first_name = first_name.value
+        else setError(first_name, 'your first name should not be / have number')
+    }
+
+    if (last_name.value != "") {
+        if (isValidName(last_name.value)) data.last_name = last_name.value
+        else setError(last_name, 'your last name should not be / have number')
+    }
+    if (email.value != "") {
+        if (isValidEmail(email.value)) data.email = email.value
+        else setError(email, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+    }
+    if (pass.value != "") {
+        if (isValidPassword(pass.value)) data.pass = pass.value
+        else setError(pass, 'only alphabetic or/and numeric characters allowed') //why?
+    }
+
+    if (Object.entries(data).length > 0) {
+        data.curr_password = current_pass.value
+        const user1 = await user();
+        const res = await fetch("http://localhost:3000/user/" + user1.userId,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(data)
+            })
+        if (res.ok) {
+            location.href = '/' //should i stay or should i go?
+
+        }
+        else setError(current_pass, 'invalid password')
+    }
 }
-
-
-
-
 
 
 tabs.forEach(tab => {
@@ -243,6 +248,10 @@ tabs.forEach(tab => {
             case "profile":
                 const user1 = await user();
                 document.getElementById("profile").innerHTML = profile_template(user1)
+                document.getElementById('profile-form').addEventListener("submit", (e) => {
+                    e.preventDefault()
+                    editUser()
+                })
                 break
             case "trackers":
                 load_trackers()
