@@ -80,7 +80,7 @@ td, tr{
 
 .userEdit{
     text-align: center;
-    width: 5%;
+    width: 10%;
     
 }
 
@@ -90,6 +90,7 @@ td, tr{
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
+
 .userInput{
     width: 25%;
     min-width: 5ch;
@@ -101,10 +102,6 @@ td, tr{
     background-color: var(--background);
     border: 2px solid var(--foreground);
 
-}
-.userInfo, .userEdit{
-    
-    margin-bottom: 1rem;
 }
 
 table{

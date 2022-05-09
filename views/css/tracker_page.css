@@ -55,7 +55,6 @@
     grid-template-rows: 1fr  1fr 1fr 1fr;
 }
 .card *{
-
     font-size: 3rem;
     justify-self: center;
     align-self: center;
@@ -67,7 +66,7 @@
 .card h2{
     color: var(--foreground);
   font-size: 1.25rem;
-  width: 10ch;
+  width: 12ch;
   white-space: nowrap; 
   overflow: hidden;
   background-color: var(--background);
