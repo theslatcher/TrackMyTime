@@ -252,3 +252,28 @@ button:hover{
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     }
 }
+
+.card-context-menu {
+    display: none;
+    position: absolute;
+    border: 1px;
+    background-color:var(--background);
+    z-index: 3;
+}
+
+ .card-context-menu-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.card-context-menu-item {
+    display: block;
+    color: var(--foreground);
+    padding: 10px;
+}
+
+.card-context-menu-item:hover {
+    background-color: var(--clr-purple);
+    cursor: pointer;
+}
