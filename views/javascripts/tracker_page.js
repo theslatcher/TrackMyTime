@@ -2,13 +2,7 @@ const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
 
 async function user() {
-    const data = JSON.parse(atob(document.cookie
-        .split('; ')
-        .find(row => row.startsWith('user_details='))
-        .split('=')[1]
-        .split('.')[1]
-        .replace('-', '+')
-        .replace('_', '/')));
+    const data = JSON.parse(localStorage.getItem('user_details'));
 
     const res = await fetch('/user/' + data.user.userId)
     const user1 = await res.json()
