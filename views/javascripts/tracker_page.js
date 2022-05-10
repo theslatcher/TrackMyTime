@@ -1,6 +1,6 @@
+
 const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
-
 async function user() {
     const data = JSON.parse(atob(document.cookie
         .split('; ')
@@ -20,12 +20,9 @@ const load_trackers = async () => {
     document.getElementById('trackers').innerHTML = ""
     document.getElementById('trackers').innerHTML += trackerButtons_template()
     document.getElementById(localStorage.getItem('filter')).classList.add("bActive")
-
-
     const url = new URL('http://localhost:3000/task/user/' + user1.userId)
     const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
     url.searchParams.append(localStorage.getItem('filter'), date)
-
     const res = await fetch(url)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
@@ -33,18 +30,13 @@ const load_trackers = async () => {
 
     }
 }
-
-
 const create_tracker = async () => {
-
     const name = document.getElementById('create_new_card').children[0].value
     const goal = document.getElementById('create_new_card').children[2].value
-
     if (name.length < 1)
         alert("name of tracker cant be empty")
     else if (goal.length < 1)
         alert("goal cant be empty")
-
     else {
         const user1 = await user();
         const res = await fetch("http://localhost:3000/task", {
@@ -80,10 +72,7 @@ const create_tracker = async () => {
 
     }
 }
-
-
 const delete_tracker = async (id) => {
-    console.log(id);
     if (confirm("Do you want to delete " + id)) {
         await fetch("http://localhost:3000/time", {
             headers: {
@@ -109,6 +98,23 @@ const delete_tracker = async (id) => {
         )
         load_trackers()
     }
+}
+async function updateTracker(trackerid) {
+    const url = new URL('http://localhost:3000/task/' + trackerid)
+    const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
+    url.searchParams.append(localStorage.getItem('filter'), date)
+    console.log(trackerid);
+    const res = await fetch(url)
+    const new_tracker = await res.json()
+    const old_tracker = document.getElementById(trackerid)
+    const new_time = (calc_time_from_db(new_tracker.currenttime))
+    const newgoal = calc_goal(new_tracker.goal)
+
+    old_tracker.children[2].innerHTML = new_time.hours + "h"
+    old_tracker.children[4].innerHTML = new_time.min + "m"
+    console.log(old_tracker.children[6]);
+    old_tracker.children[6].max = newgoal
+    old_tracker.children[6].value = new_tracker.currenttime
 
 }
 function daysInYear() {
@@ -139,6 +145,9 @@ function calc_goal(goal) {
     return new_goal
 }
 
+function cancel_new_card() {
+    document.getElementById('cards').removeChild(document.getElementById('create_new_card'))
+}
 
 async function add_new_time(button) {
     const h = button.parentElement.children[3].value
@@ -157,31 +166,17 @@ async function add_new_time(button) {
         })
     }
     )
-    load_trackers()
+    updateTracker(button.parentElement.id)
 }
-
 function card_form_toggle(button) {
     button.parentElement.parentElement.children[3].classList.toggle("card-hidden");
     button.parentElement.parentElement.children[5].classList.toggle("card-hidden");
     button.parentElement.parentElement.children[7].classList.toggle("card-hidden");
 }
-
-
-
-
-
-
-
-
 function test(some) {
     document.getElementById("create_new_card").setAttribute("style", "border: 3px solid" + some.value)
     document.getElementById("newgoal").setAttribute("style", "border-bottom: 1px solid" + some.value)
-
 }
-
-
-
-
 async function editUser() {
     const data = {}
     const username = document.getElementById("username")
@@ -232,8 +227,6 @@ async function editUser() {
         else setError(current_pass, 'invalid password')
     }
 }
-
-
 tabs.forEach(tab => {
     tab.addEventListener('click', async () => {
         const target = document.querySelector(tab.dataset.tabTarget)
@@ -241,10 +234,8 @@ tabs.forEach(tab => {
             tabContent.classList.remove('active')
             tabContent.innerHTML = ""
         })
-
         target.classList.add('active');
         switch (target.id) {
-
             case "profile":
                 const user1 = await user();
                 document.getElementById("profile").innerHTML = profile_template(user1)
@@ -261,22 +252,25 @@ tabs.forEach(tab => {
 
     })
 })
-
 function add_card() {
     if (!document.getElementById("create_new_card"))
         document.getElementById("cards").innerHTML = form_template() + document.getElementById("cards").innerHTML
-
+    else cancel_new_card()
 }
-
-
-
+function timeoutbuttons() {
+    const buttons = Array.from(document.getElementById("filter_buttons").children)
+    buttons.forEach(button => {
+        button.disabled = true;
+        setTimeout(() => {
+            button.disabled = false;
+        }, 500);
+    });
+}
 function filterButton(button) {
-    localStorage.setItem('filter', button)
+    timeoutbuttons()
+    localStorage.setItem('filter', button.id)
     load_trackers()
-
-
 }
-
 document.addEventListener("DOMContentLoaded", () => {
     theme_check()
 

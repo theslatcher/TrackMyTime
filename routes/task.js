@@ -14,8 +14,8 @@ router.post("/", auth.require_logged_in, async (req, res) => {
 
     TrackerTask.create(req.body).then(response => {
         res.status(200)
-        res.send({body: response.dataValues})
-    }).catch(err => {res.send(409).send({error: err})})
+        res.send({ body: response.dataValues })
+    }).catch(err => { res.send(409).send({ error: err }) })
 })
 
 router.delete("/", auth.require_logged_in, async (req, res) => {
@@ -38,75 +38,72 @@ router.get("/", auth.require_logged_in, async (req, res) => {
     if (!req.user.is_admin)
         whereStatement["userId"] = req.user.userId
 
-    TrackerTask.findAll({where: whereStatement}).then(response => {
+    TrackerTask.findAll({ where: whereStatement }).then(response => {
         res.status(200)
         res.send(response)
-    }).catch(err => {res.send(409).send({error: err})})
+    }).catch(err => { res.send(409).send({ error: err }) })
 })
 
 function getDateQuery(query) {
     let dateQuery = {}
 
-    if (query.d)
-	{
+    if (query.d) {
         const day = dayjs(new Date(query.d))
         const start = day.startOf('day').format()
         const end = day.endOf('day').format()
 
-		dateQuery = {
-			dayofyear: {
-				[Op.between]: [start, end]
-			}
-		}
-	}
-    else if (query.w)
-    {
+        dateQuery = {
+            dayofyear: {
+                [Op.between]: [start, end]
+            }
+        }
+    }
+    else if (query.w) {
         const week = dayjs(new Date(query.w))
         const start = week.startOf('week').format()
         const end = week.endOf('week').format()
 
-		dateQuery = {
-			dayofyear: {
-				[Op.between]: [start, end]
-			}
-		}
+        dateQuery = {
+            dayofyear: {
+                [Op.between]: [start, end]
+            }
+        }
     }
-    else if (query.m)
-    {
+    else if (query.m) {
         const month = dayjs(new Date(query.m))
         const start = month.startOf('month').format()
         const end = month.endOf('month').format()
 
-		dateQuery = {
-			dayofyear: {
-				[Op.between]: [start, end]
-			}
-		}
+        dateQuery = {
+            dayofyear: {
+                [Op.between]: [start, end]
+            }
+        }
     }
-    else if (query.y)
-    {
+    else if (query.y) {
         const year = dayjs(new Date(query.y))
         const start = year.startOf('year').format()
         const end = year.endOf('year').format()
 
-		dateQuery = {
-			dayofyear: {
-				[Op.between]: [start, end]
-			}
-		}
+        dateQuery = {
+            dayofyear: {
+                [Op.between]: [start, end]
+            }
+        }
     }
 
     return dateQuery
 }
 
 router.get("/:id", auth.require_logged_in, async (req, res) => {
-    let whereStatement = { trackerid: req.params.trackerid }
+    console.log(req.params);
+    let whereStatement = { trackerid: req.params.id }
 
     if (!req.user.is_admin)
         whereStatement["userId"] = req.user.userId
 
-	const dateQuery = getDateQuery(req.query)
-	
+    const dateQuery = getDateQuery(req.query)
+
     TrackerTask.findOne({
         attributes: {
             include: [[Sequelize.fn("SUM", Sequelize.col("TrackerTime.totaltime")), "currenttime"]]
@@ -118,7 +115,7 @@ router.get("/:id", auth.require_logged_in, async (req, res) => {
         .then(response => {
             res.status(200)
             res.send(response)
-        }).catch(err => {res.send(404).send({error: err})})
+        }).catch(err => { res.send(404).send({ error: err }) })
 })
 
 router.put("/:id", auth.require_logged_in, async (req, res) => {
@@ -131,21 +128,21 @@ router.put("/:id", auth.require_logged_in, async (req, res) => {
         { where: whereStatement }).then(response => {
             res.status(200)
             res.send("Success!")
-        }).catch(err => {res.send(409).send({error: err})})
+        }).catch(err => { res.send(409).send({ error: err }) })
 })
 
 router.delete("/user/:userId", auth.require_logged_in, async (req, res) => {
     if (!(req.user.is_admin || (req.user.userId == req.params.userId)))
-        return res.status(403).send({error: new Error('Forbidden Access.')})
+        return res.status(403).send({ error: new Error('Forbidden Access.') })
 
     TrackerTask.destroy({ where: { userId: req.params.userId } }).then(response => {
         res.sendStatus(200, response)
-    }).catch(err => {res.send(409).send({error: err})})
+    }).catch(err => { res.send(409).send({ error: err }) })
 })
 
 router.get("/user/:userId", auth.require_logged_in, async (req, res) => {
     if (!(req.user.is_admin || (req.user.userId == req.params.userId)))
-        return res.status(403).send({error: new Error('Forbidden Access')})
+        return res.status(403).send({ error: new Error('Forbidden Access') })
 
     const dateQuery = getDateQuery(req.query)
 
@@ -159,7 +156,7 @@ router.get("/user/:userId", auth.require_logged_in, async (req, res) => {
     })).then(response => {
         res.status(200)
         res.send(response)
-    }).catch(err => {res.send(409).send({error: err})})
+    }).catch(err => { res.send(409).send({ error: err }) })
 })
 
 

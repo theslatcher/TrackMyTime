@@ -53,15 +53,16 @@
     height: 284px;
     background-color: var(--background);
     z-index: 1;
-    grid-template-columns: 1fr  1fr;
+    grid-template-columns: 170px  auto;
         box-shadow: var(--shadows);
 
     grid-template-rows: 1fr  1fr 1fr 1fr;
 }
 .card *{
-    margin-left: 1ch;
+    margin-left: 1rem;
     font-size: 3rem;
     align-self: center;
+    padding: 0;
 
 }
 .card h1{
@@ -70,7 +71,6 @@
 .card h2{
   color: var(--foreground);
   font-size: 1.25rem;
-  width: 15ch;
   white-space: nowrap; 
   overflow: hidden;
   background-color: var(--background);
@@ -103,7 +103,7 @@
     font-size: 1.5rem;
     width: 30px;
     cursor: pointer;
-
+    justify-self: center;
     height: 30px;
 }
 
@@ -138,6 +138,7 @@
     grid-column: 1/3;
     font-size: 1.25rem;
     border: 0;
+    width: 4ch;
     text-align: center;
 
 }
@@ -149,8 +150,12 @@
     grid-column: 2;
     width: 4ch;
     font-size: 2rem;
+    text-align: center;
+    padding-right: 0.5rem;
 
 }
+
+
 .form_color{
   grid-row: 3;
      width: 74px;
@@ -165,7 +170,13 @@
     cursor: pointer;
 
 }
+.form_buttons{
+    grid-column: 1/3;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
 
+}
 button{
     margin: 0.2rem;
     width: 70px;

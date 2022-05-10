@@ -17,9 +17,11 @@ function card_template(tracker) {
 
                 <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
 
-                <h2 class = "card-goal">${"Goal is " + goal}</h2>
+                <progress class="card-goal"value="${tracker.currenttime}" max="${goal}" >
+                </progress>
+
                 <i class="fas fa-equals card-button card-hidden" onclick="add_new_time(this)"></i>
-                
+
             </div>
     `)
 
@@ -30,13 +32,14 @@ function form_template() {
     return (`
     <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
                     <input class = "form_text"type="text" placeholder="Type name of new tracker">
-                    <h1 class="form-title">Goal</h1>
-                    <input class ="form-input" type="number" id="newgoal"placeholder="hrs/day" min="1">
+                    <h1 class="form-title">Daily Goal</h1>
+                    <input class ="form-input" type="number" id="newgoal"placeholder="hrs" min="1" max="24">
                     <h1 class="form-title">Color</h1>
                     <input class = "form-input form_color" onchange="test(this)"type="color">
-                    <i class="far fa-window-close  form_button" onclick="load_trackers()"></i>
+                    <div class="form_buttons">
+                    <i class="far fa-window-close  form_button" onclick="cancel_new_card()"></i>
                   <i class="far fa-check-square form_button"  onclick="create_tracker()"></i>
-                    
+                     </div>
 
             </form>`)
 }
@@ -44,10 +47,10 @@ function trackerButtons_template() {
     return (`
     <div class="button-container">
         <div id="filter_buttons">
-            <button onclick="filterButton(id)" id="d">Day</button>
-            <button onclick="filterButton(id)" id="w" >Week</button>
-            <button onclick="filterButton(id)" id="m">Month</button>
-            <button onclick="filterButton(id)" id="y">Year</button>
+            <button onclick="filterButton(this)" id="d">Day</button>
+            <button onclick="filterButton(this)" id="w" >Week</button>
+            <button onclick="filterButton(this)" id="m">Month</button>
+            <button onclick="filterButton(this)" id="y">Year</button>
         </div>
             <button onclick="add_card()"  class="possetive add_tracker">Add</button>
         
