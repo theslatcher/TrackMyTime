@@ -63,7 +63,7 @@
         <nav class="card-context-menu" id="card-context-menu">
 			<ul class="card-context-menu-items">
 				<li class="card-context-menu-item" onclick="toggle_add_time($(this).parent().parent().attr('task-id')); $(this).parent().parent().hide()">Add Time</li>
-				<li class="card-context-menu-item" onclick="delete_tracker($(this).parent().parent().attr('task-id')); $(this).parent().parent().hide()">Delete</li>
+				<li class="card-context-menu-item" onclick="delete_tracker($(this).parent().parent().attr('task-id'), $(this).parent().parent().attr('task-name')); $(this).parent().parent().hide()">Delete</li>
 			</ul>
 		</nav>
     </body>

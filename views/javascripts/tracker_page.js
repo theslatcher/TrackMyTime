@@ -165,6 +165,7 @@ async function card_form_toggle(e, button) {
         open = true
 
     menu.attr("task-id", button.parentElement.parentElement.id)
+    menu.attr("task-name", button.parentElement.parentElement.getAttribute("task-name"))
 
     if (menu.is(":visible"))
         menu.hide();

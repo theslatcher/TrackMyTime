@@ -4,7 +4,7 @@ function card_template(tracker) {
     const goal = calc_goal(tracker.goal)
     return (`
         
-             <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
+             <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}" task-name="${tracker.name}">
                 <h2 class = ""> ${tracker.name}</h2>
                 <div class ="card-buttons">
                     <i class="fas fa-plus card-button" onclick="card_form_toggle(event, this)"></i>
