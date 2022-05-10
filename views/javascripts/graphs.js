@@ -201,5 +201,4 @@ setTimeout(() => {
   createPie(testData, 0, "Summarization of total time in every task");
   createLine(testDataL1, 1, "Summarization of total time in something");
   createLine(testDataL2, 2, "Summarization of total time in something else");
-}, 500);
-document.getElementById("graph-container").innerHTML = `<canvas id="chart0" class="graph-canvas"></canvas><canvas id="chart1" class="graph-canvas"></canvas><canvas id="chart2" class="graph-canvas"></canvas>`;
+}, 2000);
