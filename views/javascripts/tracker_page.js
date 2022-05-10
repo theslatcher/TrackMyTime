@@ -10,7 +10,7 @@ async function user() {
         .replace('-', '+')
         .replace('_', '/')));
 
-    const res = await fetch('http://localhost:3000/user/' + data.user.userId)
+    const res = await fetch('/user/' + data.user.userId)
     const user1 = await res.json()
     return (user1)
 }
@@ -22,10 +22,9 @@ const load_trackers = async () => {
     document.getElementById(localStorage.getItem('filter')).classList.add("bActive")
 
 
-    const url = new URL('http://localhost:3000/task/user/' + user1.userId)
+    const url = new URL(window.location.href + 'task/user/' + user1.userId)
     const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
     url.searchParams.append(localStorage.getItem('filter'), date)
-
     const res = await fetch(url)
     const trackers = await res.json()
     for (let index = 0; index < trackers.length; index++) {
@@ -47,7 +46,7 @@ const create_tracker = async () => {
 
     else {
         const user1 = await user();
-        const res = await fetch("http://localhost:3000/task", {
+        const res = await fetch("/task", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -63,7 +62,7 @@ const create_tracker = async () => {
 
         )
         const tracker = await res.json()
-        await fetch("http://localhost:3000/time", {
+        await fetch("/time", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -82,10 +81,9 @@ const create_tracker = async () => {
 }
 
 
-const delete_tracker = async (id) => {
-    console.log(id);
-    if (confirm("Do you want to delete " + id)) {
-        await fetch("http://localhost:3000/time", {
+const delete_tracker = async (id, name) => {
+    if (confirm("Do you want to delete " + name)) {
+        await fetch("/time", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -96,7 +94,7 @@ const delete_tracker = async (id) => {
             })
         }
         )
-        await fetch("http://localhost:3000/task", {
+        await fetch("/task", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -144,7 +142,7 @@ async function add_new_time(button) {
     const h = button.parentElement.children[3].value
     const min = (button.parentElement.children[5].value / 60)
     const time = Number(h) + Number(min)
-    await fetch("http://localhost:3000/time", {
+    await fetch("/time", {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -216,7 +214,7 @@ async function editUser() {
     if (Object.entries(data).length > 0) {
         data.curr_password = current_pass.value
         const user1 = await user();
-        const res = await fetch("http://localhost:3000/user/" + user1.userId,
+        const res = await fetch("/user/" + user1.userId,
             {
                 headers: {
                     'Accept': 'application/json',

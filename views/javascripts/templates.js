@@ -7,7 +7,7 @@ function card_template(tracker) {
              <div class="card" style="${"border: 3px solid " + tracker.color}" id="${tracker.trackerid}">
                 <h2 class = ""> ${tracker.name}</h2>
                 <div class ="card-buttons">
-                <i class="fas fa-trash card-button" onclick="delete_tracker(this.parentElement.parentElement.id)"></i>
+                <i class="fas fa-trash card-button" onclick="delete_tracker(${tracker.trackerid}, '${tracker.name}')"></i>
                <i class="fas fa-plus card-button" onclick="card_form_toggle(this)"></i>  
                 </div>
                 <h1 class="">${time.hours + "h"}</h1>

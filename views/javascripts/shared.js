@@ -26,7 +26,7 @@ toggleButton.addEventListener('click', () => {
 })
 
 async function logout() {
-    await fetch('http://localhost:3000/user/signout')
+    await fetch('/user/signout')
     location.href = '/'
 }
 
