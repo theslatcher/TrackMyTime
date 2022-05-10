@@ -1,51 +1,149 @@
-body{
-    background-color: grey;
-    color: white;
+button{
+    margin-left: 1rem;
+    margin-top: 2rem;
+    padding: 0.5rem;
+    color: var(--foreground);
+    background-color: var(--clr-purple);
+    outline: none;
+}
+
+h1{
+    background: var(--clr-purple);
+    font-size: x-large;
+    padding: 1rem;
+    letter-spacing: 0.1rem;
+    color: var(--clr-white);
+    margin:5% 0;
+}
+
+h2{
+    margin: 1rem 0;
+    font-size: x-large;
 }
 
 #main-div{
-    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
-#Users, #Stats{
-    margin-left: 27.5%;
-    margin-top: 2.5%;
-    float: left;
-}
+
 
 #Stats{
-    margin-left: 10%;
     display: none;
 }
 
 td, tr{
-    background-color: lightgrey;
-    color: black;
+    background-color: var(--background);
+    color: var(--foreground);
     border-collapse: collapse;
 }
 
-#userTable tr:hover td {
-    background: grey;
-    color: white;
+.userEdit{
+    padding: 3px;
 }
 
-th:hover{
-    background-color: rgb(90, 90, 90);
+#delete{
+    background-color: rgb(212, 23, 23);
 }
 
-td, th{
+#edit{
+    background-color: rgb(50, 107, 206);
+}
+
+#userTable tr:hover .userInfo{
+    cursor: pointer;
+    background-color: var(--clr-columnhover);
+    color: var(--font-color);
+}
+
+#userTable #delete:hover{
+    cursor: pointer;
+    background-color: rgb(255, 28, 28);
+    color: var(--font-color);
+}
+
+#userTable #edit:hover{
+    cursor: pointer;
+    background-color: dodgerblue;
+    color: var(--font-color);
+}
+
+.userHeader:hover{
+    background-color: var(--clr-headerhover);
+    cursor: pointer;
+}
+
+.taskHeader:hover{
+    background-color: var(--clr-headerhover);
+    cursor: pointer;
+}
+
+.userEdit{
+    text-align: center;
+    width: 10%;
+    
+}
+
+.userInfo{
     text-align: center;
     width: 25%;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.userInput{
+    width: 25%;
+    min-width: 5ch;
+    max-width: 50%;
+    display: block;
+    margin-inline: auto;
+    text-align: center;
+    color: var(--foreground);
+    background-color: var(--background);
+    border: 2px solid var(--foreground);
+
 }
 
 table{
+    font-size: 1rem;
     border-spacing: 0px;
-    border: 2px black solid
+    box-shadow: var(--shadows);
+    border: 1px var(--foreground) solid;
+    width: 100%;
 }
 
 th{
-    background-color: grey;
-    color: white;
+    padding: 0.5rem;
+    background-color: var(--clr-possetive);
+    color: var(--foreground);
+}
+
+.taskColumn{
+    margin-left: 0.1rem;
+    margin-bottom: 0.3rem;
+    padding: 0.25rem;
+    text-align: center;
+}
+
+@media screen  and (min-width: 400px) { 
+    #main-div{
+        margin-inline: 5%;
+    }
+    h1{
+        margin-inline: 5%;
+    }
+}
+
+@media screen  and (min-width: 766px) { 
+    #main-div{
+    
+    grid-template-columns:  70% 30%;
+}
+table{
+    font-size: 1.2rem;
+    
+}
+#Stats{
+    margin-left: 2rem;
+}
 }

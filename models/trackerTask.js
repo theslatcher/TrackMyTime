@@ -1,5 +1,6 @@
 const DataTypes = require('sequelize').DataTypes;
 const sequelize = require('../db').db;
+const TrackerTime = require('./trackerTime');
 
 var TrackerTask = sequelize.define('TrackerTask', {
     trackerid: {
@@ -13,14 +14,11 @@ var TrackerTask = sequelize.define('TrackerTask', {
     },
     color: DataTypes.STRING,
     goal: DataTypes.INTEGER,
-    currenttime: {
+    userId: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
-    },
-    username: {
-        type: DataTypes.STRING,
         references: 'User',
-        referencesKey: 'username'
+        referencesKey: 'userId',
+        field: 'userId'
     }
 },
 {
@@ -29,6 +27,9 @@ var TrackerTask = sequelize.define('TrackerTask', {
 });
 
 TrackerTask.removeAttribute('id');
+
+TrackerTask.hasMany(TrackerTime, { as: 'TrackerTime', foreignKey: 'trackerid' });
+TrackerTime.belongsTo(TrackerTask, { foreignKey: 'trackerid' });
 
 TrackerTask.schema('public');
 

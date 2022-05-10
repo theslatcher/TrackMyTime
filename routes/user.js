@@ -1,120 +1,147 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const crypto = require('crypto');
 const User = require('../models/user');
-const jwt = require("jsonwebtoken");
-
-async function hashPassword(password) {
-	return new Promise( (resolve, reject) => {
-		const salt = crypto.randomBytes(64).toString('base64');
-		const iterations = 100000;
-		const hashBytes = 64;
-		crypto.pbkdf2(password, salt, iterations, hashBytes, 'sha256', (err, hash) => {
-			if (err)
-				return reject(err);
-
-			resolve(salt + ":" + hash.toString('base64'));
-		});
-	});
-}
-
-async function verifyPassword(hashedPassword, password) {
-	return new Promise( (resolve, reject) => {
-		const salt = hashedPassword.substring(0,88);
-		const iterations = 100000;
-		const hashBytes = 64;
-		crypto.pbkdf2(password, salt, iterations, hashBytes, 'sha256', (err, hash) => {
-			if (err)
-				return reject(err);
-
-			resolve(hash.toString('base64') == hashedPassword.substring(89));
-		});
-	});
-}
-
-passport.use(new LocalStrategy((username, password, done) => {
-  return User.findOne({where: {username: username}})
-	.then(async (response) => {
-        if (!response) {
-			return done(null, false, {message: 'Incorrect username or password 5.'}); 
-		}
-
-		validPassword = await verifyPassword(response.password, password);
-
-		if (validPassword)
-			return done(null, {username: response.username, first_name: response.first_name,
-						last_name: response.last_name, email: response.email});
-		else
-			return done(null, false, {message: 'Incorrect username or password.'});
-    })
-	.catch(err => {
-        return done(err);
-    });
-}));
-
-passport.serializeUser(function(user, done) {
-	done(null, { username: user.username });
-});
-
-passport.deserializeUser(function(user, done) {
-	User.findOne({attributes: ['username', 'first_name', 'last_name', 'email'], where: {username: user.username}})
-	.then(response => {
-        return done(null, response);
-    })
-	.catch(err => {
-        return done(err);
-    });
-});
+const jwt = require('jsonwebtoken');
+const auth = require('../lib/auth');
 
 router.post('/signup', async (req, res) => {
 	if (req.body.password)
-			req.body.password = await hashPassword(req.body.password);
+		req.body.password = await auth.hash_password(req.body.password);
 
 	await User.create(req.body)
 		.then(response => {
-			res.status(200).json({message: 'Success!'});
+			res.status(200).json('Success!');
 		})
 		.catch(err => {
-			console.log(err);
-			res.status(409).json({err: err});
+			res.status(409).json({error: err});
 		});
 });
 
-router.post('/login', passport.authenticate('local'), async (req, res) => {
-	res.cookie("user_details", jwt.sign({user: req.user}, process.env.JWTSecret));
-	res.redirect('/');
+router.post('/login', auth.authenticate, async (req, res) => {
+	res.cookie('user_details', jwt.sign({user: req.user}, process.env.JWTSecret));
+	
+	req.session.save(function() {             
+        return res.status(200).send('Success!');
+    });
 }); 
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	res.clearCookie("user_details");
-	res.redirect('/');
+	res.clearCookie('user_details');
+	
+	req.session.save(function() {             
+        return res.status(200).send('Success!');
+    });
 });
 
-router.get('/', async (req, res) => {
-	await User.findAll().then(response => {
-		res.status(200)
-		res.send(response)
-	})
-})
+router.get('/', auth.require_logged_in, async (req, res) => {
+	const page_size = 10;
+	const page = req.query.p || req.query.page || 1;
 
-router.get('/:username', async (req, res) => {
-	await User.findOne({where: {username: req.params.username}}).then(response => {
-		res.status(200)
-		res.send(response)
-	})
-})
+	let user_attributes = ['userId', 'username'];
 
-router.delete('/:username', async (req, res) => {
-	await User.destroy({where: {username: req.params.username}}).then(response => {
-		res.status(200)
-		res.send({message: "Success!"})
-	}).catch(err => {
-		res.status(404)
-		res.send({error: err})
-	})
-})
+	if (req.user && req.user.is_admin)
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findAll({attributes: user_attributes, offset: ((page-1)*page_size), limit: page_size})
+		.then(response => {
+			res.status(200).send(response);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(404).send({error: err});
+		});
+});
+
+router.get('/:userId', auth.require_logged_in, async (req, res) => {
+	let user_attributes = ['userId', 'username'];
+
+	if (req.user.is_admin || (req.user.userId == req.params.userId))
+		user_attributes.push('first_name', 'last_name', 'email');
+
+	User.findOne({attributes: user_attributes, where:{userId: req.params.userId}})
+		.then(response => {
+			res.status(200).send(response);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(404).send({error: err});
+		});
+});
+
+router.delete('/:userId', auth.require_logged_in, async (req, res) => {
+	if (req.user.is_admin || (req.user.userId == req.params.userId))
+	{
+		User.findOne({where: {userId : req.params.userId}})
+			.then(async (response) => {
+				if (response.username === 'admin')
+					return res.status(409).send({error: new Error('Cannot delete admin users.')});
+
+				let allowed = req.user.is_admin;
+
+				if (!allowed && req.body.password)
+					allowed = await auth.verify_password(response.password, req.body.password);
+
+				if (!allowed)
+					return res.status(409).send({error: new Error('Cannot delete your account without providing password.')});
+
+				User.destroy({where:{userId: req.params.userId}})
+					.then(response => {
+						res.status(200).send({message: 'Success!'});
+					})
+					.catch(err => {
+						console.log(err);
+						res.status(404).send({error: err});
+					});
+			})
+			.catch(err => {
+				console.log(err);
+				res.status(404).send({error: err});
+			});
+	}
+	else
+		res.status(403).send({error: new Error('Forbidden Access.')});
+});
+
+router.put('/:userId', auth.require_logged_in, async (req, res) => {
+	if (!req.user.is_admin && !req.body.curr_password)
+		return res.status(409).send({error: new Error('Invalid password!')});
+
+	User.findOne({where: {userId : req.params.userId}})
+		.then(async (response) => {
+			if (admin_request || await auth.verify_password(response.password, req.body.curr_password))
+			{
+				let update_fields = {};
+
+				if (req.body.username)
+					update_fields['username'] = req.body.username;
+
+				if (req.body.first_name)
+					update_fields['first_name'] = req.body.first_name;
+
+				if (req.body.last_name)
+					update_fields['last_name'] = req.body.last_name;
+
+				if (req.body.email)
+					update_fields['email'] = req.body.email;
+
+				if (req.body.new_password)
+					update_fields['password'] = await auth.hash_password(req.body.new_password);
+
+				User.update(update_fields, {where:{userId: req.params.userId}})
+					.then(response => {
+						res.status(200).send('Success!');
+					})
+					.catch(err => {
+						res.status(409).send({error: err});
+					});
+			}
+			else
+				res.status(409).send({error: new Error('Invalid password!')});
+		})
+		.catch (err => {
+			res.status(409).send({error: err});
+		});
+});
 
 module.exports = router;

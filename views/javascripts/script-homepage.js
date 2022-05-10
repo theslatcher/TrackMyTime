@@ -1,83 +1,177 @@
-const tabs = document.querySelectorAll("[data-tab-target]")
-const tabContent = document.querySelectorAll("[data-tab-content]");
-const toggleButton = document.getElementsByClassName('toggle-btn')[0]
-const navbarLinks = document.getElementsByClassName('navbar-links')[0]
-const signUpForm = document.getElementById('sign-up-form');
-const loginForm = document.getElementById('login-form');
-const loginUserName = document.getElementById('login-username');
-const loginPassword = document.getElementById('login-password');
-const signUpUserName = document.getElementById('sign-up-username');
-const signUpFirstName = document.getElementById('firstName');
-const signUpLastName = document.getElementById('lastName');
-const signUpEmail = document.getElementById('email');
-const signUpPassword = document.getElementById('sign-up-password');
+const tabs = document.querySelectorAll('[data-tab-target]')
+const tabContent = document.querySelectorAll('[data-tab-content]')
 
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        //select the tab when click on
-        const target = document.querySelector(tab.dataset.tabTarget)
+const signUpForm = document.getElementById('sign-up-form')
+const loginForm = document.getElementById('login-form')
+const loginUserName = document.getElementById('login-username')
+const loginPassword = document.getElementById('login-password')
+const signUpUserName = document.getElementById('sign-up-username')
+const signUpFirstName = document.getElementById('firstName')
+const signUpLastName = document.getElementById('lastName')
+const signUpEmail = document.getElementById('email')
+const signUpPassword = document.getElementById('sign-up-password')
 
-        //hidden the tab content
-        tabContent.forEach(tabContent => {
-            tabContent.classList.remove('active')
-        })
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    //select the tab when click on
+    const target = document.querySelector(tab.dataset.tabTarget)
 
-        //show the tab content when click on target tab
-        target.classList.add('active');
-
+    //hide the tab content
+    tabContent.forEach((tabContent) => {
+      tabContent.classList.remove('active')
     })
+
+    //show the tab content when click on target tab
+    target.classList.add('active')
+  })
 })
 
 //show tabs when click to toggle button
-toggleButton.addEventListener('click', () => {
-    navbarLinks.classList.toggle('active');
-    })
+
 
 signUpForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const signUpUser = {
-        username: signUpUserName.value,
-        password: signUpPassword.value,
-        first_name: signUpFirstName.value,
-        last_name: signUpLastName.value,
-        email: signUpEmail.value
-    };
+  e.preventDefault()
+  let isUsernameValid = checkUserName(),
+    isEmailValid = checkEmail(),
+    isPasswordValid = checkPassword(),
+    isFirstNameValid = checkFirstName(),
+    isLastNameValid = checkLastName();
 
-    fetch ('/user/signup', {
-        method: 'POST',
-        headers: {
-            "Content-Type": 'application/json',
-        },
-        body: JSON.stringify(signUpUser),
+  let validateInputs = isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid;
+
+  if (validateInputs) {
+    console.log("validate input success");
+    const signUpUser = {
+      username: signUpUserName.value,
+      password: signUpPassword.value,
+      first_name: signUpFirstName.value,
+      last_name: signUpLastName.value,
+      email: signUpEmail.value,
+    }
+
+    fetch('/user/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(signUpUser),
     })
-    .then(data => {
-        console.log('Success:', data);
+      .then((data) => {
+        if (data.ok) alert('Success create an account');
       })
-    .catch((error) => {
-        console.error('Error:', error);
-      });
-});
+      .catch((error) => {
+        console.error('Error:', error)
+      })
+  }
+}
+)
 
 loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const loginUser = {
-        username: loginUserName.value,
-        password: loginPassword.value
-    };
+  e.preventDefault()
+  const loginUser = {
+    username: loginUserName.value,
+    password: loginPassword.value,
+  }
 
-    fetch ('/user/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            "Content-Type": 'application/json',
-        },
-        body: JSON.stringify(loginUser),
+  fetch('/user/login', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(loginUser),
+  })
+    .then((data) => {
+      if (data.ok) {
+        console.log('Success to login' + data)
+        location.href = '/'
+      }
+      else {
+        console.log("error " + data.status);
+        alert("invalid username or password");
+      }
     })
-    .then(data => {
-        console.log('Success:', data);
-      })
     .catch((error) => {
-        console.error('Error:', error);
-      });
-
+      console.error('Error:', error)
+    })
 })
+
+const checkFirstName = () => {
+  let valid = false;
+  const firstName = signUpFirstName.value.trim()
+  if (firstName === '') {
+    setError(signUpFirstName, 'First name is required')
+  } else {
+    if (isValidName(firstName)) {
+      setError(signUpFirstName, 'your first name should not be/have number')
+    } else {
+      setSuccess(signUpFirstName);
+      valid = true;
+    }
+  }
+  return valid;
+}
+const checkLastName = () => {
+  let valid = false;
+  const lastName = signUpLastName.value.trim()
+  if (lastName === '') {
+    setError(signUpLastName, 'Last name is required')
+  } else {
+    if (isValidName(lastName)) {
+      setError(signUpLastName, 'your last name should not be/have number')
+    } else {
+      setSuccess(signUpLastName)
+      valid = true;
+    }
+  }
+  return valid;
+}
+const checkUserName = () => {
+  const userNameValue = signUpUserName.value.trim()
+  let valid = false;
+  if (userNameValue === '' || userNameValue === null) {
+    setError(signUpUserName, 'User name is required')
+  } else if (!isValidUserName(userNameValue)) {
+    setError(signUpUserName, 'username must have around 4 to 20 characters, alphabetic or/and numeric, . - _')
+  } else {
+    setSuccess(signUpUserName)
+    valid = true;
+  }
+  return valid;
+};
+
+const checkEmail = () => {
+  const emailValue = signUpEmail.value.trim()
+  let valid = false;
+  if (emailValue === '') {
+    setError(signUpEmail, 'Email is required')
+  } else if (!isValidEmail(emailValue)) {
+    setError(signUpEmail, 'Provide a valid email address')
+  } else {
+    setSuccess(signUpEmail)
+    valid = true;
+  }
+  return valid;
+}
+
+const checkPassword = () => {
+  const password = signUpPassword.value;
+  let valid = false;
+  if (password === '' || password === null) {
+    setError(signUpPassword, 'Password is required')
+  } else if (!isValidPassword(password)) {
+    setError(signUpPassword, 'only alphabetic or/and numeric characters allowed')
+  } else {
+    setSuccess(signUpPassword);
+    valid = true;
+  }
+  return valid;
+}
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  theme_check()
+});

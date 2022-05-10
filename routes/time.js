@@ -1,60 +1,123 @@
+const TrackerTask = require('../models/trackerTask');
 const TrackerTime = require('../models/trackerTime');
+const { Op } = require("sequelize");
 const express = require("express");
 const router = express.Router();
+const auth = require("../lib/auth")
 
-router.get("/", async (req, res) => {
-  await TrackerTime.findAll()
+router.get("/", auth.require_logged_in, async (req, res) => {
+  let userIdQuery = {};
+
+  if (!req.user.is_admin)
+    userIdQuery['userId'] = req.user.userId;
+
+  TrackerTime.findAll({include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
       res.status(200).send(response);
     })
     .catch((err) => {
-      res.status(404).send(err);
+      res.status(404).send({error: err});
     });
 });
 
-router.get("/:id", async (req, res) => {
-  await TrackerTime.findAll({ where: { trackerid: req.params.id } })
+router.get("/:id", auth.require_logged_in, async (req, res) => {
+  let userIdQuery = {};
+
+  if (!req.user.is_admin)
+    userIdQuery['userId'] = req.user.userId;
+
+  TrackerTime.findOne({where: {trackerid: req.params.id}, 
+    include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
-      // sort by date
-      response.sort((b, a) => {
-        return new Date(a.dayofyear) - new Date(b.dayofyear);
-      });
-      res.status(200);
-      res.send(response);
+      if (req.user.is_admin || (response.userId == req.user.userId))
+        res.status(200).send(response);
+      else
+        res.status(403).send({error: new Error(`Unable to retrieve tracker with id: ${req.params.id}.`)});
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.status(404).send({error: err});
+    });
 });
 
-router.post("/", async (req, res) => {
-  await TrackerTime.create(req.body)
+router.post("/", auth.require_logged_in, async (req, res) => {
+  if (!req.user.is_admin)
+  {
+    let allowed = false;
+    await TrackerTask.findOne({where: {trackerid: req.body.trackerid, userId: req.user.userId}})
+      .then((response) => {
+        if (response)
+          allowed = true;
+      })
+      .catch((err) => {
+        return res.status(404).send({error: err});
+      });
+
+      if (!allowed)
+        return res.status(404).send({error: new Error('Not Found.')});
+  }
+
+  TrackerTime.create(req.body)
     .then((response) => {
       res
         .status(200)
         .send(`Added ${req.body.totaltime} to trackerid ${req.body.trackerid}`);
     })
     .catch((err) => {
-      res.status(409).send(err);
+      res.status(409).send({error: err});
     });
 });
 
-router.delete("/", async (req, res) => {
-  await TrackerTime.destroy({where: {trackerid: req.body.trackerid}})
+router.delete("/", auth.require_logged_in, async (req, res) => {
+  let userIdQuery = {};
+
+  if (!req.user.is_admin)
+    userIdQuery['userId'] = req.user.userId;
+
+  TrackerTime.destroy({where: {trackerid: req.body.trackerid}, 
+    include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
       res.status(200).send(`Deleted ${response} rows`);
     })
     .catch((err) => {
-      res.status(409).send(err);
+      res.status(409).send({error: err});
     });
 });
 
-router.put("/:id", async (req, res) => {
-  await TrackerTime.update({dayofyear: req.body.dayofyear, totaltime: req.body.totaltime}, 
-    {where: {trackerid: req.params.id}})
+router.delete("/user/:userId", auth.require_logged_in, async (req, res) => {
+  if (!((req.user.userId == req.params.userId) || req.user.is_admin))
+    return res.status(403).send({error: new Error('Forbidden Access.')});
+
+	TrackerTask.findAll({attributes: ['trackerid'], where: {userId: req.params.userId}})
+		.then(async (response) => {
+			const trackerids = response.map(elem => elem.trackerid);
+			TrackerTime.destroy({where: {trackerid: {[Op.or]: trackerids}}})
+				.then((deletedElems) => {
+					res.status(200).send(`Deleted ${deletedElems} rows`);
+				})
+				.catch((err) => {
+					res.status(409).send({error: err});
+				});
+				
+		})
+		.catch((err) => {
+			res.status(409).send({error: err});
+		});
+});
+
+router.put("/:id", auth.require_logged_in, async (req, res) => {
+  let userIdQuery = {};
+
+  if (!req.user.is_admin)
+    userIdQuery['userId'] = req.user.userId;
+
+  TrackerTime.update({dayofyear: req.body.dayofyear, totaltime: req.body.totaltime}, 
+    {where: {trackerid: req.params.id},
+    include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
       res.status(200).send(`Updated ${response.length} rows`);
     })
     .catch((err) => {
-      res.status(404).send(err);
+      res.status(404).send({error: err});
     });
 });
 

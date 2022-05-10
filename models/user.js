@@ -1,10 +1,16 @@
 const DataTypes = require('sequelize').DataTypes;
 const sequelize = require('../db').db;
+const TrackerTask = require('./trackerTask');
 
 var User = sequelize.define('User', {
+	userId: {
+		type: DataTypes.INTEGER,
+		autoIncrement: true,
+		primaryKey: true
+	},
 	username: {
 		type: DataTypes.STRING,
-		primaryKey: true
+		primaryKey: false
 	},
 	first_name: {
 		type: DataTypes.STRING,
@@ -35,10 +41,20 @@ var User = sequelize.define('User', {
 },
 {
 	timestamps: false,
-    freezeTableName: true
+    freezeTableName: true,
+	indexes: [
+		{
+		  unique: true, 
+		  name: 'unique_username',  
+		  fields: [sequelize.fn('lower', sequelize.col('username'))]
+		}
+	]
 });
 
 User.removeAttribute('id');
+
+User.hasMany(TrackerTask, { as: 'TrackerTask', foreignKey: 'userId' });
+TrackerTask.belongsTo(User, { foreignKey: 'userId' });
 
 User.schema('public');
 

@@ -1,0 +1,120 @@
+.submit {
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 1rem 1.5rem;
+    border: none;
+    width: auto;
+    height: auto;
+    background: var(--clr-purple);
+    cursor: pointer;
+    color: var(--clr-white);;
+  }
+  
+.submit:hover {
+background-color: var(--clr-submitHover);
+}
+
+/*This is navbar and footer-div*/
+.primary-header, .footer{
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: var(--shadows);
+}
+.logo {
+  max-height: 100px;
+  max-width: 100px;
+}
+/*This is toggle button style (=) hidden*/
+.toggle-btn {
+    display: none;
+    
+    width: 30px;
+    height: 21px;
+  }
+  
+  .toggle-btn .bar {
+    height: 3px;
+    width: 100%;
+    background-color: var(--foreground);
+    border-radius: 10px;
+  }
+  .tabs, .list {
+  display: flex;
+  gap: var(--gap, 1rem);
+  list-style-type: none;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 10px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.tab:hover {
+  background-color: var(--clr-hover);
+}
+  .brand-title{
+  font-size: 1.5rem;
+  flex-grow: 1;
+  font-weight:bold;
+      cursor: pointer;
+
+}
+  .logo-title-container{
+     display: flex;
+     align-items: center;
+
+   }
+.container {
+  padding-inline: 2rem;
+  margin-inline: auto;
+  max-width: 80rem;
+}
+  /*navbar, footer change to a column list when screensize smaller than 800px, toggle button appears*/
+  @media (max-width: 840px) {
+    .primary-header, .list {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 50px;
+    }
+   .logo-title-container{
+     margin-top: 0.5rem;
+     width: 100%;
+     text-overflow: ellipsis;
+   }
+ 
+    .toggle-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+
+    }
+  
+    .navbar-links {
+        display: none;
+        width: 100%;
+    }
+  
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+  
+    .navbar-links ul li {
+        text-align: center;
+    }
+  
+    .navbar-links ul li a {
+        padding: .5rem 1rem;
+    }
+  
+    .navbar-links.active {
+        display: flex;
+        align-self: end;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+  }

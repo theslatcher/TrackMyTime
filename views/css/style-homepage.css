@@ -10,23 +10,22 @@
 /* ------------------- */
 /* Custome properties  */
 /* ------------------- */
-:root{
-  --clr-dark: #0B0D17;
-  --clr-white: #ffffff;
-  --clr-purple: #926AA6;
+
+
+
+
+.list li > a, .social a > i {
+  color: var(--foreground);
 }
 
-/*color*/
-.bg-color {background-color: var(--clr-white);}
-.text-dark {color: var(--clr-dark);}
-.text-white{color:var(--clr-white);}
-.bg-purple{background:var(--clr-purple);}
+.social {
+  padding: 0.5em 0;
+}
 
-.tabs {
+.tabs, .list {
   display: flex;
   gap: var(--gap, 1rem);
   list-style-type: none;
-
 }
 
 .tab {
@@ -34,90 +33,17 @@
   padding: 10px;
 }
 
-
 .tab:hover {
-  background-color: #AAA;
+  background-color: var(--clr-hover);
 }
 
 .page-content {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 20px 20px;
+  min-height: calc(100vh - 95px);
 }
 
-.logo{
-  max-height: 100px;
-  max-width: 100px;
-}
-.logo > img{
-  width: 100%;
-  object-fit: contain;
-  border-radius: 50%;
-}
 
-.brand-title{
-  font-size: 1.5rem;
-  flex-grow: 1;
-  font-weight:bold;
-}
 
-.primary-header{
-  display: flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-direction: row;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-}
-
-.toggle-btn {
-  position: absolute;
-  top: .75rem;
-  right: 1rem;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 21px;
-}
-
-.toggle-btn .bar {
-  height: 3px;
-  width: 100%;
-  background-color: black;
-  border-radius: 10px;
-}
-
-@media (max-width: 800px) {
-  .primary-header {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-
-  .toggle-btn {
-      display: flex;
-  }
-
-  .navbar-links {
-      display: none;
-      width: 100%;
-  }
-
-  .navbar-links ul {
-      width: 100%;
-      flex-direction: column;
-  }
-
-  .navbar-links ul li {
-      text-align: center;
-  }
-
-  .navbar-links ul li a {
-      padding: .5rem 1rem;
-  }
-
-  .navbar-links.active {
-      display: flex;
-  }
-}
 
 h1 {
   text-align: center;
@@ -131,29 +57,37 @@ h1 {
 .guide-container{
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-evenly;
   gap: 2rem;
   padding: 0.5rem;
   margin-inline: auto;
 }
 
 .guide-item{
-  padding: 2rem;
-  border: 0.5rem solid red;
+  padding: 0 0;
   max-width: 30em;
+  display: flex;
+  flex-direction: column;
 }
 
-.number {
-  width: 3em;
-  font-size: 40px;
+.number h1{
   text-align: center;
-  color: var(--clr-white);
-  background-color:var(--clr-purple);
+  color: var(--foreground);
   border-radius: 50%;
-}
+  display:inline;
+} 
 
 .guide-content {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  justify-content:center;
+  padding: 1em 1em;
+}
+
+.guide-content img {
+  max-width: 5em;
+  max-height: 5em;
+  object-fit:cover;
 }
 
 h3,p{
@@ -166,63 +100,18 @@ h3,p{
   max-width: 80rem;
 }
 
-
-h2 {
-  background: var(--clr-purple);
-  letter-spacing: 0.1rem;
-  padding: 1rem;
-  cursor: default;
-  color: var(--clr-white);
+@media screen and (max-width: 620px){
+  .guide-container{
+    display: block;
+  }
 }
 
-.form-group label {
-  display: block;
-  margin: 1rem 0 0.5rem 0;
-}
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  width: 100%;
-  padding: 1rem 0.8rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  outline: 0;
-  transition: border 0.15s;
-}
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  height: 2.6rem;
+@media screen and (min-width: 620px) and (max-width: 1000px){
+  .guide-container{
+    align-items:center
+  }
 }
 
-.submit {
-  font-weight: bold;
-  margin-top: 1rem;
-  padding: 1rem 1.5rem;
-  border: none;
-  background: var(--clr-purple);
-  cursor: pointer;
-  color: var(--clr-white);;
-}
 
-.submit:hover {
-  background-color: #b0d6f7;
-}
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus,
-.form-group input[type="password"] {
-  border: 1px solid #222;
-}
 
-.form-group.success input {
-  border-color: #09c372;
-}
 
-.form-group.error input {
-  border-color: #ff3860;
-}
-
-.form-group .error {
-  color: #ff3860;
-  font-size: 9px;
-  height: 13px;
-}

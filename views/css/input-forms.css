@@ -1,0 +1,61 @@
+.form-group label {
+  display: block;
+  margin: 1rem 0 0.5rem 0;
+}
+input{
+  background-color: var(--clr-white);
+  color: var(--clr-dark);
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 1rem 0.8rem;
+  border: 1px solid var(--clr-dark);
+  outline: 0;
+  transition: border 0.15s;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  height: 2.6rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"] {
+  border: 1px solid var(--clr-dark);
+}
+
+.form-group.success input {
+  border-color: var(--clr-success);
+}
+
+.form-group.error input {
+  border-color: var(--clr-error);
+}
+
+.form-group .error {
+  color: var(--clr-error);
+  font-size: 15px;
+  height: 13px;
+}
+
+#registration, #log-in, #profile{
+  margin-inline:20%;
+  padding-top: 20px;
+}
+
+@media (max-width: 840px) {
+  #registration, #log-in, #profile{
+      margin-inline:10%;
+
+  }
+}
+
+@media (max-width: 400px) {
+  #registration, #log-in, #profile{
+      margin-inline:0%;
+
+  }
+}
