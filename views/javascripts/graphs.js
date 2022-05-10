@@ -197,8 +197,8 @@ function init() {
 }
 
 // this is placeholder until I fix the data fetching
-setTimeout(() => {
+function loadGraphs() {
   createPie(testData, 0, "Summarization of total time in every task");
   createLine(testDataL1, 1, "Summarization of total time in something");
   createLine(testDataL2, 2, "Summarization of total time in something else");
-}, 2000);
+}
