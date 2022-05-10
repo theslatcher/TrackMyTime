@@ -176,17 +176,17 @@ async function card_form_toggle(e, button) {
     {
         menu.show()
 
-        const button_rect = button.getBoundingClientRect()
+        const menu_pos = { x: $(button).position().left, y: $(button).position().top + $(button).height() }
 
-        if ( (window.innerWidth - button_rect.left) < menu.offsetWidth )
+        if ( (window.innerWidth - menu_pos.x) < menu.offsetWidth )
             menu.css('left', window.innerWidth - menu.offsetWidth + "px")
         else
-            menu.css('left', button_rect.left + "px")
+            menu.css('left', menu_pos.x + "px")
 
-        if ( (window.innerHeight - button_rect.bottom) < menu.offsetHeight )
+        if ( (window.innerHeight - menu_pos.y) < menu.offsetHeight )
             menu.css('top', window.innerHeight - menu.offsetHeight + "px")
         else
-            menu.css('top', button_rect.bottom + "px")
+            menu.css('top', menu_pos.y + "px")
 
         const ctx_menu_listener = (event) => {
             const $target = $(event.target)
