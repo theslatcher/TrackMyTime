@@ -191,8 +191,17 @@ button:hover{
 @media screen  and (min-width: 400px) {  
     .button-container{
         grid-template-columns: 4fr 1fr ;
-
+    }
 }
+
+.graph-container {
+    max-width: 40rem;
+    margin:auto;
+    padding-bottom: 100px;
+}
+  
+.graph-canvas {
+    margin-top: 50px;
 }
 
 @media screen  and (min-width: 600px) { 
