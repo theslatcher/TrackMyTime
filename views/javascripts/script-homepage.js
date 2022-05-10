@@ -83,11 +83,16 @@ loginForm.addEventListener('submit', (e) => {
   })
     .then((data) => {
       if (data.ok) {
-        console.log('Success to login' + data)
-        location.href = '/'
+        data.json().then(user_details => {
+          localStorage.setItem('user_details', JSON.stringify(user_details))
+          location.href = '/'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
       }
       else {
-        console.log("error " + data.status);
+        console.error('Error:', data);
         alert("invalid username or password");
       }
     })

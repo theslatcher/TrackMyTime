@@ -2,15 +2,9 @@
 const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
 async function user() {
-    const data = JSON.parse(atob(document.cookie
-        .split('; ')
-        .find(row => row.startsWith('user_details='))
-        .split('=')[1]
-        .split('.')[1]
-        .replace('-', '+')
-        .replace('_', '/')));
+    const data = JSON.parse(localStorage.getItem('user_details'));
 
-    const res = await fetch('http://localhost:3000/user/' + data.user.userId)
+    const res = await fetch('/user/' + data.user.userId)
     const user1 = await res.json()
     return (user1)
 }
@@ -20,7 +14,9 @@ const load_trackers = async () => {
     document.getElementById('trackers').innerHTML = ""
     document.getElementById('trackers').innerHTML += trackerButtons_template()
     document.getElementById(localStorage.getItem('filter')).classList.add("bActive")
-    const url = new URL('http://localhost:3000/task/user/' + user1.userId)
+
+
+    const url = new URL(window.location.href + 'task/user/' + user1.userId)
     const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
     url.searchParams.append(localStorage.getItem('filter'), date)
     const res = await fetch(url)
@@ -39,7 +35,7 @@ const create_tracker = async () => {
         alert("goal cant be empty")
     else {
         const user1 = await user();
-        const res = await fetch("http://localhost:3000/task", {
+        const res = await fetch("/task", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -55,7 +51,7 @@ const create_tracker = async () => {
 
         )
         const tracker = await res.json()
-        await fetch("http://localhost:3000/time", {
+        await fetch("/time", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -72,9 +68,11 @@ const create_tracker = async () => {
 
     }
 }
-const delete_tracker = async (id) => {
-    if (confirm("Do you want to delete " + id)) {
-        await fetch("http://localhost:3000/time", {
+
+
+const delete_tracker = async (id, name) => {
+    if (confirm("Do you want to delete " + name)) {
+        await fetch("/time", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -85,7 +83,7 @@ const delete_tracker = async (id) => {
             })
         }
         )
-        await fetch("http://localhost:3000/task", {
+        await fetch("/task", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -153,7 +151,7 @@ async function add_new_time(button) {
     const h = button.parentElement.children[3].value
     const min = (button.parentElement.children[5].value / 60)
     const time = Number(h) + Number(min)
-    await fetch("http://localhost:3000/time", {
+    await fetch("/time", {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -211,7 +209,7 @@ async function editUser() {
     if (Object.entries(data).length > 0) {
         data.curr_password = current_pass.value
         const user1 = await user();
-        const res = await fetch("http://localhost:3000/user/" + user1.userId,
+        const res = await fetch("/user/" + user1.userId,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -248,6 +246,8 @@ tabs.forEach(tab => {
                 load_trackers()
                 break
             default:
+                document.getElementById("graphs").innerHTML = `<canvas id="chart0" class="graph-canvas"></canvas><canvas id="chart1" class="graph-canvas"></canvas><canvas id="chart2" class="graph-canvas"></canvas>`;
+                break
         }
 
     })
