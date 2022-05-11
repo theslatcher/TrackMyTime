@@ -37,7 +37,7 @@ function formatTimeData(data, color, title) {
   let labels = [];
   let datasets = [];
   let colors = [];
-  let newtitle = "Summarization of hours spent in " + title;
+  let newtitle = "Hours spent in " + title;
   for (let i = 0; i < data.length; i++) {
     labels.push(data[i].dayofyear);
     datasets.push(data[i].totaltime);
@@ -52,7 +52,7 @@ function formatTimeData(data, color, title) {
 }
 
 // this is the config/css for how the chart will look
-function cfg(type, data, title) {
+function cfg(type, data, title, label) {
   return {
     type: type,
     data: data,
@@ -67,6 +67,9 @@ function cfg(type, data, title) {
         intersect: true,
       },
       plugins: {
+        legend: {
+          display: label
+        },
         title: {
           display: true,
           text: title,
@@ -85,14 +88,13 @@ function createPie(d, i, title) {
     labels: d.labels,
     datasets: [
       {
-        label: "Summarization of total time in every task",
         borderColor: d.colors, // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets,
       },
     ],
   };
-  let config = cfg("pie", data, title);
+  let config = cfg("pie", data, title, true);
   new Chart(document.getElementById("chart" + i), config);
 }
 
@@ -101,14 +103,13 @@ function createLine(d, i, title) {
     labels: d.labels,
     datasets: [
       {
-        label: "Hours spent on each day",
         borderColor: d.colors, // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets,
       },
     ],
   };
-  let config = cfg("line", data, title);
+  let config = cfg("line", data, title, false);
   new Chart(document.getElementById("chart" + i), config);
 }
 
@@ -162,7 +163,7 @@ async function createCanvas(lineData, pieData) {
   createPie(
     pieData,
     id++,
-    "Summarization of total time in every task"
+    "Summarization of hours spent on each task"
   );
 
   // create line graphs
