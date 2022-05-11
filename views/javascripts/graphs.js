@@ -134,9 +134,9 @@ async function loadGraphs(user) {
   // if the new data is different from the old data then createCanvas
   if (localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
     await createCanvas(trackerTimeData, trackerTaskData, trackers);
-    console.log("graphs loaded from server");
+    //console.log("graphs loaded from server");
   } else {
-    console.log("graphs loaded from local storage");
+    //console.log("graphs loaded from local storage");
   }
 
   // save trackerTaskData and trackerTimeData to local storage
