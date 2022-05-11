@@ -255,9 +255,7 @@ tabs.forEach(tab => {
                 load_trackers()
                 break
             default:
-                
-                document.getElementById("graphs").innerHTML = `<canvas id="chart0" class="graph-canvas"></canvas><canvas id="chart1" class="graph-canvas"></canvas><canvas id="chart2" class="graph-canvas"></canvas>`;
-                loadGraphs()
+                loadGraphs(await user());
                 break
         }
 

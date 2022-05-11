@@ -1,74 +1,33 @@
-const testData = {
-  labels: ["Study", "Games", "Movies", "Cooking", "Workout", "Sleep"],
-  datasets: [32, 12, 15, 10, 20, 5],
-  colors: ["#00bcd4", "#ff9800", "#9c27b0", "#009688", "#4caf50", "#795548"],
-};
-const testDataL1 = {
-  labels: [
-    "2022-05-01",
-    "2022-05-02",
-    "2022-05-03",
-    "2022-05-04",
-    "2022-05-05",
-    "2022-05-06",
-    "2022-05-07",
-    "2022-05-08",
-    "2022-05-09",
-  ],
-  datasets: [1.01666666666667, 1, 0.966666666666667, 1.8166666666666667, 0.4, 3.2, 2.5, 2.3, 1.5],
-  colors: ["#00bcd4", "#00bcd4", "#00bcd4", "#00bcd4", "#00bcd4", "#00bcd4", "#00bcd4", "#00bcd4"],
-}
-const testDataL2 = {
-  labels: [
-    "2022-05-01",
-    "2022-05-02",
-    "2022-05-03",
-    "2022-05-04",
-    "2022-05-05",
-  ],
-  datasets: [2.14, 2.01666666666667, 5.966666666666667, 0.0166666666666667, 1],
-  colors: ["#ff9800", "#ff9800", "#ff9800", "#ff9800", "#ff9800"],
-};
-
 let chartAmount = 0;
 let trackerIds = [];
-const userData = "";
+let userData = {};
 
-function fetchTrackerTask(user) {
-  return new Promise((resolve, reject) => {
-    fetch(`/task/user/${user}`)
-      .then((res) => res.json())
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+async function fetchTimeTracker(id) {
+  return await fetch("/time/" + id, {
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(data => {
+    return data;
   });
 }
 
-function fetchTimeTracker(id) {
-  return new Promise((resolve, reject) => {
-    fetch(`/time/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
+// format tracker data for pie chart
 function formatData(data) {
   let labels = [];
   let datasets = [];
   let colors = [];
-  data.forEach((task) => {
-    labels.push(task.name);
-    datasets.push(task.currenttime);
-    colors.push(task.color);
-  });
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].currenttime > 0) {
+      labels.push(data[i].name);
+      datasets.push(data[i].currenttime);
+      colors.push(data[i].color);
+    }
+  }
   return {
     labels: labels,
     datasets: datasets,
@@ -76,17 +35,16 @@ function formatData(data) {
   };
 }
 
-function formatTime(data) {
+// format time data for line graph
+function formatTimeData(data, color) {
   let labels = [];
   let datasets = [];
   let colors = [];
-  let color = "#00bcd4";
-  data.forEach((time) => {
-    labels.push(time.dayofyear);
-    datasets.push(time.totaltime);
-
+  for (let i = 0; i < data.length; i++) {
+    labels.push(data[i].dayofyear);
+    datasets.push(data[i].totaltime);
     colors.push(color);
-  });
+  }
   return {
     labels: labels,
     datasets: datasets,
@@ -94,6 +52,7 @@ function formatTime(data) {
   };
 }
 
+// this is the config/css for how the chart will look
 function cfg(type, data, title) {
   return {
     type: type,
@@ -127,7 +86,7 @@ function createPie(d, i, title) {
     labels: d.labels,
     datasets: [
       {
-        label: "Summarization of total time in every ",
+        label: "Summarization of total time in every task",
         borderColor: d.colors, // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets,
@@ -143,7 +102,7 @@ function createLine(d, i, title) {
     labels: d.labels,
     datasets: [
       {
-        label: "Hours",
+        label: "Hours spent on each day",
         borderColor: d.colors, // line color
         backgroundColor: d.colors, // fill color
         data: d.datasets,
@@ -154,51 +113,48 @@ function createLine(d, i, title) {
   new Chart(document.getElementById("chart" + i), config);
 }
 
-function init() {
-  fetchTrackerTask(userData)
-    .then((data) => {
-      return formatData(data);
-    })
-    .then((data) => {
-      createPie(
-        testData,
-        chartAmount++,
-        "Summarization of total time in every task"
-      );
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+async function loadGraphs(user) {
+  // reset on load
+  document.getElementById("graphs").innerHTML = ``;
+  chartAmount = 0;
+  userData = user;
 
-  // makes a line graph for each task that the user has
-  for (let i = 0; i < trackerIds.length; i++) {
-    fetchTimeTracker(trackerIds[i])
-      .then((data) => {
-        return formatTime(data);
-      })
-      .then((data) => {
-        createLine(
-          data,
-          chartAmount++,
-          "Summarization of total time in " + trackerIds[i]
-        );
-      })
-      .then(() => {
-        let canvas = ``;
-        for (let i = 1; i < chartAmount; i++) {
-          canvas += `<canvas id="chart${i} class="graph-canvas"></canvas>`;
-        }
-        document.getElementById("graphs").innerHTML += canvas;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  // fetch all user trackers
+  const url = new URL(window.location.href + 'task/user/' + user.userId);
+  const res = await fetch(url);
+  const trackers = await res.json();
+
+  // arrays to graph data store data
+  let trackerTaskData = formatData(trackers)
+  let trackerTimeData = []
+  
+  // fetch time data for each tracker
+  for (let i = 0; i < trackers.length; i++) {
+    const res = await fetchTimeTracker(trackers[i].trackerid)
+    trackerTimeData.push(res)
   }
-}
+  
+  // create graphs canvas
+  let canvas = ``;
+  for (let i = 0; i < trackerTimeData.length+1; i++) { // +1 is for the pie chart
+    canvas += `<canvas id="chart${i}" class="graph-canvas"></canvas>`;
+  }
+  document.getElementById("graphs").innerHTML = canvas;
+  
+  // self explanatory
+  createPie(
+    trackerTaskData,
+    chartAmount++,
+    "Summarization of total time in every task"
+  );
 
-// this is placeholder until I fix the data fetching
-function loadGraphs() {
-  createPie(testData, 0, "Summarization of total time in every task");
-  createLine(testDataL1, 1, "Summarization of total time in something");
-  createLine(testDataL2, 2, "Summarization of total time in something else");
+  // create line graphs
+  for (let i = 0; i < trackerTimeData.length; i++) {
+    let data = formatTimeData(trackerTimeData[i], trackers[i].color);
+    createLine(
+      data,
+      chartAmount++,
+      "Summarization of total time in " + trackers[i].name
+    );
+  }
 }
