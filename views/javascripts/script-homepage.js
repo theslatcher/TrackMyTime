@@ -23,8 +23,12 @@ tabs.forEach((tab) => {
 
     //show the tab content when click on target tab
     target.classList.add('active')
+    if (navbarLinks.classList.contains('active'))
+      navbarLinks.classList.toggle('active')
   })
-})
+
+}
+)
 
 //show tabs when click to toggle button
 
@@ -87,9 +91,9 @@ loginForm.addEventListener('submit', (e) => {
           localStorage.setItem('user_details', JSON.stringify(user_details))
           location.href = '/'
         })
-        .catch((error) => {
-          console.error('Error:', error)
-        })
+          .catch((error) => {
+            console.error('Error:', error)
+          })
       }
       else {
         console.error('Error:', data);

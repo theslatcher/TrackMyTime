@@ -23,20 +23,20 @@
     </head>
     <body>
         <header class="primary-header container">
-            <div class="logo-title-container">
-                <div class="logo">
-                    <!-- <img src="../assets/logo.PNG" alt="logo of the website"> -->
-                    <i class="fas fa-clock"></i>
+            <div class="logo-title-button-container">
+                <div class="logo-title-container">
+                    <div class="logo">
+                        <!-- <img src="../assets/logo.PNG" alt="logo of the website"> -->
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="brand-title" onclick="window.location= '/';">Track
+                        my time</div>
                 </div>
-                <div class="brand-title" onclick="window.location= '/';">Track
-                    my
-                    time</div>
-
-                <a href="#" class="toggle-btn">
+                <div class="toggle-btn">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </a>
+                </div>
             </div>
             <div class="navbar-links">
                 <ul class="tabs">
@@ -54,19 +54,27 @@
         </header>
         <div id="profile" data-tab-content>
         </div>
-        <div id="graphs" class="graph-container"data-tab-content>
-            
+        <div id="graphs" class="graph-container" data-tab-content>
+
         </div>
         <div id="trackers" data-tab-content class="active">
 
         </div>
 
         <nav class="card-context-menu" id="card-context-menu">
-			<ul class="card-context-menu-items">
-				<li class="card-context-menu-item" onclick="toggle_add_time($(this).parent().parent().attr('task-id')); $(this).parent().parent().hide()">Add Time</li>
-				<li class="card-context-menu-item" onclick="delete_tracker($(this).parent().parent().attr('task-id'), $(this).parent().parent().attr('task-name')); $(this).parent().parent().hide()">Delete</li>
-			</ul>
-		</nav>
+            <ul class="card-context-menu-items">
+                <li class="card-context-menu-item"
+                    onclick="toggle_add_time($(this).parent().parent().attr('task-id'));
+                    $(this).parent().parent().hide()">Add Time</li>
+                <li class="card-context-menu-item"
+                    onclick="toggle_edit_tracker($(this).parent().parent().attr('task-id'));
+                    $(this).parent().parent().hide()">Edit</li>
+                <li class="card-context-menu-item"
+                    onclick="delete_tracker($(this).parent().parent().attr('task-id'),
+                    $(this).parent().parent().attr('task-name'));
+                    $(this).parent().parent().hide()">Delete</li>
+            </ul>
+        </nav>
     </body>
     <script src="../javascripts/graphs.js" type="text/javascript"
         defer> </script>

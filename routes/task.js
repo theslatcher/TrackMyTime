@@ -96,7 +96,6 @@ function getDateQuery(query) {
 }
 
 router.get("/:id", auth.require_logged_in, async (req, res) => {
-    console.log(req.params);
     let whereStatement = { trackerid: req.params.id }
 
     if (!req.user.is_admin)

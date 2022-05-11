@@ -82,10 +82,18 @@
 .card-goal{
  grid-column: 1;
   grid-row: 4;
+  display: flex;
+  margin: 0;
+}
+.card-goal h2{
+  font-size: 0.9rem;
 
 }
-
-
+.progress{
+    font-size: 1rem;
+    width: 90px;
+    margin: 5px;
+}
 .card-hidden{
     display: none;
 }
@@ -111,7 +119,10 @@
       justify-self: center;
 }
 
-
+.edit_tracker{
+    width: inherit;
+    height: inherit;
+}
 
 
 .card input{
@@ -123,16 +134,7 @@
     outline: 0;
     
 }
-.select{
-    width: 10ch;
-    white-space: nowrap; 
-    text-overflow: ellipsis;
-    height: 2rem;
-    margin: 0.2rem 0 0 0.2rem;
-    font-size: 1.2rem;
-    background-color: var(--background);
-    border: 0;
-}
+
 .form_text{
     grid-row: 1;
     grid-column: 1/3;
