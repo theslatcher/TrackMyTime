@@ -1,19 +1,15 @@
-let chartAmount = 0;
-let trackerIds = [];
-let userData = {};
-
 async function fetchTimeTracker(id) {
   return await fetch("/time/" + id, {
     headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    method: 'GET'
+    method: "GET",
   })
-  .then(res => res.json())
-  .then(data => {
-    return data;
-  });
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    });
 }
 
 // format tracker data for pie chart
@@ -114,47 +110,65 @@ function createLine(d, i, title) {
 }
 
 async function loadGraphs(user) {
-  // reset on load
   document.getElementById("graphs").innerHTML = ``;
-  chartAmount = 0;
-  userData = user;
 
   // fetch all user trackers
-  const url = new URL(window.location.href + 'task/user/' + user.userId);
+  const url = new URL(window.location.href + "task/user/" + user.userId);
   const res = await fetch(url);
   const trackers = await res.json();
 
+  // if the data is saved in the local storage then load it
+  if (localStorage.getItem("trackerTaskData") && localStorage.getItem("trackerTimeData") && localStorage.getItem("trackerData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
+    await createCanvas(JSON.parse(localStorage.getItem("trackerTimeData")), JSON.parse(localStorage.getItem("trackerTaskData")), JSON.parse(localStorage.getItem("trackerData")));
+
   // arrays to graph data store data
-  let trackerTaskData = formatData(trackers)
-  let trackerTimeData = []
-  
+  let trackerTaskData = formatData(trackers);
+  let trackerTimeData = [];
+
   // fetch time data for each tracker
   for (let i = 0; i < trackers.length; i++) {
-    const res = await fetchTimeTracker(trackers[i].trackerid)
-    trackerTimeData.push(res)
+    const res = await fetchTimeTracker(trackers[i].trackerid);
+    trackerTimeData.push(res);
   }
-  
-  // create graphs canvas
+
+  // if the new data is different from the old data then createCanvas
+  if (localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
+    await createCanvas(trackerTimeData, trackerTaskData, trackers);
+    console.log("graphs loaded from server");
+  } else {
+    console.log("graphs loaded from local storage");
+  }
+
+  // save trackerTaskData and trackerTimeData to local storage
+  localStorage.setItem("trackerTaskData", JSON.stringify(trackerTaskData));
+  localStorage.setItem("trackerTimeData", JSON.stringify(trackerTimeData));
+  localStorage.setItem("trackerData", JSON.stringify(trackers));
+}
+
+async function createCanvas(lineData, pieData, tracker) {
+  let id = 0;
+  // create empty graphs canvas
   let canvas = ``;
-  for (let i = 0; i < trackerTimeData.length+1; i++) { // +1 is for the pie chart
+  for (let i = 0; i < lineData.length + 1; i++) {
+    // +1 is for the pie chart
     canvas += `<canvas id="chart${i}" class="graph-canvas"></canvas>`;
   }
   document.getElementById("graphs").innerHTML = canvas;
-  
+
   // self explanatory
   createPie(
-    trackerTaskData,
-    chartAmount++,
+    pieData,
+    id++,
     "Summarization of total time in every task"
   );
 
   // create line graphs
-  for (let i = 0; i < trackerTimeData.length; i++) {
-    let data = formatTimeData(trackerTimeData[i], trackers[i].color);
+  for (let i = 0; i < lineData.length; i++) {
+    let data = formatTimeData(lineData[i], tracker[i].color);
     createLine(
       data,
-      chartAmount++,
-      "Summarization of total time in " + trackers[i].name
+      id++,
+      "Summarization of total time in " + tracker[i].name
     );
   }
 }
