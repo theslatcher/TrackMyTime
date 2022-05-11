@@ -121,12 +121,12 @@ async function loadGraphs(user) {
   const trackers = await res.json();
 
   // if the data is saved in the local storage then load it
-  if (loadedOnce && localStorage.getItem("trackerTaskData") && localStorage.getItem("trackerTimeData") && localStorage.getItem("trackerData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
-    await createCanvas(JSON.parse(localStorage.getItem("trackerTimeData")), JSON.parse(localStorage.getItem("trackerTaskData")));
+  if (loadedOnce && localStorage.getItem("pieData") && localStorage.getItem("lineData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
+    await createCanvas(JSON.parse(localStorage.getItem("lineData")), JSON.parse(localStorage.getItem("pieData")));
 
   // arrays to graph data store data
-  let trackerTaskData = formatData(trackers);
-  let trackerTimeData = [];
+  let pieData = formatData(trackers);
+  let lineData = [];
 
   // if the new data is different from the old data then createCanvas
   if (loadedOnce == false || localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
@@ -134,9 +134,9 @@ async function loadGraphs(user) {
     for (let i = 0; i < trackers.length; i++) {
       let  res = await fetchTimeTracker(trackers[i].trackerid);
       res = formatTimeData(res, trackers[i].color, trackers[i].name);
-      trackerTimeData.push(res);
+      lineData.push(res);
     }
-    await createCanvas(trackerTimeData, trackerTaskData);
+    await createCanvas(lineData, pieData);
     loadedOnce = true;
     //console.log("graphs loaded from server");
   } else {
@@ -151,8 +151,9 @@ async function createCanvas(lineData, pieData) {
   let id = 0;
   // create empty graphs canvas
   let canvas = ``;
+  
+  // fill the canvas (+1 is the pie chart)
   for (let i = 0; i < lineData.length + 1; i++) {
-    // +1 is for the pie chart
     canvas += `<canvas id="chart${i}" class="graph-canvas"></canvas>`;
   }
   document.getElementById("graphs").innerHTML = canvas;
@@ -173,7 +174,8 @@ async function createCanvas(lineData, pieData) {
     );
   }
   
-  // save trackerTaskData and trackerTimeData to local storage
-  localStorage.setItem("trackerTaskData", JSON.stringify(pieData));
-  localStorage.setItem("trackerTimeData", JSON.stringify(lineData));
+  // save pieData and lineData to local storage
+  localStorage.setItem("pieData", JSON.stringify(pieData));
+  localStorage.setItem("lineData", JSON.stringify(lineData));
 }
+// ⊂(　　⊂　　　_ω_　)⊃
