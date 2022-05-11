@@ -1,3 +1,4 @@
+var loadedOnce = false;
 async function fetchTimeTracker(id) {
   return await fetch("/time/" + id, {
     headers: {
@@ -32,10 +33,11 @@ function formatData(data) {
 }
 
 // format time data for line graph
-function formatTimeData(data, color) {
+function formatTimeData(data, color, title) {
   let labels = [];
   let datasets = [];
   let colors = [];
+  let newtitle = "Summarization of hours spent in " + title;
   for (let i = 0; i < data.length; i++) {
     labels.push(data[i].dayofyear);
     datasets.push(data[i].totaltime);
@@ -45,6 +47,7 @@ function formatTimeData(data, color) {
     labels: labels,
     datasets: datasets,
     colors: colors,
+    title: newtitle,
   };
 }
 
@@ -118,34 +121,33 @@ async function loadGraphs(user) {
   const trackers = await res.json();
 
   // if the data is saved in the local storage then load it
-  if (localStorage.getItem("trackerTaskData") && localStorage.getItem("trackerTimeData") && localStorage.getItem("trackerData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
-    await createCanvas(JSON.parse(localStorage.getItem("trackerTimeData")), JSON.parse(localStorage.getItem("trackerTaskData")), JSON.parse(localStorage.getItem("trackerData")));
+  if (loadedOnce && localStorage.getItem("trackerTaskData") && localStorage.getItem("trackerTimeData") && localStorage.getItem("trackerData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
+    await createCanvas(JSON.parse(localStorage.getItem("trackerTimeData")), JSON.parse(localStorage.getItem("trackerTaskData")));
 
   // arrays to graph data store data
   let trackerTaskData = formatData(trackers);
   let trackerTimeData = [];
 
-  // fetch time data for each tracker
-  for (let i = 0; i < trackers.length; i++) {
-    const res = await fetchTimeTracker(trackers[i].trackerid);
-    trackerTimeData.push(res);
-  }
-
   // if the new data is different from the old data then createCanvas
-  if (localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
-    await createCanvas(trackerTimeData, trackerTaskData, trackers);
+  if (loadedOnce == false || localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
+    // fetch time data for each tracker
+    for (let i = 0; i < trackers.length; i++) {
+      let  res = await fetchTimeTracker(trackers[i].trackerid);
+      res = formatTimeData(res, trackers[i].color, trackers[i].name);
+      trackerTimeData.push(res);
+    }
+    await createCanvas(trackerTimeData, trackerTaskData);
+    loadedOnce = true;
     //console.log("graphs loaded from server");
   } else {
     //console.log("graphs loaded from local storage");
   }
 
-  // save trackerTaskData and trackerTimeData to local storage
-  localStorage.setItem("trackerTaskData", JSON.stringify(trackerTaskData));
-  localStorage.setItem("trackerTimeData", JSON.stringify(trackerTimeData));
+  // save the tracker data since we can check if the currenttime has changed to fetch new data from the server
   localStorage.setItem("trackerData", JSON.stringify(trackers));
 }
 
-async function createCanvas(lineData, pieData, tracker) {
+async function createCanvas(lineData, pieData) {
   let id = 0;
   // create empty graphs canvas
   let canvas = ``;
@@ -164,11 +166,14 @@ async function createCanvas(lineData, pieData, tracker) {
 
   // create line graphs
   for (let i = 0; i < lineData.length; i++) {
-    let data = formatTimeData(lineData[i], tracker[i].color);
     createLine(
-      data,
+      lineData[i],
       id++,
-      "Summarization of total time in " + tracker[i].name
+      lineData[i].title
     );
   }
+  
+  // save trackerTaskData and trackerTimeData to local storage
+  localStorage.setItem("trackerTaskData", JSON.stringify(pieData));
+  localStorage.setItem("trackerTimeData", JSON.stringify(lineData));
 }
