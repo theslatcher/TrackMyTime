@@ -26,6 +26,7 @@ toggleButton.addEventListener('click', () => {
 })
 
 async function logout() {
+    localStorage.removeItem('user_details')
     await fetch('/user/signout')
     location.href = '/'
 }

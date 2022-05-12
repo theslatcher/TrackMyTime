@@ -2,13 +2,7 @@ const tabs = document.querySelectorAll("[data-tab-target]")
 const tabContent = document.querySelectorAll("[data-tab-content]");
 
 async function user() {
-    const data = JSON.parse(atob(document.cookie
-        .split('; ')
-        .find(row => row.startsWith('user_details='))
-        .split('=')[1]
-        .split('.')[1]
-        .replace('-', '+')
-        .replace('_', '/')));
+    const data = JSON.parse(localStorage.getItem('user_details'));
 
     const res = await fetch('/user/' + data.user.userId)
     const user1 = await res.json()
@@ -158,23 +152,58 @@ async function add_new_time(button) {
     load_trackers()
 }
 
-function card_form_toggle(button) {
-    button.parentElement.parentElement.children[3].classList.toggle("card-hidden");
-    button.parentElement.parentElement.children[5].classList.toggle("card-hidden");
-    button.parentElement.parentElement.children[7].classList.toggle("card-hidden");
+function toggle_add_time(id) {
+    $(`#${id}`).find('.card-hidden').toggle('card-hidden');
 }
 
+async function card_form_toggle(e, button) {
+    const menu = $('#card-context-menu')
 
+    let open = false
 
+    if (menu.attr("task-id") != button.parentElement.parentElement.id)
+        open = true
 
+    menu.attr("task-id", button.parentElement.parentElement.id)
+    menu.attr("task-name", button.parentElement.parentElement.getAttribute("task-name"))
 
+    if (menu.is(":visible"))
+        menu.hide();
+    else
+        open = true
 
+    if (open)
+    {
+        menu.show()
 
+        const menu_pos = { x: $(button).position().left, y: $(button).position().top + $(button).height() }
+
+        if ( (window.innerWidth - menu_pos.x) < menu.offsetWidth )
+            menu.css('left', window.innerWidth - menu.offsetWidth + "px")
+        else
+            menu.css('left', menu_pos.x + "px")
+
+        if ( (window.innerHeight - menu_pos.y) < menu.offsetHeight )
+            menu.css('top', window.innerHeight - menu.offsetHeight + "px")
+        else
+            menu.css('top', menu_pos.y + "px")
+
+        const ctx_menu_listener = (event) => {
+            const $target = $(event.target)
+            if (!$target.closest('#card-context-menu').length && $('#card-context-menu').is(':visible')) {
+                $('#card-context-menu').hide()
+                document.removeEventListener('click', ctx_menu_listener)
+            }
+        }
+
+        e.stopImmediatePropagation();
+        document.addEventListener('click', ctx_menu_listener)
+    }
+}
 
 function test(some) {
     document.getElementById("create_new_card").setAttribute("style", "border: 3px solid" + some.value)
     document.getElementById("newgoal").setAttribute("style", "border-bottom: 1px solid" + some.value)
-
 }
 
 
