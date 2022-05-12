@@ -29,6 +29,9 @@ router.get("/:id", auth.require_logged_in, async (req, res) => {
   TrackerTime.findAll({where: {trackerid: req.params.id}, 
     include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
+        response.sort((a, b) => {
+          return new Date(a.dayofyear) - new Date(b.dayofyear);
+        });
         res.status(200).send(response);
     })
     .catch((err) => {
