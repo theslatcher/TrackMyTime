@@ -53,10 +53,37 @@ function formatTimeData(data, color, title) {
 
 // this is the config/css for how the chart will look
 function cfg(type, data, title, label) {
+  let color = 'white'
+  let grid_color = 'gray'
+  let scales
+  if (document.body.classList.contains('theme-light'))
+    color = 'black'
+
+
+
+  if (type === 'line')
+    scales = {
+      x: {
+        grid: {
+          color: grid_color,
+          borderColor: grid_color
+        }
+      },
+      y: {
+        grid: {
+          color: grid_color,
+          borderColor: grid_color
+        }
+      }
+    }
+
+
+  console.log(type);
   return {
     type: type,
     data: data,
     options: {
+      scales: scales,
       responsive: true,
       tooltips: {
         mode: "index",
@@ -73,16 +100,16 @@ function cfg(type, data, title, label) {
         title: {
           display: true,
           text: title,
-          color: "#d3d1d1",
+          color: color,
           font: {
             size: 18,
-          },
-        },
-      },
-    },
-  };
-}
+          }
+        }
+      }
+    }
 
+  }
+}
 function createPie(d, i, title) {
   let data = {
     labels: d.labels,
@@ -133,7 +160,7 @@ async function loadGraphs(user) {
   if (loadedOnce == false || localStorage.getItem("trackerData") !== JSON.stringify(trackers) || localStorage.getItem("trackerData") == null) {
     // fetch time data for each tracker
     for (let i = 0; i < trackers.length; i++) {
-      let  res = await fetchTimeTracker(trackers[i].trackerid);
+      let res = await fetchTimeTracker(trackers[i].trackerid);
       res = formatTimeData(res, trackers[i].color, trackers[i].name);
       lineData.push(res);
     }
@@ -152,7 +179,7 @@ async function createCanvas(lineData, pieData) {
   let id = 0;
   // create empty graphs canvas
   let canvas = ``;
-  
+
   // fill the canvas (+1 is the pie chart)
   for (let i = 0; i < lineData.length + 1; i++) {
     canvas += `<canvas id="chart${i}" class="graph-canvas"></canvas>`;
@@ -174,7 +201,7 @@ async function createCanvas(lineData, pieData) {
       lineData[i].title
     );
   }
-  
+
   // save pieData and lineData to local storage
   localStorage.setItem("pieData", JSON.stringify(pieData));
   localStorage.setItem("lineData", JSON.stringify(lineData));
