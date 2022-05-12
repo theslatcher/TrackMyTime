@@ -1,29 +1,28 @@
 
 const tabs = document.querySelectorAll('[data-tab-target]')
 const tabContent = document.querySelectorAll('[data-tab-content]');
-async function user() {
+async function get_user() {
     const data = JSON.parse(localStorage.getItem('user_details'));
-
     const res = await fetch('/user/' + data.user.userId)
     const user1 = await res.json()
     return (user1)
 }
-
+const userId = () => {
+    const data = JSON.parse(localStorage.getItem('user_details'));
+    return data.user.userId
+}
 const load_trackers = async () => {
-    const user1 = await user();
     document.getElementById('trackers').innerHTML = ''
     document.getElementById('trackers').innerHTML += trackerButtons_template()
     document.getElementById(localStorage.getItem('filter')).classList.add('bActive')
-    const url = new URL(window.location.href + 'task/user/' + user1.userId)
+    const url = new URL(window.location.href + 'task/user/' + userId())
     const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
     url.searchParams.append(localStorage.getItem('filter'), date)
     const res = await fetch(url)
     const trackers = await res.json()
     trackers.forEach(tracker => {
         document.getElementById('cards').innerHTML += card_template(tracker)
-
     });
-
 }
 const get_a_tracker = async (trackerid) => {
     const url = new URL(window.location.href + 'task/' + trackerid)
@@ -42,7 +41,7 @@ const create_tracker = async () => {
     else if (goal.length < 1)
         alert('goal cant be empty')
     else {
-        const user1 = await user();
+        const id = userId()
         const res = await fetch('/task', {
             headers: {
                 'Accept': 'application/json',
@@ -53,11 +52,9 @@ const create_tracker = async () => {
                 'name': name,
                 'goal': goal,
                 'color': document.getElementById('create_new_card').children[4].value,
-                'userId': user1.userId
+                'userId': id
             })
-        }
-
-        )
+        })
         const tracker = await res.json()
         await fetch('/time', {
             headers: {
@@ -73,11 +70,8 @@ const create_tracker = async () => {
         }
         )
         load_trackers()
-
     }
 }
-
-
 const delete_tracker = async (id, name) => {
     if (confirm('Do you want to delete ' + name)) {
         await fetch('/time', {
@@ -205,35 +199,26 @@ function toggle_add_time(id) {
 
 async function card_form_toggle(e, button) {
     const menu = $('#card-context-menu')
-
     let open = false
-
     if (menu.attr('task-id') != button.parentElement.id)
         open = true
-
     menu.attr('task-id', button.parentElement.id)
     menu.attr('task-name', button.parentElement.getAttribute('task-name'))
-
     if (menu.is(':visible'))
         menu.hide();
     else
         open = true
-
     if (open) {
         menu.show()
-
         const menu_pos = { x: $(button).position().left, y: $(button).position().top + $(button).height() }
-
         if ((window.innerWidth - menu_pos.x) < menu.offsetWidth)
             menu.css('left', window.innerWidth - menu.offsetWidth + 'px')
         else
             menu.css('left', menu_pos.x + 'px')
-
         if ((window.innerHeight - menu_pos.y) < menu.offsetHeight)
             menu.css('top', window.innerHeight - menu.offsetHeight + 'px')
         else
             menu.css('top', menu_pos.y + 'px')
-
         const ctx_menu_listener = (event) => {
             const $target = $(event.target)
             if (!$target.closest('#card-context-menu').length && $('#card-context-menu').is(':visible')) {
@@ -241,12 +226,10 @@ async function card_form_toggle(e, button) {
                 document.removeEventListener('click', ctx_menu_listener)
             }
         }
-
         e.stopImmediatePropagation();
         document.addEventListener('click', ctx_menu_listener)
     }
 }
-
 function toggle_color(color) {
 
     document.getElementById(color.parentElement.id).setAttribute('style', 'border: 3px solid' + color.value)
@@ -260,7 +243,6 @@ async function editUser() {
     const email = document.getElementById('email')
     const pass = document.getElementById('password')
     const current_pass = document.getElementById('current_password')
-
     if (username.value != '') {
         if (isValidUserName(username.value)) data.username = username.value
         else setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
@@ -269,7 +251,6 @@ async function editUser() {
         if (isValidName(first_name.value)) data.first_name = first_name.value
         else setError(first_name, 'your first name should not be / have number')
     }
-
     if (last_name.value != '') {
         if (isValidName(last_name.value)) data.last_name = last_name.value
         else setError(last_name, 'your last name should not be / have number')
@@ -282,11 +263,10 @@ async function editUser() {
         if (isValidPassword(pass.value)) data.pass = pass.value
         else setError(pass, 'only alphabetic or/and numeric characters allowed') //why?
     }
-
     if (Object.entries(data).length > 0) {
         data.curr_password = current_pass.value
-        const user1 = await user();
-        const res = await fetch('/user/' + user1.userId,
+        const id = userId
+        const res = await fetch('/user/' + id,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -312,8 +292,7 @@ tabs.forEach(tab => {
         target.classList.add('active');
         switch (target.id) {
             case 'profile':
-                const user1 = await user();
-                document.getElementById('profile').innerHTML = profile_template(user1)
+                document.getElementById('profile').innerHTML = profile_template(await get_user())
                 document.getElementById('profile-form').addEventListener('submit', (e) => {
                     e.preventDefault()
                     editUser()
@@ -324,10 +303,9 @@ tabs.forEach(tab => {
                 break
             default:
                 document.getElementById('graphs').innerHTML = `<canvas id='chart0' class='graph-canvas'></canvas><canvas id='chart1' class='graph-canvas'></canvas><canvas id='chart2' class='graph-canvas'></canvas>`;
-                loadGraphs(await user());
+                loadGraphs(userId());
                 break
         }
-
         if (navbarLinks.classList.contains('active'))
             navbarLinks.classList.toggle('active')
     })

@@ -144,7 +144,7 @@ async function loadGraphs(user) {
   document.getElementById("graphs").innerHTML = ``;
 
   // fetch all user trackers
-  const url = new URL(window.location.href + "task/user/" + user.userId);
+  const url = new URL(window.location.href + "task/user/" + user);
   const res = await fetch(url);
   const trackers = await res.json();
 

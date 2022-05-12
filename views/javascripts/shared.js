@@ -21,7 +21,7 @@ async function theme_switch() {
     document.body.classList.add(localStorage.getItem('theme'))
     if (document.getElementById('graphs'))
         if (document.getElementById('graphs').classList.contains('active'))
-            loadGraphs(await user())
+            loadGraphs(userId)
 
 }
 
@@ -31,6 +31,10 @@ toggleButton.addEventListener('click', () => {
 
 async function logout() {
     localStorage.removeItem('user_details')
+    localStorage.removeItem('pieData')
+    localStorage.removeItem('lineData')
+    localStorage.removeItem('trackerData')
+
     await fetch('/user/signout')
     location.href = '/'
 }
