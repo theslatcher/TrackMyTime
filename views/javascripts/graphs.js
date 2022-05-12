@@ -40,19 +40,16 @@ function formatTimeData(data, color, title) {
   let newtitle = "Summarization of hours spent on " + title;
 
   let tempTime = 0;
-  let select = 0;
   for (let i = 0; i < data.length; i++) {
     tempTime += data[i].totaltime; // add up all the time (for a growing graph)
     if (labels.includes(data[i].dayofyear)) {
       // checks if the dates are the same
       datasets[labels.indexOf(data[i].dayofyear)] += data[i].totaltime;
     } else {
-      select = i;
       labels.push(data[i].dayofyear);
       datasets.push(tempTime);
       colors.push(color);
     }
-    console.log(datasets[select]);
   }
   // if dataset has only one label add 0 to the front of datasets
   if (labels.length === 1) {
@@ -60,7 +57,6 @@ function formatTimeData(data, color, title) {
     labels.unshift("Start");
     colors.unshift(color);
   }
-  console.log(labels, datasets, colors, newtitle);
   return {
     labels: labels,
     datasets: datasets,
