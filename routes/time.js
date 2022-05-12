@@ -29,10 +29,7 @@ router.get("/:id", auth.require_logged_in, async (req, res) => {
   TrackerTime.findAll({where: {trackerid: req.params.id}, 
     include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
-      if (req.user.is_admin || (response.userId == req.user.userId))
         res.status(200).send(response);
-      else
-        res.status(403).send({error: new Error(`Unable to retrieve tracker with id: ${req.params.id}.`)});
     })
     .catch((err) => {
       res.status(404).send({error: err});
