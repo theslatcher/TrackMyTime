@@ -2,7 +2,7 @@
 const toggleButton = document.getElementsByClassName('toggle-btn')[0]
 const navbarLinks = document.getElementsByClassName('navbar-links')[0]
 
-function theme_switch() {
+async function theme_switch() {
     const current = localStorage.getItem('theme');
     switch (current) {
         case "theme-dark":
@@ -19,6 +19,10 @@ function theme_switch() {
     }
     document.body.removeAttribute("class")
     document.body.classList.add(localStorage.getItem('theme'))
+    if (document.getElementById('graphs'))
+        if (document.getElementById('graphs').classList.contains('active'))
+            loadGraphs(await user())
+
 }
 
 toggleButton.addEventListener('click', () => {

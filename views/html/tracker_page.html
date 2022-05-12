@@ -16,9 +16,13 @@
         <link rel="stylesheet" href="../css/tracker_page.css">
 
         <script src="../javascripts/jquery-3.6.0.min.js" defer> </script>
+        <script src="../javascripts/graphs.js" type="text/javascript"
+            defer> </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="../javascripts/tracker_page.js" defer> </script>
         <script src="../javascripts/shared.js" defer></script>
         <script src="../javascripts/templates.js" defer> </script>
+
         <title>TrackMyTime</title>
     </head>
     <body>
@@ -70,13 +74,12 @@
                     onclick="toggle_edit_tracker($(this).parent().parent().attr('task-id'));
                     $(this).parent().parent().hide()">Edit</li>
                 <li class="card-context-menu-item"
+
                     onclick="delete_tracker($(this).parent().parent().attr('task-id'),
                     $(this).parent().parent().attr('task-name'));
                     $(this).parent().parent().hide()">Delete</li>
             </ul>
         </nav>
     </body>
-    <script src="../javascripts/graphs.js" type="text/javascript"
-        defer> </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </html>
