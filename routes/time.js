@@ -3,7 +3,7 @@ const TrackerTime = require('../models/trackerTime');
 const { Op } = require("sequelize");
 const express = require("express");
 const router = express.Router();
-const auth = require("../lib/auth")
+const auth = require("../lib/auth");
 
 router.get("/", auth.require_logged_in, async (req, res) => {
   let userIdQuery = {};
@@ -26,13 +26,10 @@ router.get("/:id", auth.require_logged_in, async (req, res) => {
   if (!req.user.is_admin)
     userIdQuery['userId'] = req.user.userId;
 
-  TrackerTime.findOne({where: {trackerid: req.params.id}, 
+  TrackerTime.findAll({where: {trackerid: req.params.id}, 
     include: { model: TrackerTask, as: 'TrackerTask', attributes: [], where: userIdQuery}})
     .then((response) => {
-      if (req.user.is_admin || (response.userId == req.user.userId))
         res.status(200).send(response);
-      else
-        res.status(403).send({error: new Error(`Unable to retrieve tracker with id: ${req.params.id}.`)});
     })
     .catch((err) => {
       res.status(404).send({error: err});
