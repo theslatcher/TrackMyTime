@@ -64,10 +64,9 @@ h1 {
 }
 
 .guide-item{
-  padding: 0 0;
+  padding: 0;
   max-width: 30em;
-  display: flex;
-  flex-direction: column;
+  flex:1;
 }
 
 .number h1{
@@ -88,6 +87,13 @@ h1 {
   max-width: 5em;
   max-height: 5em;
   object-fit:cover;
+}
+
+.manual img{
+  padding: 1em 0;
+}
+.guide-content > p {
+  margin:0.5em;
 }
 
 h3,p{

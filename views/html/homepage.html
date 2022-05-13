@@ -91,7 +91,7 @@
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" name="username" id="sign-up-username"
-                placeholder="Username" />
+                placeholder="Username" minlength="4" maxlength="20" />
               <div class="error"></div>
             </div>
             <div class="form-group">
@@ -115,7 +115,7 @@
             <div class="form-group">
               <label for="password">Password (6 characters minimum)</label>
               <input type="password" name="password" id="sign-up-password"
-                placeholder="Your password" />
+                placeholder="Your password" minlength="6" />
               <div class="error"></div>
             </div>
             <div class="form-group">
@@ -133,13 +133,13 @@
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text" name="username" id="login-username"
-              placeholder="Username" required />
+              placeholder="Username" minlength="4" maxlength="20" required />
             <div class="error"></div>
           </div>
           <div class="form-group">
             <label for="password">Password (6 characters minimum)</label>
             <input type="password" name="password" id="login-password"
-              placeholder="Your password" required />
+              placeholder="Your password" minlength="6" required />
             <div class="error"></div>
           </div>
           <div class="form-group">
@@ -152,12 +152,20 @@
       </div>
 
 
-      <div id="how-it-work" data-tab-content>
+      <div id="how-it-work" class ="manual" data-tab-content>
         <h1>Manual</h1>
+        <h3>Registration and login</h3>
+        <center><img src="../assets/registration.PNG" alt="registration form"></center>
         <p>First you need an account. The username should have around 4 to 20
-          characters, you are free to choose among alphabetic and/or nummeric
-          characters, only special characters are "- _ ." allowed
-          . Your first name
+          characters, you are free to choose among alphabetic and/or numeric characters, only special characters are "- _ ." allowed. Your first name and last name should not contain any number. Valid email address and password are also required.
+          When your account is successfully created, a message will appear </p><center><img src="../assets/success_msg.PNG" alt="successMsg"></center>. <p>Then you need to switch to login page to access to your dashboard.</p><center><img src="../assets/login.PNG" alt="login form"></center><p> If your username and password are matched, browser will automatically redirect to dashboard page, otherwise a error message will show.</p><center><img src="../assets/error-lgn-msg.PNG" alt="error login msg"></center>
+        
+        <h3>Track time</h3>
+        <center><img src="../assets/dashboard-page.PNG" alt="dashboard"></center>
+        <p>To add a task tracker, press task button. A tracker card will appear, you can enter task name, daily goal and color. When everything is done, click to a tick symbol button. The card will save to the board, you can create as many tracker cards as you want.</p> <center><img src="../assets/card-example.PNG" alt="successMsg"></center>
+        <p>  Whenever you finish your task, click the triple bar and input time then click tick button. The progress bar will show how far you reach your goal. You can edit the tracker card name, goal, color by clicking to edit, or delete the card when you reach your goal. By choosing week, month and year button,
+          you can see different cards and how far you progress to your goal. Click to graphs bar in the navbar, you can see pie chart and line chart to get visual overview of your tracker time.</p> <center><img src="../assets/graph.PNG" alt="graph"></center> <p> In profile page, you can edit your account. On the far right side of navbar, the symbol will switch to 
+          either dark or light theme when being clicked to. The logout button will sign out your account and redirect to homepage.
         </p>
       </div>
 
@@ -165,7 +173,7 @@
         <h1>Who are we?</h1>
         <h3>Our story</h3>
         <img src="../assets/sologan.PNG" alt="our sologon" class="right">
-        <p>Far away, in Sweden, a group of student need to finish a project to
+        <p>Far away, in Sweden, a group of student need to find an interesting project to
           pass a course of cs programme. <br/>
             They kept wondering, "What should we do?” and “How could we finish
             it in 1 month?" So, they created a time tracking tool.<br/>
