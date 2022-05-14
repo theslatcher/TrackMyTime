@@ -33,7 +33,7 @@ tabs.forEach((tab) => {
 //show tabs when click to toggle button
 
 
-signUpForm.addEventListener('submit', (e) => {
+signUpForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   let isUsernameValid = checkUserName(),
     isEmailValid = checkEmail(),
@@ -53,20 +53,25 @@ signUpForm.addEventListener('submit', (e) => {
       email: signUpEmail.value,
     }
 
-    fetch('/user/signup', {
+    const res = await fetch('/user/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(signUpUser),
     })
-      .then((data) => {
-        if (data.ok) alert('Success create an account');
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+    if (res.ok) {
+      alert('Success create an account');
+    }
+    else {
+      const error = await res.json()
+      if (error.error.errors[0].message.includes('username'))
+        setError(signUpUserName, 'username is already in use')
+      else if (error.error.errors[0].message.includes('email'))
+        setError(signUpEmail, 'email is already in use')
+    }
   }
+
 }
 )
 
@@ -111,7 +116,7 @@ const checkFirstName = () => {
   if (firstName === '') {
     setError(signUpFirstName, 'First name is required')
   } else {
-    if (isValidName(firstName)) {
+    if (!isValidName(firstName)) {
       setError(signUpFirstName, 'your first name should not be/have number')
     } else {
       setSuccess(signUpFirstName);
@@ -126,7 +131,7 @@ const checkLastName = () => {
   if (lastName === '') {
     setError(signUpLastName, 'Last name is required')
   } else {
-    if (isValidName(lastName)) {
+    if (!isValidName(lastName)) {
       setError(signUpLastName, 'your last name should not be/have number')
     } else {
       setSuccess(signUpLastName)

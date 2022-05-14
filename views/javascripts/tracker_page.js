@@ -2,27 +2,38 @@
 const tabs = document.querySelectorAll('[data-tab-target]')
 const tabContent = document.querySelectorAll('[data-tab-content]');
 async function get_user() {
-    const data = JSON.parse(localStorage.getItem('user_details'));
-    const res = await fetch('/user/' + data.user.userId)
-    const user1 = await res.json()
-    return (user1)
+    const res = await fetch('/user/' + userId())
+    const user = await res.json()
+    return (user)
 }
 const userId = () => {
     const data = JSON.parse(localStorage.getItem('user_details'));
     return data.user.userId
 }
-const load_trackers = async () => {
+const load_tracker_section = async () => {
+    generate_buttons()
+    generate_trackers_html()
+}
+function generate_buttons() {
     document.getElementById('trackers').innerHTML = ''
     document.getElementById('trackers').innerHTML += trackerButtons_template()
     document.getElementById(localStorage.getItem('filter')).classList.add('bActive')
+}
+async function generate_trackers_html() {
+    const trackers = await get_trackers()
+    let html = ""
+    trackers.forEach(tracker => {
+        html += card_template(tracker)
+    })
+    document.getElementById('cards').innerHTML = html
+    return html
+}
+const get_trackers = async () => {
     const url = new URL(window.location.href + 'task/user/' + userId())
-    const date = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
-    url.searchParams.append(localStorage.getItem('filter'), date)
+    url.searchParams.append(localStorage.getItem('filter'), new Date())
     const res = await fetch(url)
     const trackers = await res.json()
-    trackers.forEach(tracker => {
-        document.getElementById('cards').innerHTML += card_template(tracker)
-    });
+    return trackers
 }
 const get_a_tracker = async (trackerid) => {
     const url = new URL(window.location.href + 'task/' + trackerid)
@@ -31,7 +42,6 @@ const get_a_tracker = async (trackerid) => {
     const res = await fetch(url)
     const new_tracker = await res.json()
     return new_tracker
-
 }
 const create_tracker = async () => {
     const name = document.getElementById('create_new_card').children[0].value
@@ -69,7 +79,7 @@ const create_tracker = async () => {
             })
         }
         )
-        load_trackers()
+        generate_trackers_html()
     }
 }
 const delete_tracker = async (id, name) => {
@@ -96,10 +106,9 @@ const delete_tracker = async (id, name) => {
             })
         }
         )
-        load_trackers()
+        document.getElementById("cards").removeChild(document.getElementById(id))
     }
 }
-
 function daysInYear() {
     return isLeapYear(new Date().getFullYear()) ? 366 : 365
 }
@@ -127,11 +136,9 @@ function calc_goal(goal) {
     }
     return new_goal
 }
-
 function cancel_new_card() {
     document.getElementById('cards').removeChild(document.getElementById('create_new_card'))
 }
-
 async function add_new_time(button) {
     const h = button.parentElement.children[3].value
     const min = (button.parentElement.children[5].value / 60)
@@ -151,10 +158,7 @@ async function add_new_time(button) {
     )
     reload_a_card(button.parentElement.id)
     toggle_add_time(button.parentElement.id)
-
 }
-
-
 async function save_tracker(id) {
     await fetch('/task/' + id, {
         headers: {
@@ -169,34 +173,26 @@ async function save_tracker(id) {
         })
 
     })
-
     reload_a_card(id)
 }
-
-
 async function reload_a_card(id) {
     const tracker = await get_a_tracker(id)
     const old_card = document.getElementById(id)
     const new_card = document.createElement("somethingfun");
     new_card.innerHTML = card_template(tracker)
     old_card.parentElement.replaceChild(new_card.children[0], old_card)
-
 }
-
 async function toggle_edit_tracker(id) {
     const tracker = await get_a_tracker(id)
     const old_card = document.getElementById(id)
     const new_card = document.createElement("cool");
     new_card.innerHTML = edit_tracker(tracker)
     old_card.parentElement.replaceChild(new_card.children[0], old_card)
-
     toggle_add_time(id)
-
 }
 function toggle_add_time(id) {
     $(`#${id}`).find('.card-hidden').toggle('card-hidden');
 }
-
 async function card_form_toggle(e, button) {
     const menu = $('#card-context-menu')
     let open = false
@@ -230,43 +226,93 @@ async function card_form_toggle(e, button) {
         document.addEventListener('click', ctx_menu_listener)
     }
 }
+function validateHrs(number, max) {
+    console.log(isNaN(number));
+    console.log(max);
+    console.log(typeof (number));
+    number = parseInt(number)
+    if (!isNaN(number)) {
+        number
+        if (number < 1) {
+            number = 1
+        } else if (number > max) {
+            number = max
+        }
+    }
+    else number = 1
+    return number
+}
 function toggle_color(color) {
-
     document.getElementById(color.parentElement.id).setAttribute('style', 'border: 3px solid' + color.value)
     document.getElementById('newgoal').setAttribute('style', 'border-bottom: 1px solid' + color.value)
 }
-async function editUser() {
+function get_data_from_form() {
     const data = {}
     const username = document.getElementById('username')
     const first_name = document.getElementById('first_name')
     const last_name = document.getElementById('last_name')
     const email = document.getElementById('email')
     const pass = document.getElementById('password')
-    const current_pass = document.getElementById('current_password')
+    let validInput = true
     if (username.value != '') {
-        if (isValidUserName(username.value)) data.username = username.value
-        else setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+        if (isValidUserName(username.value.trim())) {
+            data.username = username.value
+            setSuccess(username)
+        }
+        else {
+            setError(username, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+            validInput = false
+        }
     }
     if (first_name.value != '') {
-        if (isValidName(first_name.value)) data.first_name = first_name.value
-        else setError(first_name, 'your first name should not be / have number')
+        if (isValidName(first_name.value.trim())) {
+            data.first_name = first_name.value
+            setSuccess(first_name)
+        }
+        else {
+            setError(first_name, 'your first name should not be / have number')
+            validInput = false
+        }
     }
     if (last_name.value != '') {
-        if (isValidName(last_name.value)) data.last_name = last_name.value
-        else setError(last_name, 'your last name should not be / have number')
+        if (isValidName(last_name.value.trim())) {
+            data.last_name = last_name.value
+            setSuccess(last_name)
+        }
+        else {
+            setError(last_name, 'your last name should not be / have number')
+            validInput = false
+        }
     }
     if (email.value != '') {
-        if (isValidEmail(email.value)) data.email = email.value
-        else setError(email, 'username must have around 4 to 20 characters, alphabetic or/and numeric')
+        if (isValidEmail(email.value)) {
+            data.email = email.value
+            setSuccess(email)
+        }
+        else {
+            setError(email, 'Provide a valid email address')
+            validInput = false
+        }
     }
     if (pass.value != '') {
-        if (isValidPassword(pass.value)) data.pass = pass.value
-        else setError(pass, 'only alphabetic or/and numeric characters allowed') //why?
+        if (isValidPassword(pass.value)) {
+            data.pass = pass.value
+            setSuccess(pass)
+        }
+        else {
+            setError(pass, 'only alphabetic or/and numeric characters allowed')
+            validInput = false
+        }
     }
-    if (Object.entries(data).length > 0) {
+    data.valid = validInput
+    return data
+}
+async function editUser() {
+    const data = get_data_from_form()
+    const current_pass = document.getElementById('current_password')
+    if (Object.entries(data).length > 1 && data.valid) {
         data.curr_password = current_pass.value
-        const id = userId
-        const res = await fetch('/user/' + id,
+        const res = await fetch('/user/' + userId(),
             {
                 headers: {
                     'Accept': 'application/json',
@@ -277,9 +323,16 @@ async function editUser() {
             })
         if (res.ok) {
             location.href = '/'
-
         }
-        else setError(current_pass, 'invalid password')
+        else {
+            const error = await res.json()
+            if (error.error.errors[0].message.includes('username'))
+                setError(username, 'username is already in use')
+            else if (error.error.errors[0].message.includes('email'))
+                setError(email, 'email is already in use')
+            else
+                setError(pass, 'invalid')
+        }
     }
 }
 tabs.forEach(tab => {
@@ -299,11 +352,11 @@ tabs.forEach(tab => {
                 })
                 break
             case 'trackers':
-                load_trackers()
+                load_tracker_section()
                 break
             default:
-                document.getElementById('graphs').innerHTML = `<canvas id='chart0' class='graph-canvas'></canvas><canvas id='chart1' class='graph-canvas'></canvas><canvas id='chart2' class='graph-canvas'></canvas>`;
-                loadGraphs(userId());
+                document.getElementById('graphs').innerHTML = graph_template_container()
+                loadGraphs();
                 break
         }
         if (navbarLinks.classList.contains('active'))
@@ -315,23 +368,15 @@ function add_card() {
         document.getElementById('cards').innerHTML = form_template() + document.getElementById('cards').innerHTML
     else cancel_new_card()
 }
-function timeoutbuttons() {
-    const buttons = Array.from(document.getElementById('filter_buttons').children)
-    buttons.forEach(button => {
-        button.disabled = true;
-        setTimeout(() => {
-            button.disabled = false;
-        }, 500);
-    });
-}
 function filterButton(button) {
-    timeoutbuttons()
+    button.parentElement.querySelector('.bActive').classList.toggle('bActive')
     localStorage.setItem('filter', button.id)
-    load_trackers()
+    button.classList.add('bActive')
+    generate_trackers_html()
 }
 document.addEventListener('DOMContentLoaded', () => {
     theme_check()
     if (!localStorage.getItem('filter'))
         localStorage.setItem('filter', 'd')
-    load_trackers()
+    load_tracker_section()
 })
