@@ -44,6 +44,7 @@ background-color: var(--clr-submitHover);
   display: flex;
   gap: var(--gap, 1rem);
   list-style-type: none;
+  padding: 0;
 }
 
 .tab {
