@@ -37,11 +37,25 @@ function formatTimeData(data, color, title) {
   let labels = [];
   let datasets = [];
   let colors = [];
-  let newtitle = "Hours spent in " + title;
+  let newtitle = "Summarization of hours spent on " + title;
+
+  let tempTime = 0;
   for (let i = 0; i < data.length; i++) {
-    labels.push(data[i].dayofyear);
-    datasets.push(data[i].totaltime);
-    colors.push(color);
+    tempTime += data[i].totaltime; // add up all the time (for a growing graph)
+    if (labels.includes(data[i].dayofyear)) {
+      // checks if the dates are the same
+      datasets[labels.indexOf(data[i].dayofyear)] += data[i].totaltime;
+    } else {
+      labels.push(data[i].dayofyear);
+      datasets.push(tempTime);
+      colors.push(color);
+    }
+  }
+  // if dataset has only one label add 0 to the front of datasets
+  if (labels.length === 1) {
+    datasets.unshift(0);
+    labels.unshift("Start");
+    colors.unshift(color);
   }
   return {
     labels: labels,
@@ -59,8 +73,6 @@ function cfg(type, data, title, label) {
   if (document.body.classList.contains('theme-light'))
     color = 'black'
 
-
-
   if (type === 'line')
     scales = {
       x: {
@@ -77,8 +89,6 @@ function cfg(type, data, title, label) {
       }
     }
 
-
-  console.log(type);
   return {
     type: type,
     data: data,
@@ -152,7 +162,7 @@ async function loadGraphs(user) {
   if (loadedOnce && localStorage.getItem("pieData") && localStorage.getItem("lineData") && localStorage.getItem("trackerData") == JSON.stringify(trackers))
     await createCanvas(JSON.parse(localStorage.getItem("lineData")), JSON.parse(localStorage.getItem("pieData")));
 
-  // arrays to graph data store data
+  // arrays to store graph data
   let pieData = formatData(trackers);
   let lineData = [];
 
