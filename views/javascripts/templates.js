@@ -10,10 +10,10 @@ function card_template(tracker) {
                     <i class="fas fa-bars card-button" onclick="card_form_toggle(event, this)"></i>
                
                 <h1 class="">${time.hours + "h"}</h1>
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="99" placeholder="hrs">
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="24" placeholder="hrs" oninput="this.value=validateHrs(this.value,this.max)">
                 <h1 class="">${time.min + "m"}</h1>
 
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" >
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" oninput="this.value=validateHrs(this.value,this.max)">
                  <div class="card-goal">
                  <h2>${percentage}%</h2>
                 <progress class="progress"value="${tracker.currenttime}" max="${goal}" >
@@ -25,14 +25,18 @@ function card_template(tracker) {
 
 }
 
+
+function graph_template_container() {
+    return (`<canvas id='chart0' class='graph-canvas'></canvas><canvas id='chart1' class='graph-canvas'></canvas><canvas id='chart2' class='graph-canvas'></canvas>`)
+}
 function edit_tracker(tracker) {
     return (`
     <form id="${tracker.trackerid}" class=" card" style="border: 3px solid ${tracker.color}">
                     <input class = "form_text"type="text" value="${tracker.name}">
                     <h1 class="form-title">Daily Goal</h1>
-                    <input class="form-input" type="number" id="newgoal"value="${tracker.goal}" min="1" max="24">
+                    <input class="form-input" type="number" id="newgoal"value="${tracker.goal}" min="1" max="24" oninput="this.value=validateHrs(this.value,this.max)">
                     <h1 class="form-title">Color</h1>
-                    <input class = "form-input form_color" onchange="toggle_color(this)"type="color" value='${tracker.color}'>
+                    <input class = "form-input form_color" oninput="toggle_color(this)"type="color" value='${tracker.color}'>
                     <div class="form_buttons">
                     <i class="far fa-window-close  form_button" onclick="reload_a_card(${tracker.trackerid})"></i>
                   <i class="far fa-check-square form_button"  onclick="save_tracker(${tracker.trackerid})"></i>
@@ -45,9 +49,9 @@ function form_template() {
     <form id="create_new_card" class="card" style=" border: 3px solid var(--foreground)">
                     <input class = "form_text"type="text" placeholder="Type name of new tracker">
                     <h1 class="form-title">Daily Goal</h1>
-                    <input class ="form-input" type="number" id="newgoal"placeholder="hrs" min="1" max="24">
+                    <input class ="form-input" type="number" id="newgoal"placeholder="hrs" min="1" max="24" oninput="this.value=validateHrs(this.value,this.max)">
                     <h1 class="form-title">Color</h1>
-                    <input class = "form-input form_color" onchange="toggle_color(this)"type="color">
+                    <input class = "form-input form_color" oninput="toggle_color(this)"type="color">
                     <div class="form_buttons">
                     <i class="far fa-window-close  form_button" onclick="cancel_new_card()"></i>
                   <i class="far fa-check-square form_button"  onclick="create_tracker()"></i>

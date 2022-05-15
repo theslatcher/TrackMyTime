@@ -12,22 +12,22 @@ router.post('/signup', async (req, res) => {
 			res.status(200).json('Success!');
 		})
 		.catch(err => {
-			res.status(409).json({error: err});
+			res.status(409).json({ error: err });
 		});
 });
 
 router.post('/login', auth.authenticate, async (req, res) => {
-	req.session.save(function() {
-        return res.status(200).json({user: req.user});
-    });
-}); 
+	req.session.save(function () {
+		return res.status(200).json({ user: req.user });
+	});
+});
 
 router.get('/signout', async (req, res) => {
 	req.logOut();
-	
-	req.session.save(function() {             
-        return res.status(200).send('Success!');
-    });
+
+	req.session.save(function () {
+		return res.status(200).send('Success!');
+	});
 });
 
 router.get('/', auth.require_logged_in, async (req, res) => {
@@ -39,13 +39,13 @@ router.get('/', auth.require_logged_in, async (req, res) => {
 	if (req.user && req.user.is_admin)
 		user_attributes.push('first_name', 'last_name', 'email');
 
-	User.findAll({attributes: user_attributes, offset: ((page-1)*page_size), limit: page_size})
+	User.findAll({ attributes: user_attributes, offset: ((page - 1) * page_size), limit: page_size })
 		.then(response => {
 			res.status(200).send(response);
 		})
 		.catch(err => {
 			console.log(err);
-			res.status(404).send({error: err});
+			res.status(404).send({ error: err });
 		});
 });
 
@@ -55,23 +55,22 @@ router.get('/:userId', auth.require_logged_in, async (req, res) => {
 	if (req.user.is_admin || (req.user.userId == req.params.userId))
 		user_attributes.push('first_name', 'last_name', 'email');
 
-	User.findOne({attributes: user_attributes, where:{userId: req.params.userId}})
+	User.findOne({ attributes: user_attributes, where: { userId: req.params.userId } })
 		.then(response => {
 			res.status(200).send(response);
 		})
 		.catch(err => {
 			console.log(err);
-			res.status(404).send({error: err});
+			res.status(404).send({ error: err });
 		});
 });
 
 router.delete('/:userId', auth.require_logged_in, async (req, res) => {
-	if (req.user.is_admin || (req.user.userId == req.params.userId))
-	{
-		User.findOne({where: {userId : req.params.userId}})
+	if (req.user.is_admin || (req.user.userId == req.params.userId)) {
+		User.findOne({ where: { userId: req.params.userId } })
 			.then(async (response) => {
 				if (response.username === 'admin')
-					return res.status(409).send({error: new Error('Cannot delete admin users.')});
+					return res.status(409).send({ error: new Error('Cannot delete admin users.') });
 
 				let allowed = req.user.is_admin;
 
@@ -79,65 +78,58 @@ router.delete('/:userId', auth.require_logged_in, async (req, res) => {
 					allowed = await auth.verify_password(response.password, req.body.password);
 
 				if (!allowed)
-					return res.status(409).send({error: new Error('Cannot delete your account without providing password.')});
+					return res.status(409).send({ error: new Error('Cannot delete your account without providing password.') });
 
-				User.destroy({where:{userId: req.params.userId}})
+				User.destroy({ where: { userId: req.params.userId } })
 					.then(response => {
-						res.status(200).send({message: 'Success!'});
+						res.status(200).send({ message: 'Success!' });
 					})
 					.catch(err => {
 						console.log(err);
-						res.status(404).send({error: err});
+						res.status(404).send({ error: err });
 					});
 			})
 			.catch(err => {
 				console.log(err);
-				res.status(404).send({error: err});
+				res.status(404).send({ error: err });
 			});
 	}
 	else
-		res.status(403).send({error: new Error('Forbidden Access.')});
+		res.status(403).send({ error: new Error('Forbidden Access.') });
 });
 
 router.put('/:userId', auth.require_logged_in, async (req, res) => {
 	if (!req.user.is_admin && !req.body.curr_password)
-		return res.status(409).send({error: new Error('Invalid password!')});
-
-	User.findOne({where: {userId : req.params.userId}})
+		return res.status(409).send({ error: new Error('Invalid password!') });
+	User.findOne({ where: { userId: req.params.userId } })
 		.then(async (response) => {
-			if (admin_request || await auth.verify_password(response.password, req.body.curr_password))
-			{
+			if (req.user.is_admin || await auth.verify_password(response.password, req.body.curr_password)) {
 				let update_fields = {};
-
 				if (req.body.username)
 					update_fields['username'] = req.body.username;
-
 				if (req.body.first_name)
 					update_fields['first_name'] = req.body.first_name;
-
 				if (req.body.last_name)
 					update_fields['last_name'] = req.body.last_name;
-
 				if (req.body.email)
 					update_fields['email'] = req.body.email;
-
 				if (req.body.new_password)
 					update_fields['password'] = await auth.hash_password(req.body.new_password);
-
-				User.update(update_fields, {where:{userId: req.params.userId}})
+				User.update(update_fields, { where: { userId: req.params.userId } })
 					.then(response => {
 						res.status(200).send('Success!');
 					})
 					.catch(err => {
-						res.status(409).send({error: err});
+						console.log(err);
+						res.status(409).send({ error: err });
 					});
 			}
 			else
-				res.status(409).send({error: new Error('Invalid password!')});
+				res.status(409).send({ error: new Error('Invalid password!') });
 		})
-		.catch (err => {
-			res.status(409).send({error: err});
+		.catch(err => {
+			console.log(err);
+			res.status(409).send({ error: err });
 		});
 });
-
 module.exports = router;
