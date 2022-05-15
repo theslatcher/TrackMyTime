@@ -234,12 +234,12 @@ function validateHrs(number, max) {
     if (!isNaN(number)) {
         number
         if (number < 1) {
-            number = 1
+            number = 0
         } else if (number > max) {
             number = max
         }
     }
-    else number = 1
+    else number = 0
     return number
 }
 function toggle_color(color) {
