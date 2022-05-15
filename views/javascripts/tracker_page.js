@@ -326,12 +326,14 @@ async function editUser() {
         }
         else {
             const error = await res.json()
-            if (error.error.errors[0].message.includes('username'))
-                setError(username, 'username is already in use')
-            else if (error.error.errors[0].message.includes('email'))
-                setError(email, 'email is already in use')
+            if (error.error.errors) {
+                if (error.error.errors[0].message.includes('username'))
+                    setError(username, 'username is already in use')
+                else if (error.error.errors[0].message.includes('email'))
+                    setError(email, 'email is already in use')
+            }
             else
-                setError(pass, 'invalid')
+                setError(current_pass, 'password not accepted')
         }
     }
 }
