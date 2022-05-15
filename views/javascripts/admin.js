@@ -168,6 +168,7 @@ async function sortTable(sortBy, Type, userId) {
         sortedBy = userSortedBy
         info = await fetchUsers()
     } else {
+        sortedBy = taskSortedBy
         info = await fetchTasks(userId)
     }
 
@@ -195,6 +196,7 @@ async function sortTable(sortBy, Type, userId) {
         userSortedBy = sortBy
         buildUserTable(info)
     } else {
+        taskSortedBy = sortBy
         buildTaskTable(info, userId)
     }
 
