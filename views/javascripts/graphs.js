@@ -1,3 +1,4 @@
+
 var loadedOnce = false;
 async function fetchTimeTracker(id) {
   return await fetch("/time/" + id, {
@@ -88,7 +89,7 @@ function cfg(type, data, title, label) {
         }
       }
     }
-
+  
   return {
     type: type,
     data: data,
@@ -150,11 +151,11 @@ function createLine(d, i, title) {
   new Chart(document.getElementById("chart" + i), config);
 }
 
-async function loadGraphs(user) {
+async function loadGraphs() {
   document.getElementById("graphs").innerHTML = ``;
-
+  const user = userId()
   // fetch all user trackers
-  const url = new URL(window.location.href + "task/user/" + user.userId);
+  const url = new URL(window.location.href + "task/user/" + user);
   const res = await fetch(url);
   const trackers = await res.json();
 

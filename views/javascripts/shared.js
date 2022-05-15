@@ -21,7 +21,7 @@ async function theme_switch() {
     document.body.classList.add(localStorage.getItem('theme'))
     if (document.getElementById('graphs'))
         if (document.getElementById('graphs').classList.contains('active'))
-            loadGraphs(await user())
+            loadGraphs(userId)
 
 }
 
@@ -31,6 +31,10 @@ toggleButton.addEventListener('click', () => {
 
 async function logout() {
     localStorage.removeItem('user_details')
+    localStorage.removeItem('pieData')
+    localStorage.removeItem('lineData')
+    localStorage.removeItem('trackerData')
+
     await fetch('/user/signout')
     location.href = '/'
 }
@@ -40,18 +44,15 @@ function theme_check() {
         if (window.matchMedia &&
             window.matchMedia('(prefers-color-scheme: dark)').matches) {
             localStorage.setItem('theme', "theme-dark")
-
-
         }
         else {
             localStorage.setItem('theme', "theme-light")
         }
         document.body.classList.add(localStorage.getItem('theme'))
-
     }
     else document.body.classList.add(localStorage.getItem('theme'))
     if (localStorage.getItem('theme') === "theme-dark") document.getElementById("themeSwitch").classList.add("fa-moon");
-    if (localStorage.getItem('theme') === "theme-light") document.getElementById("themeSwitch").classList.add("fa-sun");
+    else document.getElementById("themeSwitch").classList.add("fa-sun");
 }
 
 
@@ -87,9 +88,8 @@ const setSuccess = (element) => {
 }
 
 const isValidName = (name) => {
-    const re =
-        /^[0-9]+$/
-    return re.test(String(name).toLowerCase())
+    const re = /^[0-9]+$/
+    return !re.test(String(name).toLowerCase())
 }
 
 
@@ -100,6 +100,7 @@ const isValidEmail = (email) => {
 }
 
 const isValidUserName = username => {
+    console.log(username);
     const re = /^(?=.{4,20}$)(?:[a-zA-Z\d]+(?:(?:\.|-|_)[a-zA-Z\d])*)+$/;
     return re.test(username);
 }
