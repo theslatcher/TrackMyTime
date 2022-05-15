@@ -227,13 +227,10 @@ async function card_form_toggle(e, button) {
     }
 }
 function validateHrs(number, max) {
-    console.log(isNaN(number));
-    console.log(max);
-    console.log(typeof (number));
     number = parseInt(number)
     if (!isNaN(number)) {
         number
-        if (number < 1) {
+        if (number < 0) {
             number = 0
         } else if (number > max) {
             number = max

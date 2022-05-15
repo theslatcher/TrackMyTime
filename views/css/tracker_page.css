@@ -20,6 +20,11 @@
 
 }
 
+.addtime_buttons{
+    display: flex;
+
+}
+
 
 .possetive{
         background-color:var(--clr-purple);
@@ -106,7 +111,7 @@
     font-size: 1.5rem;
     width: 30px;
     cursor: pointer;
-    justify-self: center;
+    justify-self: start;
     height: 30px;
 }
 
