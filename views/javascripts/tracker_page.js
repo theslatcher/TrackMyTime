@@ -139,9 +139,10 @@ function calc_goal(goal) {
 function cancel_new_card() {
     document.getElementById('cards').removeChild(document.getElementById('create_new_card'))
 }
-async function add_new_time(button) {
-    const h = button.parentElement.children[3].value
-    const min = (button.parentElement.children[5].value / 60)
+async function add_new_time(id) {
+    const card = document.getElementById(id)
+    const h = card.children[3].value
+    const min = (card.children[5].value / 60)
     const time = Number(h) + Number(min)
     await fetch('/time', {
         headers: {
@@ -150,14 +151,14 @@ async function add_new_time(button) {
         },
         method: 'POST',
         body: JSON.stringify({
-            'trackerid': button.parentElement.id,
+            'trackerid': id,
             'totaltime': time,
             'dayofyear': new Date()
         })
     }
     )
-    reload_a_card(button.parentElement.id)
-    toggle_add_time(button.parentElement.id)
+    reload_a_card(card.id)
+    toggle_add_time(card.id)
 }
 async function save_tracker(id) {
     await fetch('/task/' + id, {
@@ -227,10 +228,11 @@ async function card_form_toggle(e, button) {
     }
 }
 function validateHrs(number, max) {
+
     number = parseInt(number)
     if (!isNaN(number)) {
         number
-        if (number < 0) {
+        if (number < 1) {
             number = 0
         } else if (number > max) {
             number = max

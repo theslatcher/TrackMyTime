@@ -20,10 +20,7 @@
 
 }
 
-.addtime_buttons{
-    display: flex;
 
-}
 
 
 .possetive{
@@ -99,19 +96,13 @@
 }
 
 
-.card-buttons{
-    grid-column: 2;
-    margin: 0;
-    display: flex;
-    justify-content: center;
 
-}
 .card-button{
     margin: 0;
     font-size: 1.5rem;
     width: 30px;
     cursor: pointer;
-    justify-self: start;
+    justify-self: end;
     height: 30px;
 }
 
@@ -134,7 +125,12 @@
     outline: 0;
     
 }
+.addtime_buttons{
+    display: flex;
+    margin-left: 0;
+    justify-content: center;
 
+}
 .form_text{
     grid-row: 1;
     grid-column: 1/3;

@@ -21,7 +21,7 @@ function card_template(tracker) {
                 </div>
                 <div class="addtime_buttons">
                     <i class="far fa-window-close card-button card-hidden" onclick="toggle_add_time(${tracker.trackerid})"></i>
-                    <i class="far fa-check-square card-button card-hidden" onclick="add_new_time(this)"></i>
+                    <i class="far fa-check-square card-button card-hidden" onclick="add_new_time(${tracker.trackerid})"></i>
                 </div>
             </div>
     `)
