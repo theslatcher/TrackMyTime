@@ -10,10 +10,10 @@ function card_template(tracker) {
                     <i class="fas fa-bars card-button" onclick="card_form_toggle(event, this)"></i>
                
                 <h1 class="">${time.hours + "h"}</h1>
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="24" placeholder="hrs" oninput="this.value=validateHrs(this.value,this.max)">
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="0" max="24" placeholder="hrs" oninput="this.value=validateHrs(this.value,this.max)">
                 <h1 class="">${time.min + "m"}</h1>
 
-                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="1" max="59" placeholder="min" oninput="this.value=validateHrs(this.value,this.max)">
+                <input style="${"border-bottom: 1px solid " + tracker.color}" class="form-input card-hidden" type="number" min="0" max="59" placeholder="min" oninput="this.value=validateHrs(this.value,this.max)">
                  <div class="card-goal">
                  <h2>${percentage}%</h2>
                 <progress class="progress"value="${tracker.currenttime}" max="${goal}" >

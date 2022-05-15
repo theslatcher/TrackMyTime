@@ -234,12 +234,12 @@ function validateHrs(number, max) {
     if (!isNaN(number)) {
         number
         if (number < 1) {
-            number = 1
+            number = 0
         } else if (number > max) {
             number = max
         }
     }
-    else number = 1
+    else number = 0
     return number
 }
 function toggle_color(color) {
@@ -326,12 +326,14 @@ async function editUser() {
         }
         else {
             const error = await res.json()
-            if (error.error.errors[0].message.includes('username'))
-                setError(username, 'username is already in use')
-            else if (error.error.errors[0].message.includes('email'))
-                setError(email, 'email is already in use')
+            if (error.error.errors) {
+                if (error.error.errors[0].message.includes('username'))
+                    setError(username, 'username is already in use')
+                else if (error.error.errors[0].message.includes('email'))
+                    setError(email, 'email is already in use')
+            }
             else
-                setError(pass, 'invalid')
+                setError(current_pass, 'password not accepted')
         }
     }
 }
