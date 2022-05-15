@@ -8,6 +8,7 @@
     grid-template-columns: 1fr;
     justify-items: center;
     gap: 3rem;
+    margin-bottom: 3rem;
 }
 
 .button-container{
@@ -230,7 +231,7 @@ progress::-moz-progress-bar {
 .graph-container {
     max-width: 40rem;
     margin:auto;
-    padding-bottom: 100px;
+    margin-bottom: 100px;
 }
   
 .graph-canvas {
