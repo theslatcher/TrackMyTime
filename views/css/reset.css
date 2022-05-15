@@ -87,8 +87,9 @@ i {
   text-align: center;
   font-weight:bold;
 }
-
-
+#about{
+  text-align: center;
+}
 
 #about > img {
   height: auto; 
@@ -108,10 +109,6 @@ i {
   white-space: pre-line;
 }
 
-.right {
-  float: right;
-  margin-left: 1em;
-}
 
 h2 {
   background: var(--clr-purple);
