@@ -43,15 +43,17 @@ function buildUserTable(info) {
         </tr>
         </thead>`
     for (user of info) {
-        userTable.insertAdjacentHTML("beforeend", `
-        <tr id='` + user.userId + `'>
-            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.username + ` </td>
-            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.first_name + `</td>
-            <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.last_name + ` </td>
-            <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit" id="edit"> Edit </td>
-            <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit" id="delete"> Delete </td>
-        </tr>    
+        if(user.username != "admin"){
+            userTable.insertAdjacentHTML("beforeend", `
+            <tr id='` + user.userId + `'>
+                <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.username + ` </td>
+                <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.first_name + `</td>
+                <td onclick="javascript:getSpecific('`+ user.userId + `')" class="userInfo">` + user.last_name + ` </td>
+                <td onclick="javascript:editUser('` + user.userId + `')" class="userEdit" id="edit"> Edit </td>
+                <td onclick="javascript:deleteUser('` + user.userId + `')"class="userEdit" id="delete"> Delete </td>
+            </tr>    
         `)
+        }
     }
 }
 
