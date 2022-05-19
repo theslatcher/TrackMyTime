@@ -11,7 +11,12 @@
 
 # Introduction
 
-A project about a project about a project about a time tracking project.
+Is there a bigger problem than time?
+Did you know that a day consists of only 24 hours? Shocked me when I first heard about it, too. Well, have you ever felt like you need help with managing and keeping track of where your time goes in a day?
+
+Fret not, here’s the solution for you: 
+“Track My Time”: A time managing app which helps you with that problem and your productivity! Through our app you can create tasks for what you need to keep track of: be it studying(could be studying for a specific course), gaming, how much time you spend on breaks, etc.
+
 
 # Getting Started
 
