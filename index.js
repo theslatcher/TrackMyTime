@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(require('body-parser').json());
 app.use(require('cookie-parser')());
-app.use(express.static('views'));
+app.use(express.static('dist'));
 
 const db = require('./db');
 const expressSession = require('express-session');
@@ -47,22 +47,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const task = require('./routes/task');
-app.use('/task/', task);
+app.use('/api/task/', task);
 
 const userRouter = require('./routes/user');
-app.use('/user/', userRouter);
+app.use('/api/user/', userRouter);
 
 const timeRouter = require('./routes/time');
-app.use('/time/', timeRouter);
+app.use('/api/time/', timeRouter);
 
-app.get('/', (req, res) => {
-	if (req.user)
-		if (req.user.is_admin)
-			res.sendFile(path.join(__dirname, '/views/html/admin.html'));
-		else
-			res.sendFile(path.join(__dirname, '/views/html/tracker_page.html'));
-	else
-		res.sendFile(path.join(__dirname, '/views/html/homepage.html'));
+app.get('/*', (req, res) => {
+	res.sendFile(path.join(__dirname, '/dist/index.html'));
 });
 
 app.listen(port, () => console.log(`Running on ${port}!`));
